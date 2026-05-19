@@ -146,7 +146,9 @@
   .p-tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; color: #4ecdc4; letter-spacing: 1px; margin-bottom: .2rem; }
   .p-title { font-size: clamp(.88rem, 2vw, 1rem); font-weight: 700; color: #f0ece4; margin-bottom: .3rem; line-height: 1.3; }
   .p-desc { font-size: clamp(.72rem, 1.8vw, .8rem); color: #9bcfcb; margin-bottom: .8rem; line-height: 1.4; flex-grow: 1; }
-  .p-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; }
+  .p-footer { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; margin-top: auto; }
+  .p-footer .btn-group { display: flex; gap: 6px; }
+  .p-price { font-size: clamp(.9rem, 2vw, 1rem); font-weight: 700; color: #c9a84c; align-self: flex-end; }
   .p-price { font-size: clamp(.9rem, 2vw, 1rem); font-weight: 700; color: #c9a84c; }
   .btn-buy {
     background: rgba(78,205,196,.1); border: 1px solid #4ecdc4;
@@ -286,7 +288,7 @@
           </div>
           <h2 class="p-title" style="font-size:clamp(1rem,3vw,1.3rem);">Espiral del Viento · Atrapa Sueños</h2>
           <p class="p-desc" style="margin-top:.5rem;">Tejido a mano con hilos premium. Ideal para colgar en balcones, jardines o ventanas. Incluye atrapa sueños colgante. Colores a elección.</p>
-          <div class="p-footer" style="margin-top:1rem;">
+          <div class="p-footer" style="margin-top:1rem;align-items:flex-end;">
             
             <div class="btn-group">
               <button class="btn-ver" onclick="abrirModal('Espiral del Viento · Atrapa Sueños','Tejido a mano con hilos premium. Incluye atrapa sueños colgante. Colores a elección.',['cortavientocelestes.jpg','cortavientocelestes2.jpg'])">Ver 🖼️</button>
