@@ -147,8 +147,9 @@
   .p-title { font-size: clamp(.88rem, 2vw, 1rem); font-weight: 700; color: #f0ece4; margin-bottom: .3rem; line-height: 1.3; }
   .p-desc { font-size: clamp(.72rem, 1.8vw, .8rem); color: #9bcfcb; margin-bottom: .8rem; line-height: 1.4; flex-grow: 1; }
   .p-footer { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; margin-top: auto; }
-  .p-footer .btn-group { display: flex; gap: 6px; }
-  .p-price { font-size: clamp(.9rem, 2vw, 1rem); font-weight: 700; color: #c9a84c; align-self: flex-end; }
+  .p-footer .btn-group { display: flex; gap: 6px; justify-content: flex-end; }
+  .p-price { font-size: clamp(.9rem, 2vw, 1.05rem); font-weight: 700; color: #c9a84c; text-align: right; }
+  .p-footer .btn-buy, .p-footer .btn-ver { align-self: flex-end; }
   .p-price { font-size: clamp(.9rem, 2vw, 1rem); font-weight: 700; color: #c9a84c; }
   .btn-buy {
     background: rgba(78,205,196,.1); border: 1px solid #4ecdc4;
@@ -286,12 +287,12 @@
             <span class="p-tag">Decoración Mágica 🦋</span>
             <span class="badge b-pop">⭐ El más vendido</span>
           </div>
-          <h2 class="p-title" style="font-size:clamp(1rem,3vw,1.3rem);">Espiral del Viento · Atrapa Sueños</h2>
-          <p class="p-desc" style="margin-top:.5rem;">Tejido a mano con hilos premium. Ideal para colgar en balcones, jardines o ventanas. Incluye atrapa sueños colgante. Colores a elección.</p>
+          <h2 class="p-title" style="font-size:clamp(1rem,3vw,1.3rem);">Espiral del Viento · Colores Combinados</h2>
+          <p class="p-desc" style="margin-top:.5rem;">Tejido a mano con hilos premium. Ideal para colgar en balcones, jardines o ventanas. Incluye atrapa sueños colgante. Combinación de colores mágicos.</p>
           <div class="p-footer" style="margin-top:1rem;align-items:flex-end;">
             
             <div class="btn-group">
-              <button class="btn-ver" onclick="abrirModal('Espiral del Viento · Atrapa Sueños','Tejido a mano con hilos premium. Incluye atrapa sueños colgante. Colores a elección.',['cortavientocelestes.jpg','cortavientocelestes2.jpg'])">Ver 🖼️</button>
+              <button class="btn-ver" onclick="abrirModal('Espiral del Viento · Colores Combinados','Tejido a mano con hilos premium. Incluye atrapa sueños colgante. Combinación de colores mágicos.',['cortavientocelestes.jpg','cortavientocelestes2.jpg'])">Ver 🖼️</button>
               <span class="p-price">$450</span>
             <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Celeste%20%F0%9F%8C%80" target="_blank">Consultar ✨</a>
             </div>
@@ -312,13 +313,13 @@
         </div>
         <div class="card-body">
           <span class="p-tag">Decoración 🌿</span>
-          <h3 class="p-title">Espiral del Viento Verde</h3>
-          <p class="p-desc">Tejido a mano · incluye atrapa sueños · color verde</p>
+          <h3 class="p-title">Espiral del Viento Monocromático</h3>
+          <p class="p-desc">Tejido a mano · incluye atrapa sueños · un solo color a elección</p>
           <div class="p-footer">
             
             <span class="p-price">$400</span>
-            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Verde%20%F0%9F%8C%BF" target="_blank">Consultar ✨</a>
-            <button class="btn-ver" onclick="abrirModal('Espiral del Viento Verde','Tejido a mano · incluye atrapa sueños · color verde',['cortavientoverde.jpg','cortavientoverde2.jpg'])">Ver 🖼️</button>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Monocrom%C3%A1tico%20%F0%9F%8C%BF" target="_blank">Consultar ✨</a>
+            <button class="btn-ver" onclick="abrirModal('Espiral del Viento Monocromático','Tejido a mano · incluye atrapa sueños · un solo color a elección',['cortavientoverde.jpg','cortavientoverde2.jpg'])">Ver 🖼️</button>
           </div>
         </div>
       </div>
