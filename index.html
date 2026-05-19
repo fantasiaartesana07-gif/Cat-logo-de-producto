@@ -146,12 +146,268 @@
   .p-tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; color: #4ecdc4; letter-spacing: 1px; margin-bottom: .2rem; }
   .p-title { font-size: clamp(.88rem, 2vw, 1rem); font-weight: 700; color: #f0ece4; margin-bottom: .3rem; line-height: 1.3; }
   .p-desc { font-size: clamp(.72rem, 1.8vw, .8rem); color: #9bcfcb; margin-bottom: .8rem; line-height: 1.4; flex-grow: 1; }
-  .p-footer { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; }
-  .p-footer-left { display: flex; gap: 6px; align-items: center; }
-  .p-price { font-size: clamp(.9rem, 2vw, 1.05rem); font-weight: 700; color: #c9a84c; text-align: right; flex-shrink: 0; }
+  .p-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: auto; }
+  .p-price { font-size: clamp(.9rem, 2vw, 1rem); font-weight: 700; color: #c9a84c; }
   .btn-buy {
     background: rgba(78,205,196,.1); border: 1px solid #4ecdc4;
     color: #4ecdc4; padding: .4rem .9rem; border-radius: 8px;
     font-size: clamp(.72rem, 1.8vw, .8rem); font-weight: 700;
-    text-decoration: none; transition: all .2s; white-space:
- 
+    text-decoration: none; transition: all .2s; white-space: nowrap;
+  }
+  .btn-buy:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 0 14px rgba(78,205,196,.5); }
+
+  .badge { font-size: .63rem; padding: .2rem .55rem; border-radius: 6px; font-weight: 700; }
+  .b-pop { background: #1a1800; color: #c9a84c; border: 1px solid rgba(201,168,76,.4); }
+  .b-new { background: #1a0d30; color: #c084fc; border: 1px solid rgba(138,79,255,.5); }
+
+  /* FOOTER */
+  .footer {
+    text-align: center; padding: 2.5rem 1.5rem 1.5rem; margin-top: 1rem;
+    background: linear-gradient(to top, #070f0f, transparent);
+  }
+  .footer-icon { font-size: 1.4rem; margin-bottom: .5rem; letter-spacing: 4px; }
+  .footer h3 {
+    font-family: 'Cinzel', serif; font-size: clamp(1rem, 3vw, 1.2rem); margin-bottom: .4rem;
+    background: linear-gradient(135deg, #8a4fff, #4ecdc4);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .footer p { font-size: clamp(.75rem, 2vw, .85rem); color: #9bcfcb; margin-bottom: 1.4rem; line-height: 1.6; }
+  .chips { display: flex; justify-content: center; gap: .8rem; flex-wrap: wrap; }
+  .chip {
+    background: #0d2222; border: 1px solid rgba(78,205,196,.3);
+    color: #f0ece4; padding: .6rem 1.3rem; border-radius: 50px;
+    font-size: clamp(.8rem, 2vw, .9rem); font-weight: 600;
+    text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; transition: all .2s;
+  }
+  .chip:hover { border-color: #4ecdc4; color: #4ecdc4; box-shadow: 0 0 12px rgba(78,205,196,.3); transform: translateY(-2px); }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="fairy-dust" id="dust"></div>
+
+<div class="page">
+
+  <div class="header">
+    <img class="logo-img" src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/logo.jpg" alt="Logo Fantasía Artesana">
+    <h1>Fantasía Artesana</h1>
+    <p>Hecho con amor · Hecho a mano</p>
+    <div class="slogan">Donde el destino y las manos se encuentran para crear magia</div>
+    <div class="divider">
+      <div class="divider-line l"></div>
+      <span style="color:#c9a84c;font-size:14px">✦</span>
+      <div class="divider-line r"></div>
+    </div>
+  </div>
+
+  <div class="nav-filters">
+    <button class="filter-btn active" onclick="filtrar('todos',this)">Todo</button>
+    <button class="filter-btn" onclick="filtrar('deco',this)">Decoración</button>
+    <button class="filter-btn" onclick="filtrar('llave',this)">Llaveros</button>
+    <button class="filter-btn" onclick="filtrar('pompom',this)">Pompones</button>
+    <button class="filter-btn" onclick="filtrar('pedido',this)">A pedido</button>
+  </div>
+
+  <div class="catalog-wrap">
+    <div class="grid" id="grid">
+
+      <!-- CORTAVIENTOS CELESTE - DESTACADO -->
+      <div class="featured-card" data-cat="deco">
+        <div class="featured-carousel">
+          <div class="carousel" data-idx="0">
+            <div class="carousel-track">
+              <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientocelestes.jpg" alt="Cortavientos Celeste">
+              <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientocelestes2.jpg" alt="Cortavientos Celeste 2">
+            </div>
+            <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+            <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+            <div class="carousel-dots">
+              <div class="cdot on"></div>
+              <div class="cdot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="featured-info">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
+            <span class="p-tag">Decoración Mágica 🦋</span>
+            <span class="badge b-pop">⭐ El más vendido</span>
+          </div>
+          <h2 class="p-title" style="font-size:clamp(1rem,3vw,1.3rem);">Espiral del Viento · Atrapa Sueños</h2>
+          <p class="p-desc" style="margin-top:.5rem;">Tejido a mano con hilos premium. Ideal para colgar en balcones, jardines o ventanas. Incluye atrapa sueños colgante. Colores a elección.</p>
+          <div class="p-footer" style="margin-top:1rem;">
+            <span class="p-price">Consultar</span>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Celeste%20%F0%9F%8C%80" target="_blank">Consultar ✨</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CORTAVIENTOS VERDE -->
+      <div class="product-card" data-cat="deco">
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientoverde.jpg" alt="Cortavientos Verde">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientoverde2.jpg" alt="Cortavientos Verde 2">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">Decoración 🌿</span>
+          <h3 class="p-title">Espiral del Viento Verde</h3>
+          <p class="p-desc">Tejido a mano · incluye atrapa sueños · color verde</p>
+          <div class="p-footer">
+            <span class="p-price">Consultar</span>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Verde%20%F0%9F%8C%BF" target="_blank">Ver ✨</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PPYOPULI -->
+      <div class="product-card" data-cat="llave">
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/ppyopuli.jpg" alt="Ppyopuli">
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">Llaveros ✨</span>
+          <h3 class="p-title">Llavero Ppyopuli (Amigurumi Woozi)</h3>
+          <p class="p-desc">Amigurumi tejido a crochet · representante de Woozi en Miniteen</p>
+          <div class="p-footer">
+            <span class="p-price">Consultar</span>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Llavero%20Ppyopuli%20(Amigurumi%20Woozi)%20%F0%9F%92%9C" target="_blank">Ver 🌙</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- MARGARITA SIMPLE -->
+      <div class="product-card" data-cat="llave">
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita.jpg" alt="Margarita Simple">
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">Llaveros 🌼</span>
+          <h3 class="p-title">Llavero Margarita Simple</h3>
+          <p class="p-desc">Flor tejida a crochet · solo llavero</p>
+          <div class="p-footer">
+            <span class="p-price">Consultar</span>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Llavero%20Margarita%20%F0%9F%8C%BC" target="_blank">Ver 🌼</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- MARGARITA + POMPÓN -->
+      <div class="product-card" data-cat="llave">
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon.jpg" alt="Margarita con Pompón">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon2.jpg" alt="Margarita con Pompón 2">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon3.jpg" alt="Margarita con Pompón 3">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">Llaveros 🌼</span>
+          <h3 class="p-title">Margarita + Bolitas y Pompón</h3>
+          <p class="p-desc">Flor crochet + cuentas nacaradas + pompón amarillo</p>
+          <div class="p-footer">
+            <span class="p-price">Consultar</span>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20la%20Margarita%20con%20Bolitas%20y%20Pomp%C3%B3n%20%F0%9F%8C%BC%E2%9C%A8" target="_blank">Ver ✨</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- POMPÓN -->
+      <div class="product-card" data-cat="pompom">
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pompon.jpg" alt="Pompón con Bolitas">
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">Pompones 💛</span>
+          <h3 class="p-title">Pompón con Bolitas</h3>
+          <p class="p-desc">Pompón amarillo + cuentas nacaradas · se vende por separado</p>
+          <div class="p-footer">
+            <span class="p-price">Consultar</span>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Pomp%C3%B3n%20con%20Bolitas%20%F0%9F%92%9B" target="_blank">Ver 💛</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- A PEDIDO -->
+      <div class="product-card" data-cat="pedido">
+        <div style="height:200px;background:linear-gradient(135deg,#1a0840,#0f2626);display:flex;align-items:center;justify-content:center;font-size:3rem;">🎨</div>
+        <div class="card-body">
+          <span class="p-tag">A Pedido 🌙</span>
+          <h3 class="p-title">Diseño Personalizado</h3>
+          <p class="p-desc">Tu idea hecha realidad a mano · consultanos sin compromiso</p>
+          <div class="p-footer">
+            <span class="p-price">A consultar</span>
+            <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Quiero%20consultar%20por%20un%20dise%C3%B1o%20personalizado%20%F0%9F%8E%A8" target="_blank">Ver 🎨</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-icon">🦋✨🧜‍♀️</div>
+    <h3>¿Te enamoraste de algo?</h3>
+    <p>Pedidos especiales y diseños únicos<br>Consultanos por métodos de entrega</p>
+    <div class="chips">
+      <a class="chip" href="https://wa.me/59898458675" target="_blank">📱 WhatsApp</a>
+      <a class="chip" href="https://www.instagram.com/_fantasia_artesana_" target="_blank">📸 Instagram</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Destellos dorados
+(function() {
+  const c = document.getElementById('dust');
+  const cols = ['#8a4fff','#4ecdc4','#c9a84c','#b388ff','#64e8e0','#f0d080'];
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    const sz = Math.random() * 3 + 1;
+    const col = cols[Math.floor(Math.random() * cols.length)];
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;background:${col};box-shadow:0 0 ${sz*2}px ${col};--d:${(Math.random()*5+2).toFixed(1)}s;--o:${(Math.random()*.7+.3).toFixed(2)};animation-delay:${(Math.random()*7).toFixed(1)}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// Carrusel
+function mover(btn, dir) {
+  const carousel = btn.closest('.carousel');
+  const track = carousel.querySelector('.carousel-track');
+  const imgs = track.querySelectorAll('img');
+  const dots = carousel.querySelectorAll('.cdot');
+  let idx = parseInt(carousel.dataset.idx) || 0;
+  idx = (idx + dir + imgs.length) % imgs.length;
+  carousel.dataset.idx = idx;
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('on', i === idx));
+}
+
+// Filtros
+function filtrar(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.featured-card, .product-card').forEach(c => {
+    c.classList.toggle('hidden', cat !== 'todos' && c.dataset.cat !== cat);
+  });
+}
+</script>
+</body>
+           </html>
+           
