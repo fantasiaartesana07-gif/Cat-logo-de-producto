@@ -11,16 +11,18 @@
   /* FONDO CÓSMICO ANIMADO (Nebulosa mística que respira) */
   body {
     font-family: 'Nunito', sans-serif;
-    background: linear-gradient(125deg, #071212, #0d1a1a, #130a21, #0a1818);
-    background-size: 300% 300%;
-    animation: nebulaBackground 20s ease infinite;
+    background: linear-gradient(125deg, #071212, #130a21, #0a1818, #1a0828, #071a14, #0d1a2a, #0f0a1e);
+    background-size: 400% 400%;
+    animation: nebulaBackground 18s ease infinite;
     color: #f0ece4;
     min-height: 100vh;
     overflow-x: hidden;
   }
   @keyframes nebulaBackground {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%   { background-position: 0% 50%; }
+    25%  { background-position: 50% 100%; }
+    50%  { background-position: 100% 50%; }
+    75%  { background-position: 50% 0%; }
     100% { background-position: 0% 50%; }
   }
 
@@ -78,13 +80,51 @@
     font-family: 'Cinzel', serif;
     font-size: clamp(1.5rem, 5.5vw, 2.4rem);
     letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px;
-    background: linear-gradient(90deg, #8a4fff, #4ecdc4, #c9a84c, #8a4fff);
-    background-size: 200% auto;
+    background: linear-gradient(90deg, #8a4fff, #4ecdc4, #f9d76b, #ff85c8, #4ecdc4, #8a4fff);
+    background-size: 300% auto;
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    animation: textShimmer 6s linear infinite;
+    animation: textShimmer 4s linear infinite;
   }
   @keyframes textShimmer {
-    to { background-position: 200% center; }
+    to { background-position: 300% center; }
+  }
+
+  /* EMOJI ANIMADO EN HEADER */
+  .header-emoji {
+    display: inline-block;
+    font-size: 1.6rem;
+    animation: emojiFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(138,79,255,0.7));
+  }
+  @keyframes emojiFloat {
+    0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
+    50% { transform: translateY(-6px) rotate(5deg) scale(1.15); }
+  }
+
+  /* SEPARADORES DECORATIVOS */
+  .section-divider {
+    display: flex; align-items: center; gap: 12px;
+    justify-content: center; margin: 0.5rem 1rem 1.5rem;
+    padding: 0 1rem;
+  }
+  .section-divider-line {
+    flex: 1; height: 1px; max-width: 200px;
+    background: linear-gradient(90deg, transparent, rgba(138,79,255,0.5), rgba(78,205,196,0.5), transparent);
+    animation: linePulse 3s ease-in-out infinite;
+  }
+  @keyframes linePulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  .section-divider-icon {
+    font-size: 0.9rem;
+    animation: iconSpin 4s linear infinite;
+    filter: drop-shadow(0 0 5px rgba(201,168,76,0.8));
+    color: #c9a84c;
+  }
+  @keyframes iconSpin {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.3) rotate(180deg); }
   }
 
   .header p { font-size: clamp(.8rem, 2vw, .98rem); color: #9bcfcb; font-style: italic; letter-spacing: 1px; }
@@ -155,11 +195,22 @@
     display: flex; flex-direction: column;
     box-shadow: 0 6px 20px rgba(0,0,0,.4);
     transition: transform .3s cubic-bezier(0.175, 0.885, 0.32, 1.2), box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
   }
+  .product-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(138,79,255,0.08), rgba(78,205,196,0.08));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .product-card:hover::after { opacity: 1; }
   .product-card:hover { 
-    transform: translateY(-7px); 
-    border-color: rgba(138,79,255,0.4);
-    box-shadow: 0 12px 25px rgba(138,79,255,.2), 0 12px 25px rgba(78,205,196,.1); 
+    transform: translateY(-8px) scale(1.01); 
+    border-color: rgba(138,79,255,0.6);
+    box-shadow: 0 16px 35px rgba(138,79,255,.3), 0 8px 20px rgba(78,205,196,.15), 0 0 0 1px rgba(138,79,255,0.1); 
   }
 
   /* CARRUSELES FLUIDOS */
@@ -201,8 +252,16 @@
     color: #4ecdc4; padding: .45rem .95rem; border-radius: 9px;
     font-size: clamp(.72rem, 1.8vw, .82rem); font-weight: 700;
     text-decoration: none; transition: all .25s ease; white-space: nowrap;
+    position: relative; overflow: hidden;
   }
-  .btn-buy:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 0 15px rgba(78,205,196,0.5); transform: translateY(-1px); }
+  .btn-buy::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, #4ecdc4, #8a4fff);
+    opacity: 0; transition: opacity 0.25s ease;
+  }
+  .btn-buy:hover::before { opacity: 1; }
+  .btn-buy:hover { color: #fff; box-shadow: 0 0 20px rgba(78,205,196,0.6), 0 0 40px rgba(78,205,196,0.2); transform: translateY(-2px) scale(1.04); border-color: transparent; }
+  .btn-buy span, .btn-buy { position: relative; z-index: 1; }
 
   .badge { font-size: .63rem; padding: .2rem .55rem; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px; }
   .b-pop { background: #1a1800; color: #c9a84c; border: 1px solid rgba(201,168,76,.4); }
@@ -213,8 +272,15 @@
     color: #c084fc; padding: .45rem .95rem; border-radius: 9px;
     font-size: clamp(.72rem,1.8vw,.82rem); font-weight: 700;
     cursor: pointer; transition: all .25s ease; white-space: nowrap; font-family: 'Nunito', sans-serif;
+    position: relative; overflow: hidden;
   }
-  .btn-ver:hover { background: #8a4fff; color: #fff; box-shadow: 0 0 15px rgba(138,79,255,0.5); transform: translateY(-1px); }
+  .btn-ver::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, #8a4fff, #c084fc);
+    opacity: 0; transition: opacity 0.25s ease;
+  }
+  .btn-ver:hover::before { opacity: 1; }
+  .btn-ver:hover { color: #fff; box-shadow: 0 0 20px rgba(138,79,255,0.6), 0 0 40px rgba(138,79,255,0.2); transform: translateY(-2px) scale(1.04); border-color: transparent; }
 
   /* FOOTER CON AURAS */
   .footer { text-align: center; padding: 3rem 1.5rem 2rem; margin-top: 1.5rem; background: linear-gradient(to top, rgba(7,15,15,0.9), transparent); }
@@ -287,7 +353,7 @@
 
   <div class="header">
     <img class="logo2-img" src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/logo2.jpg" alt="Logo Fantasía Artesana">
-    <h1>Fantasía Artesana</h1>
+    <h1>✨ Fantasía Artesana ✨</h1>
     <p>Hecho con amor · Hecho a mano</p>
     <div class="slogan">Donde el destino y las manos se encuentran para crear magia</div>
     <div class="divider">
@@ -307,6 +373,11 @@
   </div>
 
   <div class="catalog-wrap">
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <span class="section-divider-icon">✦</span>
+      <div class="section-divider-line"></div>
+    </div>
     <div class="grid" id="grid">
 
       <div class="featured-card reveal-card" data-cat="deco">
@@ -680,6 +751,12 @@
       </div>
 
     </div>
+  </div>
+
+  <div class="section-divider" style="margin-top: 1rem;">
+    <div class="section-divider-line"></div>
+    <span class="section-divider-icon">🌸</span>
+    <div class="section-divider-line"></div>
   </div>
 
   <div class="footer">
