@@ -301,6 +301,42 @@
 
   .hidden { display: none !important; }
 
+  /* HUMAREDA DE ENTRADA */
+  .smoke-screen {
+    position: fixed; inset: 0; z-index: 9998;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .smoke-layer {
+    position: absolute; left: -10%; width: 120%;
+    background: radial-gradient(ellipse at center, rgba(138,79,255,0.55) 0%, rgba(78,205,196,0.3) 40%, rgba(7,18,18,0.9) 100%);
+    animation: smokeRise var(--dur, 1.8s) ease-in forwards;
+    filter: blur(18px);
+    transform-origin: top center;
+  }
+  .smoke-layer:nth-child(1) { height: 110%; top: 0; --dur: 1.6s; animation-delay: 0s; background: radial-gradient(ellipse at 30% 50%, rgba(138,79,255,0.6) 0%, rgba(10,24,24,0.95) 70%); }
+  .smoke-layer:nth-child(2) { height: 110%; top: 0; --dur: 2s;   animation-delay: 0.15s; background: radial-gradient(ellipse at 70% 40%, rgba(78,205,196,0.5) 0%, rgba(13,10,30,0.9) 70%); }
+  .smoke-layer:nth-child(3) { height: 110%; top: 0; --dur: 1.8s; animation-delay: 0.05s; background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.35) 0%, rgba(7,18,18,0.85) 65%); }
+
+  @keyframes smokeRise {
+    0%   { transform: translateY(110%) scaleY(1); opacity: 1; }
+    30%  { opacity: 1; }
+    100% { transform: translateY(0%) scaleY(1); opacity: 0; }
+  }
+
+  /* DESTELLOS EN MODAL */
+  .modal-sparkle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10;
+    animation: modalSparkleAnim var(--d, 0.9s) ease-out forwards;
+  }
+  @keyframes modalSparkleAnim {
+    0%   { opacity: 1; transform: scale(1.2) translate(0,0); }
+    100% { opacity: 0; transform: scale(0.1) translate(var(--mx,0px), var(--my,0px)); }
+  }
+
   /* MODAL DE FOTOS CRISTAL (GLASSMORPHISM MÁGICO) */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(5,10,10,.88);
@@ -348,6 +384,13 @@
 <body>
 
 <div class="fairy-dust" id="dust"></div>
+
+<!-- HUMAREDA DE ENTRADA -->
+<div class="smoke-screen" id="smokeScreen">
+  <div class="smoke-layer"></div>
+  <div class="smoke-layer"></div>
+  <div class="smoke-layer"></div>
+</div>
 
 <div class="page">
 
@@ -890,7 +933,37 @@ function triggerButtonExplosion(clickEvent) {
 }
 
 
-// Controles del catálogo e interfaces
+// HUMAREDA DE ENTRADA — se elimina al terminar la animación
+(function() {
+  const smoke = document.getElementById('smokeScreen');
+  if (!smoke) return;
+  // La capa más lenta dura 2s + 0.15s delay = ~2.15s total
+  setTimeout(() => {
+    smoke.style.transition = 'opacity 0.4s ease';
+    smoke.style.opacity = '0';
+    setTimeout(() => smoke.remove(), 400);
+  }, 2000);
+})();
+
+// DESTELLOS EN MODAL al abrir
+function spawnModalSparkles(container) {
+  const modalCols = ['#8a4fff','#4ecdc4','#c9a84c','#ff85c8','#ffffff','#c084fc'];
+  const rect = container.getBoundingClientRect();
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('div');
+    s.className = 'modal-sparkle';
+    const sz = Math.random() * 6 + 3;
+    const col = modalCols[Math.floor(Math.random() * modalCols.length)];
+    const x = Math.random() * rect.width;
+    const y = Math.random() * rect.height * 0.5;
+    const mx = (Math.random() * 160 - 80) + 'px';
+    const my = (Math.random() * 160 - 80) + 'px';
+    const dur = (Math.random() * 0.6 + 0.6).toFixed(2) + 's';
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${x}px;top:${y}px;background:${col};box-shadow:0 0 ${sz*3}px ${col};--d:${dur};--mx:${mx};--my:${my};`;
+    container.appendChild(s);
+    setTimeout(() => s.remove(), parseFloat(dur) * 1000 + 100);
+  }
+}
 function mover(btn, dir) {
   const carousel = btn.closest('.carousel');
   const track = carousel.querySelector('.carousel-track');
@@ -942,6 +1015,8 @@ function abrirModal(titulo, desc, fotos, clickEvent) {
   setTimeout(() => {
     modalEl.style.opacity = '1';
     document.body.classList.add('modal-open');
+    const box = modalEl.querySelector('.modal-box');
+    if (box) spawnModalSparkles(box);
   }, 10);
 }
 
