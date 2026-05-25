@@ -854,7 +854,7 @@ function createInteractiveSparkle(x, y, isExplosion = false) {
   const s = document.createElement('div');
   s.className = 'interactive-sparkle';
   
-  const sz = Math.random() * 4 + 2; 
+  const sz = Math.random() * 7 + 4;
   const col = cols[Math.floor(Math.random() * cols.length)];
   const duration = (Math.random() * 0.7 + 0.5).toFixed(2) + 's';
   
@@ -866,7 +866,7 @@ function createInteractiveSparkle(x, y, isExplosion = false) {
     width: ${sz}px; height: ${sz}px;
     left: ${x - sz/2}px; top: ${y - sz/2}px;
     background: ${col};
-    box-shadow: 0 0 ${sz * 3}px ${col}, 0 0 ${sz * 6}px ${col};
+    box-shadow: 0 0 ${sz * 4}px ${col}, 0 0 ${sz * 8}px ${col}, 0 0 ${sz * 14}px ${col};
     --d: ${duration}; --mx: ${moveX}; --my: ${moveY};
   `;
   
