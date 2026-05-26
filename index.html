@@ -38,20 +38,11 @@
 
   body {
     font-family: 'Nunito', sans-serif;
-    background: var(--body-bg-grad);
-    background-size: 400% 400%;
-    animation: nebulaBackground 18s ease infinite;
+    background: #020d18;
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
-    transition: background 0.5s ease, color 0.4s ease;
-  }
-  @keyframes nebulaBackground {
-    0%   { background-position: 0% 50%; }
-    25%  { background-position: 50% 100%; }
-    50%  { background-position: 100% 50%; }
-    75%  { background-position: 50% 0%; }
-    100% { background-position: 0% 50%; }
+    transition: color 0.4s ease;
   }
   10%  { opacity: var(--max-op, 0.6); }
     80%  { opacity: var(--max-op, 0.5); }
@@ -78,10 +69,28 @@
     50%     { opacity: 0.9; box-shadow: 0 0 12px var(--col,#4ecdc4), 0 0 24px var(--col,#4ecdc4); }
   }
 
-  /* ========= DESTELLOS DE FONDO ========= */
+  /* ========= NEBULOSAS DE FONDO ========= */
   .fairy-dust { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:-1; overflow:hidden; }
-  .sparkle { position:absolute; border-radius:50%; animation: blink var(--d,3s) ease-in-out infinite; opacity:0; }
-  @keyframes blink { 0%,100%{opacity:0;transform:scale(.5) rotate(0deg)} 50%{opacity:var(--o,.9);transform:scale(1.4) rotate(180deg)} }
+  .nebula-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(var(--blur, 60px));
+    opacity: 0;
+    animation: nebulaFloat var(--nd, 20s) ease-in-out infinite alternate,
+               nebulaFade  var(--nf, 12s) ease-in-out infinite;
+    animation-delay: var(--ndelay, 0s);
+    will-change: transform, opacity;
+  }
+  @keyframes nebulaFloat {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(var(--nx1, 40px), var(--ny1, -30px)) scale(1.08); }
+    66%  { transform: translate(var(--nx2, -25px), var(--ny2, 20px)) scale(0.95); }
+    100% { transform: translate(var(--nx3, 30px), var(--ny3, -15px)) scale(1.05); }
+  }
+  @keyframes nebulaFade {
+    0%,100% { opacity: 0.04; }
+    50%     { opacity: var(--nop, 0.13); }
+  }
 
   .interactive-sparkle {
     position: absolute; border-radius: 50%; pointer-events: none; z-index: 9999; opacity: 1;
@@ -533,16 +542,6 @@
   .featured-card:hover .magic-border { opacity:1; animation: rotateBorder 1.8s linear infinite; }
   @keyframes rotateBorder { to { --angle: 360deg; } }
   @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
-
-  /* ========= PARTÍCULAS HOVER TARJETA ========= */
-  .card-particle {
-    position:absolute; border-radius:50%; pointer-events:none; z-index:10;
-    animation: cardParticleFly var(--cpd,0.9s) ease-out forwards;
-  }
-  @keyframes cardParticleFly {
-    0%  { opacity:1; transform: translate(0,0) scale(1.2); }
-    100%{ opacity:0; transform: translate(var(--cpx,0px), var(--cpy,-40px)) scale(0.1); }
-  }
 
 </style>
 </head>
@@ -1102,19 +1101,36 @@
   }
 })();
 
-// ========= DESTELLOS FONDO =========
+// ========= NEBULOSAS DE FONDO =========
 const cols = ['#8a4fff','#4ecdc4','#c9a84c','#b388ff','#64e8e0','#f0d080'];
 const c = document.getElementById('dust');
 
 (function() {
-  for (let i = 0; i < 60; i++) {
-    const s = document.createElement('div');
-    s.className = 'sparkle';
-    const sz = Math.random() * 3 + 1;
-    const col = cols[Math.floor(Math.random() * cols.length)];
-    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;background:${col};box-shadow:0 0 ${sz*2}px ${col};--d:${(Math.random()*5+2).toFixed(1)}s;--o:${(Math.random()*.7+.3).toFixed(2)};animation-delay:${(Math.random()*7).toFixed(1)}s;`;
-    c.appendChild(s);
-  }
+  const nebulas = [
+    { col:'#8a4fff', size:420, left:10,  top:15,  blur:90,  op:0.14, nd:28, nf:14, delay:0,    nx1: 60, ny1:-40, nx2:-30, ny2: 50, nx3: 40, ny3:-20 },
+    { col:'#4ecdc4', size:380, left:65,  top:5,   blur:80,  op:0.12, nd:24, nf:16, delay:-5,   nx1:-50, ny1: 30, nx2: 40, ny2:-35, nx3:-20, ny3: 25 },
+    { col:'#c9a84c', size:300, left:80,  top:55,  blur:70,  op:0.10, nd:32, nf:18, delay:-9,   nx1:-40, ny1:-30, nx2: 30, ny2: 40, nx3:-25, ny3:-15 },
+    { col:'#ff85c8', size:350, left:20,  top:65,  blur:85,  op:0.11, nd:22, nf:13, delay:-3,   nx1: 45, ny1: 35, nx2:-35, ny2:-25, nx3: 20, ny3: 30 },
+    { col:'#b388ff', size:460, left:45,  top:35,  blur:100, op:0.09, nd:36, nf:20, delay:-12,  nx1:-55, ny1: 20, nx2: 35, ny2:-45, nx3:-15, ny3: 30 },
+    { col:'#64e8e0', size:280, left:5,   top:80,  blur:65,  op:0.10, nd:20, nf:11, delay:-7,   nx1: 35, ny1:-25, nx2:-20, ny2: 30, nx3: 25, ny3:-20 },
+    { col:'#8a4fff', size:320, left:88,  top:25,  blur:75,  op:0.09, nd:26, nf:15, delay:-2,   nx1:-45, ny1: 40, nx2: 25, ny2:-30, nx3:-30, ny3: 20 },
+    { col:'#4ecdc4', size:400, left:50,  top:80,  blur:90,  op:0.08, nd:30, nf:17, delay:-15,  nx1: 30, ny1:-50, nx2:-40, ny2: 25, nx3: 20, ny3:-35 },
+  ];
+  nebulas.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'nebula-orb';
+    el.style.cssText = `
+      width:${n.size}px; height:${n.size}px;
+      left:${n.left}%; top:${n.top}%;
+      background: radial-gradient(circle, ${n.col} 0%, transparent 70%);
+      --blur:${n.blur}px; --nop:${n.op};
+      --nd:${n.nd}s; --nf:${n.nf}s; --ndelay:${n.delay}s;
+      --nx1:${n.nx1}px; --ny1:${n.ny1}px;
+      --nx2:${n.nx2}px; --ny2:${n.ny2}px;
+      --nx3:${n.nx3}px; --ny3:${n.ny3}px;
+    `;
+    c.appendChild(el);
+  });
 })();
 
 // ========= DESTELLOS INTERACTIVOS =========
@@ -1489,45 +1505,6 @@ function modalIr(i) {
     `;
     layer.appendChild(el);
   }
-})();
-
-// ========= PARTÍCULAS HOVER TARJETA =========
-(function() {
-  const pCols = ['#8a4fff','#4ecdc4','#f9d76b','#ff85c8','#c084fc','#ffffff','#64e8e0'];
-
-  function burst(card) {
-    const rect = card.getBoundingClientRect();
-    for (let i = 0; i < 18; i++) {
-      const p   = document.createElement('div');
-      p.className = 'card-particle';
-      const sz  = (Math.random()*6+3).toFixed(1);
-      const col = pCols[Math.floor(Math.random()*pCols.length)];
-      const dur = (0.6+Math.random()*0.7).toFixed(2)+'s';
-      const cpx = ((Math.random()-0.5)*100).toFixed(0)+'px';
-      const cpy = (-(30+Math.random()*60)).toFixed(0)+'px';
-      const rx  = Math.random()*rect.width;
-      const ry  = Math.random()*rect.height*0.6;
-      p.style.cssText = `width:${sz}px;height:${sz}px;left:${rx}px;top:${ry}px;background:${col};box-shadow:0 0 ${parseFloat(sz)*3}px ${col};--cpd:${dur};--cpx:${cpx};--cpy:${cpy};`;
-      card.appendChild(p);
-      setTimeout(()=>p.remove(), parseFloat(dur)*1000+100);
-    }
-  }
-
-  document.querySelectorAll('.product-card, .featured-card').forEach(card => {
-    let active = false;
-
-    card.addEventListener('mouseenter', function() {
-      if (active) return; active = true;
-      burst(card);
-      setTimeout(()=>{ active=false; }, 800);
-    });
-
-    card.addEventListener('touchstart', function() {
-      if (active) return; active = true;
-      burst(card);
-      setTimeout(()=>{ active=false; }, 800);
-    }, { passive: true });
-  });
 })();
 
 </script>
