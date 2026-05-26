@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,15 +8,69 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* FONDO CÓSMICO ANIMADO (Nebulosa mística que respira) */
+  /* ========= TEMA VARIABLES ========= */
+  [data-theme="dark"] {
+    --bg1: #020d18; --bg2: #051e2e; --bg3: #073544; --bg4: #04231a;
+    --card-bg: rgba(15, 32, 32, 0.75);
+    --card-border: rgba(78,205,196,.18);
+    --text-primary: #f0ece4;
+    --text-secondary: #9bcfcb;
+    --text-gold: #c9a84c;
+    --header-bg: rgba(10,31,31,0.6);
+    --filter-bg: rgba(13, 34, 34, 0.6);
+    --filter-border: rgba(78,205,196,.25);
+    --filter-color: #9bcfcb;
+    --search-bg: rgba(13,34,34,0.7);
+    --search-border: rgba(78,205,196,0.3);
+    --modal-overlay: rgba(5,10,10,.88);
+    --modal-bg: rgba(15, 32, 32, 0.9);
+    --carousel-bg: #0a1515;
+    --footer-bg: linear-gradient(to top, rgba(7,15,15,0.9), transparent);
+    --chip-bg: rgba(13, 34, 34, 0.7);
+    --bubble-color1: rgba(78,205,196,0.12);
+    --bubble-color2: rgba(138,79,255,0.10);
+    --bubble-color3: rgba(201,168,76,0.08);
+    --scroll-btn-bg: rgba(13,26,26,.9);
+    --sort-bg: rgba(13,34,34,0.85);
+    --badge-new-bg: linear-gradient(135deg,#8a4fff,#c084fc);
+    --body-bg-grad: linear-gradient(125deg, #020d18, #051e2e, #073544, #04231a, #062a3a, #031520, #083028);
+  }
+  [data-theme="light"] {
+    --bg1: #e8f4f8; --bg2: #d4edf5; --bg3: #c8e8f0; --bg4: #daf0e8;
+    --card-bg: rgba(255,255,255,0.85);
+    --card-border: rgba(78,150,196,.25);
+    --text-primary: #1a3040;
+    --text-secondary: #3a7080;
+    --text-gold: #8a6010;
+    --header-bg: rgba(200,235,245,0.7);
+    --filter-bg: rgba(220,240,248,0.8);
+    --filter-border: rgba(78,150,196,.35);
+    --filter-color: #2a6070;
+    --search-bg: rgba(255,255,255,0.9);
+    --search-border: rgba(78,150,196,0.4);
+    --modal-overlay: rgba(20,40,60,.75);
+    --modal-bg: rgba(240,250,255,0.97);
+    --carousel-bg: #d0eaf5;
+    --footer-bg: linear-gradient(to top, rgba(190,225,240,0.9), transparent);
+    --chip-bg: rgba(210,238,250,0.9);
+    --bubble-color1: rgba(78,180,196,0.18);
+    --bubble-color2: rgba(100,80,200,0.12);
+    --bubble-color3: rgba(180,140,40,0.12);
+    --scroll-btn-bg: rgba(200,235,248,.95);
+    --sort-bg: rgba(220,240,252,0.95);
+    --badge-new-bg: linear-gradient(135deg,#7040dd,#a060e0);
+    --body-bg-grad: linear-gradient(125deg, #d0ecf5, #c8e5f0, #d5f0e8, #c4e8f5, #d0ecfa, #d8f0ec, #c8eaf5);
+  }
+
   body {
     font-family: 'Nunito', sans-serif;
-    background: linear-gradient(125deg, #071212, #130a21, #0a1818, #1a0828, #071a14, #0d1a2a, #0f0a1e);
+    background: var(--body-bg-grad);
     background-size: 400% 400%;
     animation: nebulaBackground 18s ease infinite;
-    color: #f0ece4;
+    color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background 0.5s ease, color 0.4s ease;
   }
   @keyframes nebulaBackground {
     0%   { background-position: 0% 50%; }
@@ -26,19 +80,52 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* DESTELLOS DE FONDO */
+  /* ========= BURBUJAS FLOTANTES ========= */
+  .bubbles-layer {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    animation: bubbleRise var(--dur, 8s) ease-in infinite;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
+  }
+  @keyframes bubbleRise {
+    0%   { opacity: 0; transform: translateY(0) translateX(0) scale(0.5); }
+    10%  { opacity: var(--max-op, 0.6); }
+    80%  { opacity: var(--max-op, 0.5); }
+    100% { opacity: 0; transform: translateY(-110vh) translateX(var(--drift, 20px)) scale(1.1); }
+  }
+
+  /* ========= PLANCTON BRILLANTE ========= */
+  .plankton-layer {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .plankton {
+    position: absolute;
+    border-radius: 50%;
+    animation: planktonDrift var(--dur,6s) ease-in-out infinite alternate, planktonPulse var(--pdur,3s) ease-in-out infinite;
+    animation-delay: var(--delay,0s);
+  }
+  @keyframes planktonDrift {
+    0%   { transform: translate(0,0) rotate(0deg); }
+    100% { transform: translate(var(--dx,30px), var(--dy,-20px)) rotate(180deg); }
+  }
+  @keyframes planktonPulse {
+    0%,100% { opacity: 0.15; box-shadow: 0 0 4px var(--col,#4ecdc4); }
+    50%     { opacity: 0.9; box-shadow: 0 0 12px var(--col,#4ecdc4), 0 0 24px var(--col,#4ecdc4); }
+  }
+
+  /* ========= DESTELLOS DE FONDO ========= */
   .fairy-dust { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
   .sparkle { position:absolute; border-radius:50%; animation: blink var(--d,3s) ease-in-out infinite; opacity:0; }
   @keyframes blink { 0%,100%{opacity:0;transform:scale(.5) rotate(0deg)} 50%{opacity:var(--o,.9);transform:scale(1.4) rotate(180deg)} }
 
-  /* DESTELLOS INTERACTIVOS (ESTELA Y ESTALLIDOS) */
   .interactive-sparkle {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 1;
-    transform: scale(1);
+    position: absolute; border-radius: 50%; pointer-events: none; z-index: 9999; opacity: 1;
     animation: fadeOutSparkle var(--d, 1.2s) forwards cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   @keyframes fadeOutSparkle {
@@ -46,36 +133,28 @@
     100% { opacity: 0; transform: scale(0.1) translate(var(--mx, 0px), var(--my, 0px)); }
   }
 
-  /* EFECTO REVELACIÓN FLUIDO */
   .reveal-card {
-    opacity: 0;
-    transform: translateY(15px);
-    will-change: opacity, transform;
+    opacity: 0; transform: translateY(15px); will-change: opacity, transform;
     transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   }
-  .reveal-card.revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .reveal-card.revealed { opacity: 1; transform: translateY(0); }
 
   .page { position: relative; z-index: 1; padding-bottom: 3rem; }
 
-  /* HEADER CON EFECTO DE TEXTO ESTRELLA (SHIMMER) */
+  /* ========= HEADER ========= */
   .header {
-    padding: 2.5rem 1.5rem 1.5rem;
-    text-align: center;
-    background: linear-gradient(180deg, rgba(10,31,31,0.6) 0%, transparent 100%);
+    padding: 2.5rem 1.5rem 1.5rem; text-align: center;
+    background: var(--header-bg);
+    transition: background 0.4s ease;
   }
   .logo2-img {
-    width: 115px; height: 115px;
-    border-radius: 50%; object-fit: cover;
+    width: 115px; height: 115px; border-radius: 50%; object-fit: cover;
     border: 2px solid rgba(78,205,196,.6);
     box-shadow: 0 0 25px rgba(78,205,196,.4), 0 0 50px rgba(138,79,255,.25);
     margin-bottom: 12px;
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   .logo2-img:hover { transform: scale(1.08) rotate(4deg); }
-  
   .header h1 {
     font-family: 'Cinzel', serif;
     font-size: clamp(1.5rem, 5.5vw, 2.4rem);
@@ -85,14 +164,9 @@
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     animation: textShimmer 4s linear infinite;
   }
-  @keyframes textShimmer {
-    to { background-position: 300% center; }
-  }
-
-  /* EMOJI ANIMADO EN HEADER */
+  @keyframes textShimmer { to { background-position: 300% center; } }
   .header-emoji {
-    display: inline-block;
-    font-size: 1.6rem;
+    display: inline-block; font-size: 1.6rem;
     animation: emojiFloat 3s ease-in-out infinite;
     filter: drop-shadow(0 0 8px rgba(138,79,255,0.7));
   }
@@ -100,64 +174,184 @@
     0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
     50% { transform: translateY(-6px) rotate(5deg) scale(1.15); }
   }
-
-  /* SEPARADORES DECORATIVOS */
-  .section-divider {
-    display: flex; align-items: center; gap: 12px;
-    justify-content: center; margin: 0.5rem 1rem 1.5rem;
-    padding: 0 1rem;
-  }
-  .section-divider-line {
-    flex: 1; height: 1px; max-width: 200px;
-    background: linear-gradient(90deg, transparent, rgba(138,79,255,0.5), rgba(78,205,196,0.5), transparent);
-    animation: linePulse 3s ease-in-out infinite;
-  }
-  @keyframes linePulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-  .section-divider-icon {
-    font-size: 0.9rem;
-    animation: iconSpin 4s linear infinite;
-    filter: drop-shadow(0 0 5px rgba(201,168,76,0.8));
-    color: #c9a84c;
-  }
-  @keyframes iconSpin {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.3) rotate(180deg); }
-  }
-
-  .header p { font-size: clamp(.8rem, 2vw, .98rem); color: #9bcfcb; font-style: italic; letter-spacing: 1px; }
-  .slogan { font-size: clamp(.7rem, 1.8vw, .85rem); color: #c9a84c; letter-spacing: 1px; margin-top: 5px; opacity: .9; }
-  
-  .divider { display:flex; align-items:center; gap:10px; justify-content:center; margin: 14px 0 0; }
+  .section-divider { display:flex; align-items:center; gap:12px; justify-content:center; margin:0.5rem 1rem 1.5rem; padding:0 1rem; }
+  .section-divider-line { flex:1; height:1px; max-width:200px; background:linear-gradient(90deg,transparent,rgba(138,79,255,0.5),rgba(78,205,196,0.5),transparent); animation:linePulse 3s ease-in-out infinite; }
+  @keyframes linePulse { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+  .section-divider-icon { font-size:.9rem; animation:iconSpin 4s linear infinite; filter:drop-shadow(0 0 5px rgba(201,168,76,0.8)); color:#c9a84c; }
+  @keyframes iconSpin { 0%,100%{transform:scale(1) rotate(0deg);} 50%{transform:scale(1.3) rotate(180deg);} }
+  .header p { font-size: clamp(.8rem, 2vw, .98rem); color: var(--text-secondary); font-style: italic; letter-spacing: 1px; }
+  .slogan { font-size: clamp(.7rem, 1.8vw, .85rem); color: var(--text-gold); letter-spacing: 1px; margin-top: 5px; opacity: .9; }
+  .divider { display:flex; align-items:center; gap:10px; justify-content:center; margin:14px 0 0; }
   .divider-line { height:1px; width:65px; }
   .divider-line.l { background: linear-gradient(to right, transparent, #8a4fff); }
   .divider-line.r { background: linear-gradient(to left, transparent, #4ecdc4); }
 
-  /* FILTROS ESTILO DIJE FLOTANTE */
-  .nav-filters { display:flex; gap:.6rem; padding: 1rem 1rem 0; overflow-x:auto; scrollbar-width:none; margin-bottom:2rem; }
-  .nav-filters::-webkit-scrollbar { display:none; }
-  .filter-btn {
-    background: rgba(13, 34, 34, 0.6); border: 1px solid rgba(78,205,196,.25);
-    backdrop-filter: blur(4px);
-    color: #9bcfcb; padding: .5rem 1.1rem; border-radius: 20px;
-    font-size: clamp(.75rem, 2vw, .88rem); font-weight: 700; cursor: pointer;
-    transition: all .3s ease; white-space: nowrap; font-family: 'Nunito', sans-serif;
+  /* ========= BARRA DE BÚSQUEDA ========= */
+  .search-wrap {
+    max-width: 480px; margin: 0 auto 0.5rem; padding: 0 1rem;
+    position: relative;
   }
-  .filter-btn:hover { background: rgba(78,205,196,.15); border-color: #4ecdc4; transform: translateY(-2px); }
+  .search-input {
+    width: 100%;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    color: var(--text-primary);
+    padding: 0.65rem 1rem 0.65rem 2.8rem;
+    border-radius: 25px;
+    font-size: clamp(.82rem, 2vw, .92rem);
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+  }
+  .search-input::placeholder { color: var(--text-secondary); opacity: 0.65; }
+  .search-input:focus { border-color: #4ecdc4; box-shadow: 0 0 0 3px rgba(78,205,196,0.15); }
+  .search-icon {
+    position: absolute; left: 1.8rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-secondary); font-size: 1rem; pointer-events: none;
+  }
+  .search-clear {
+    position: absolute; right: 1.8rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text-secondary); cursor: pointer;
+    font-size: 1.1rem; opacity: 0; transition: opacity 0.2s;
+    padding: 0; line-height: 1;
+  }
+  .search-clear.visible { opacity: 0.7; }
+  .search-clear:hover { opacity: 1; color: #ef4444; }
+
+  /* ========= TOOLBAR: SORT + MODO ========= */
+  .toolbar {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.5rem 1rem 0; flex-wrap: wrap;
+    max-width: 1200px; margin: 0 auto;
+    justify-content: flex-end;
+  }
+
+  /* ========= LAYOUT CON SIDEBAR ========= */
+  .main-layout {
+    display: flex; gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 0 1rem;
+    align-items: flex-start;
+  }
+
+  /* ========= SIDEBAR DE CATEGORÍAS ========= */
+  .sidebar {
+    width: 190px; min-width: 190px; flex-shrink: 0;
+    position: sticky; top: 1rem;
+  }
+  .sidebar-title {
+    font-family: 'Cinzel', serif;
+    font-size: .78rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-gold); margin-bottom: 0.8rem; padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-filters {
+    display: flex; flex-direction: column; gap: .5rem;
+  }
+  .filter-btn {
+    background: var(--filter-bg); border: 1px solid var(--filter-border);
+    backdrop-filter: blur(4px);
+    color: var(--filter-color); padding: .55rem 1rem; border-radius: 12px;
+    font-size: clamp(.75rem, 1.5vw, .85rem); font-weight: 700; cursor: pointer;
+    transition: all .3s ease; white-space: nowrap; font-family: 'Nunito', sans-serif;
+    display: flex; align-items: center; justify-content: space-between; gap: 5px;
+    width: 100%; text-align: left;
+  }
+  .filter-btn:hover { background: rgba(78,205,196,.15); border-color: #4ecdc4; transform: translateX(3px); }
   .filter-btn.active {
     background: linear-gradient(135deg, #4ecdc4, #8a4fff);
     border-color: transparent; color: #fff;
     box-shadow: 0 4px 15px rgba(78,205,196,.4);
-    transform: translateY(-1px);
+    transform: translateX(2px);
+  }
+  .cat-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.85);
+    border-radius: 10px; font-size: .68rem; font-weight: 700;
+    padding: 0 5px; min-width: 18px; height: 16px;
+    line-height: 1; flex-shrink: 0;
+  }
+  .filter-btn:not(.active) .cat-count {
+    background: rgba(78,205,196,0.2); color: var(--filter-color);
   }
 
-  /* LAYOUT PRINCIPAL */
-  .catalog-wrap { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+  /* Contenido principal (grid) dentro del layout */
+  .catalog-main { flex: 1; min-width: 0; }
 
-  /* REACCIONES MÁGICAS EN LAS TARJETAS (AURA GLOW) */
+  /* Responsive: sidebar arriba en móvil */
+  @media (max-width: 700px) {
+    .main-layout { flex-direction: column; gap: 0.8rem; }
+    .sidebar { width: 100%; min-width: unset; position: static; }
+    .nav-filters { flex-direction: row; flex-wrap: wrap; gap: .4rem; }
+    .filter-btn { width: auto; border-radius: 20px; padding: .45rem .9rem; justify-content: center; }
+    .filter-btn:hover { transform: translateY(-2px); }
+    .filter-btn.active { transform: translateY(-1px); }
+  }
+
+  /* ========= SORT SELECT ========= */
+  .sort-wrap { flex-shrink: 0; }
+  .sort-select {
+    background: var(--sort-bg);
+    border: 1px solid var(--search-border);
+    color: var(--text-primary);
+    padding: .5rem .9rem;
+    border-radius: 20px;
+    font-size: clamp(.72rem, 2vw, .84rem);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+  }
+  .sort-select:hover { border-color: #4ecdc4; }
+
+  /* ========= MODO CLARO/OSCURO ========= */
+  .theme-toggle {
+    flex-shrink: 0;
+    width: 44px; height: 24px;
+    background: rgba(13,34,34,0.6);
+    border: 1px solid rgba(78,205,196,.3);
+    border-radius: 12px; cursor: pointer;
+    position: relative; transition: all 0.4s ease;
+    backdrop-filter: blur(4px);
+    overflow: hidden;
+  }
+  [data-theme="light"] .theme-toggle {
+    background: rgba(180,225,245,0.7);
+    border-color: rgba(78,150,196,.4);
+  }
+  .theme-toggle-thumb {
+    position: absolute; top: 3px; left: 3px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: linear-gradient(135deg, #4ecdc4, #8a4fff);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+  }
+  [data-theme="light"] .theme-toggle-thumb {
+    transform: translateX(20px);
+    background: linear-gradient(135deg, #f9d76b, #ff85c8);
+  }
+  .theme-toggle-label {
+    font-size: .68rem; color: var(--text-secondary); margin-right: 4px;
+    font-weight: 700; white-space: nowrap; align-self: center;
+  }
+  .theme-group { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+
+  /* ========= NO RESULTS ========= */
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center; padding: 3rem 1rem;
+    color: var(--text-secondary); font-size: 1rem;
+    display: none;
+  }
+  .no-results.show { display: block; }
+
+  /* ========= LAYOUT PRINCIPAL ========= */
+  .catalog-wrap { width: 100%; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+
+  /* ========= FEATURED CARD ========= */
   .featured-card {
     grid-column: 1 / -1;
     background: linear-gradient(145deg, rgba(15,38,38,0.85), rgba(26,13,48,0.85));
@@ -167,230 +361,194 @@
     box-shadow: 0 8px 30px rgba(0,0,0,.4);
     display: flex; flex-direction: row;
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative;
   }
-  .featured-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(78,205,196,0.7);
-    box-shadow: 0 12px 35px rgba(78,205,196,.25), 0 12px 35px rgba(138,79,255,.2);
+  [data-theme="light"] .featured-card {
+    background: linear-gradient(145deg, rgba(220,245,250,0.9), rgba(200,220,250,0.9));
+    box-shadow: 0 8px 30px rgba(100,160,200,.2);
   }
-  .featured-card::before {
-    content:''; display:block; width: 4px;
-    background: linear-gradient(180deg, #8a4fff, #4ecdc4, #c9a84c); flex-shrink: 0;
+  .featured-card:hover { transform: translateY(-5px); border-color: rgba(78,205,196,0.7); box-shadow: 0 12px 35px rgba(78,205,196,.25), 0 12px 35px rgba(138,79,255,.2); }
+  .featured-card::before { content:''; display:block; width:4px; background:linear-gradient(180deg,#8a4fff,#4ecdc4,#c9a84c); flex-shrink:0; }
+  @media (max-width:600px) {
+    .featured-card { flex-direction:column; }
+    .featured-card::before { width:100%; height:4px; background:linear-gradient(90deg,#8a4fff,#4ecdc4,#c9a84c); }
   }
-  @media (max-width: 600px) {
-    .featured-card { flex-direction: column; }
-    .featured-card::before { width: 100%; height: 4px; background: linear-gradient(90deg, #8a4fff, #4ecdc4, #c9a84c); }
-  }
+  .featured-carousel { width:340px; min-width:340px; position:relative; }
+  @media (max-width:600px) { .featured-carousel { width:100%; min-width:unset; } }
+  .featured-info { padding:1.5rem; flex:1; display:flex; flex-direction:column; justify-content:center; }
 
-  .featured-carousel { width: 340px; min-width: 340px; position: relative; }
-  @media (max-width: 600px) { .featured-carousel { width: 100%; min-width: unset; } }
-  .featured-info { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-
-  /* PRODUCT CARD CON AURAS DE COLOR */
+  /* ========= PRODUCT CARD ========= */
   .product-card {
-    background: rgba(15, 32, 32, 0.75);
+    background: var(--card-bg);
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(78,205,196,.18);
+    border: 1px solid var(--card-border);
     border-radius: 18px; overflow: hidden;
     display: flex; flex-direction: column;
     box-shadow: 0 6px 20px rgba(0,0,0,.4);
-    transition: transform .3s cubic-bezier(0.175, 0.885, 0.32, 1.2), box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform .3s cubic-bezier(0.175,0.885,0.32,1.2), box-shadow 0.3s ease, border-color 0.3s ease;
     position: relative;
   }
-  .product-card::after {
-    content: '';
-    position: absolute; inset: 0;
-    border-radius: 18px;
-    background: linear-gradient(135deg, rgba(138,79,255,0.08), rgba(78,205,196,0.08));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-  .product-card:hover::after { opacity: 1; }
-  .product-card:hover { 
-    transform: translateY(-8px) scale(1.01); 
-    border-color: rgba(138,79,255,0.6);
-    box-shadow: 0 16px 35px rgba(138,79,255,.3), 0 8px 20px rgba(78,205,196,.15), 0 0 0 1px rgba(138,79,255,0.1); 
-  }
+  [data-theme="light"] .product-card { box-shadow: 0 6px 20px rgba(100,160,200,.15); }
+  .product-card::after { content:''; position:absolute; inset:0; border-radius:18px; background:linear-gradient(135deg,rgba(138,79,255,0.08),rgba(78,205,196,0.08)); opacity:0; transition:opacity 0.3s ease; pointer-events:none; }
+  .product-card:hover::after { opacity:1; }
+  .product-card:hover { transform:translateY(-8px) scale(1.01); border-color:rgba(138,79,255,0.6); box-shadow:0 16px 35px rgba(138,79,255,.3),0 8px 20px rgba(78,205,196,.15); }
 
-  /* CARRUSELES FLUIDOS */
-  .carousel { position: relative; overflow: hidden; background: #0a1515; }
-  .carousel-track { display: flex; transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .carousel-track img { width: 100%; flex-shrink: 0; object-fit: cover; display: block; transition: transform 0.6s ease; }
-  .carousel:hover .carousel-track img { transform: scale(1.04); }
-  .featured-carousel .carousel-track img { height: 320px; }
-  @media (max-width: 600px) { .featured-carousel .carousel-track img { height: 245px; } }
-  .product-card .carousel-track img { height: 205px; }
-  @media (min-width: 900px) { .product-card .carousel-track img { height: 225px; } }
+  /* ========= BADGE NUEVO ========= */
+  .badge-new {
+    position: absolute; top: 10px; left: 10px; z-index: 3;
+    background: var(--badge-new-bg);
+    color: #fff; font-size: .62rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 10px rgba(138,79,255,0.5);
+    animation: badgePop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes badgePop { from{transform:scale(0) rotate(-10deg);} to{transform:scale(1) rotate(0deg);} }
 
+  /* ========= CARRUSELES ========= */
+  .carousel { position:relative; overflow:hidden; background:var(--carousel-bg); }
+  .carousel-track { display:flex; transition:transform .4s cubic-bezier(0.4,0,0.2,1); }
+  .carousel-track img { width:100%; flex-shrink:0; object-fit:cover; display:block; transition:transform 0.6s ease; }
+  .carousel:hover .carousel-track img { transform:scale(1.04); }
+  .featured-carousel .carousel-track img { height:320px; }
+  @media (max-width:600px) { .featured-carousel .carousel-track img { height:245px; } }
+  .product-card .carousel-track img { height:205px; }
+  @media (min-width:900px) { .product-card .carousel-track img { height:225px; } }
   .carousel-btn {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(13,26,26,.75); border: 1px solid rgba(78,205,196,.4);
-    color: #4ecdc4; width: 32px; height: 32px; border-radius: 50%;
-    font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all .2s ease; z-index: 2; backdrop-filter: blur(2px);
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:rgba(13,26,26,.75); border:1px solid rgba(78,205,196,.4);
+    color:#4ecdc4; width:32px; height:32px; border-radius:50%;
+    font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .2s ease; z-index:2; backdrop-filter:blur(2px);
   }
-  .carousel-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 0 12px #4ecdc4; }
-  .carousel-btn.prev { left: 8px; }
-  .carousel-btn.next { right: 8px; }
-  .carousel-dots { display: flex; justify-content: center; gap: 5px; padding: 7px 0 5px; background: #0a1515; }
-  .cdot { width: 6px; height: 6px; border-radius: 50%; background: #2a4040; cursor: pointer; transition: all .2s ease; }
-  .cdot.on { background: #4ecdc4; transform: scale(1.25); box-shadow: 0 0 6px #4ecdc4; }
+  .carousel-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 12px #4ecdc4; }
+  .carousel-btn.prev { left:8px; }
+  .carousel-btn.next { right:8px; }
+  .carousel-dots { display:flex; justify-content:center; gap:5px; padding:7px 0 5px; background:var(--carousel-bg); }
+  .cdot { width:6px; height:6px; border-radius:50%; background:#2a4040; cursor:pointer; transition:all .2s ease; }
+  .cdot.on { background:#4ecdc4; transform:scale(1.25); box-shadow:0 0 6px #4ecdc4; }
 
-  /* DETALLES DE TEXTO */
-  .card-body { padding: 1rem; flex-grow: 1; display: flex; flex-direction: column; }
-  .p-tag { font-size: .68rem; font-weight: 700; text-transform: uppercase; color: #4ecdc4; letter-spacing: 1.2px; margin-bottom: .3rem; }
-  .p-title { font-family: 'Nunito', sans-serif; font-size: clamp(.92rem, 2vw, 1.05rem); font-weight: 700; color: #f0ece4; margin-bottom: .3rem; line-height: 1.35; }
-  .p-desc { font-size: clamp(.74rem, 1.8vw, .82rem); color: #9bcfcb; margin-bottom: .9rem; line-height: 1.45; flex-grow: 1; }
-  .p-footer { display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 8px; margin-top: auto; }
-  .p-footer-left { display: flex; gap: 6px; align-items: flex-end; }
-  .p-price { font-size: clamp(.95rem, 2vw, 1.08rem); font-weight: 700; color: #c9a84c; text-shadow: 0 0 4px rgba(201,168,76,0.2); text-align: right; align-self: flex-end; }
-  
-  /* BOTONES MÁGICOS */
+  /* ========= TEXTO TARJETAS ========= */
+  .card-body { padding:1rem; flex-grow:1; display:flex; flex-direction:column; }
+  .p-tag { font-size:.68rem; font-weight:700; text-transform:uppercase; color:#4ecdc4; letter-spacing:1.2px; margin-bottom:.3rem; }
+  .p-title { font-family:'Nunito',sans-serif; font-size:clamp(.92rem,2vw,1.05rem); font-weight:700; color:var(--text-primary); margin-bottom:.3rem; line-height:1.35; }
+  .p-desc { font-size:clamp(.74rem,1.8vw,.82rem); color:var(--text-secondary); margin-bottom:.9rem; line-height:1.45; flex-grow:1; }
+  .p-footer { display:flex; flex-direction:row; align-items:flex-end; justify-content:space-between; gap:8px; margin-top:auto; }
+  .p-footer-left { display:flex; gap:6px; align-items:flex-end; }
+  .p-price { font-size:clamp(.95rem,2vw,1.08rem); font-weight:700; color:var(--text-gold); text-shadow:0 0 4px rgba(201,168,76,0.2); text-align:right; align-self:flex-end; }
+  .p-price[data-value] { transition: color 0.3s ease; }
+
+  /* ========= BOTONES ========= */
   .btn-buy {
-    background: rgba(78,205,196,.08); border: 1px solid #4ecdc4;
-    color: #4ecdc4; padding: .45rem .95rem; border-radius: 9px;
-    font-size: clamp(.72rem, 1.8vw, .82rem); font-weight: 700;
-    text-decoration: none; transition: all .25s ease; white-space: nowrap;
-    position: relative; overflow: hidden;
+    background:rgba(78,205,196,.08); border:1px solid #4ecdc4;
+    color:#4ecdc4; padding:.45rem .95rem; border-radius:9px;
+    font-size:clamp(.72rem,1.8vw,.82rem); font-weight:700;
+    text-decoration:none; transition:all .25s ease; white-space:nowrap;
+    position:relative; overflow:hidden;
   }
-  .btn-buy::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, #4ecdc4, #8a4fff);
-    opacity: 0; transition: opacity 0.25s ease;
-  }
-  .btn-buy:hover::before { opacity: 1; }
-  .btn-buy:hover { color: #fff; box-shadow: 0 0 20px rgba(78,205,196,0.6), 0 0 40px rgba(78,205,196,0.2); transform: translateY(-2px) scale(1.04); border-color: transparent; }
-  .btn-buy span, .btn-buy { position: relative; z-index: 1; }
-
-  .badge { font-size: .63rem; padding: .2rem .55rem; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px; }
-  .b-pop { background: #1a1800; color: #c9a84c; border: 1px solid rgba(201,168,76,.4); }
-
-  .btn-group { display: flex; flex-direction: column; gap: 6px; }
+  .btn-buy::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#4ecdc4,#8a4fff); opacity:0; transition:opacity 0.25s ease; }
+  .btn-buy:hover::before { opacity:1; }
+  .btn-buy:hover { color:#fff; box-shadow:0 0 20px rgba(78,205,196,0.6),0 0 40px rgba(78,205,196,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
+  .btn-buy span, .btn-buy { position:relative; z-index:1; }
+  .badge { font-size:.63rem; padding:.2rem .55rem; border-radius:6px; font-weight:700; letter-spacing:0.5px; }
+  .b-pop { background:#1a1800; color:#c9a84c; border:1px solid rgba(201,168,76,.4); }
+  [data-theme="light"] .b-pop { background:rgba(255,240,180,0.7); color:#8a6010; }
+  .btn-group { display:flex; flex-direction:column; gap:6px; }
   .btn-ver {
-    background: rgba(138,79,255,.08); border: 1px solid #8a4fff;
-    color: #c084fc; padding: .45rem .95rem; border-radius: 9px;
-    font-size: clamp(.72rem,1.8vw,.82rem); font-weight: 700;
-    cursor: pointer; transition: all .25s ease; white-space: nowrap; font-family: 'Nunito', sans-serif;
-    position: relative; overflow: hidden;
+    background:rgba(138,79,255,.08); border:1px solid #8a4fff;
+    color:#c084fc; padding:.45rem .95rem; border-radius:9px;
+    font-size:clamp(.72rem,1.8vw,.82rem); font-weight:700;
+    cursor:pointer; transition:all .25s ease; white-space:nowrap; font-family:'Nunito',sans-serif;
+    position:relative; overflow:hidden;
   }
-  .btn-ver::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, #8a4fff, #c084fc);
-    opacity: 0; transition: opacity 0.25s ease;
-  }
-  .btn-ver:hover::before { opacity: 1; }
-  .btn-ver:hover { color: #fff; box-shadow: 0 0 20px rgba(138,79,255,0.6), 0 0 40px rgba(138,79,255,0.2); transform: translateY(-2px) scale(1.04); border-color: transparent; }
+  .btn-ver::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#8a4fff,#c084fc); opacity:0; transition:opacity 0.25s ease; }
+  .btn-ver:hover::before { opacity:1; }
+  .btn-ver:hover { color:#fff; box-shadow:0 0 20px rgba(138,79,255,0.6),0 0 40px rgba(138,79,255,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
 
-  /* FOOTER CON AURAS */
-  .footer { text-align: center; padding: 3rem 1.5rem 2rem; margin-top: 1.5rem; background: linear-gradient(to top, rgba(7,15,15,0.9), transparent); }
-  .footer-icon { font-size: 1.5rem; margin-bottom: .6rem; letter-spacing: 5px; filter: drop-shadow(0 0 8px #8a4fff); }
-  .footer h3 {
-    font-family: 'Cinzel', serif; font-size: clamp(1.05rem, 3vw, 1.25rem); margin-bottom: .5rem;
-    background: linear-gradient(135deg, #8a4fff, #4ecdc4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  /* ========= OLAS DEL FOOTER ========= */
+  .footer-waves {
+    width: 100%; overflow: hidden;
+    line-height: 0;
   }
-  .footer p { font-size: clamp(.78rem, 2vw, .88rem); color: #9bcfcb; margin-bottom: 1.5rem; line-height: 1.6; }
-  .chips { display: flex; justify-content: center; gap: .9rem; flex-wrap: wrap; }
-  .chip {
-    background: rgba(13, 34, 34, 0.7); border: 1px solid rgba(78,205,196,.3);
-    color: #f0ece4; padding: .65rem 1.4rem; border-radius: 50px;
-    font-size: clamp(.8rem, 2vw, .92rem); font-weight: 600;
-    text-decoration: none; display: inline-flex; align-items: center; gap: .5rem; transition: all .25s ease;
-  }
-  .chip:hover { border-color: #4ecdc4; color: #4ecdc4; box-shadow: 0 0 15px rgba(78,205,196,.35); transform: translateY(-3px); }
+  .footer-waves svg { display:block; width:100%; height:60px; }
+  .wave1 { animation: waveAnim1 6s ease-in-out infinite; }
+  .wave2 { animation: waveAnim2 8s ease-in-out infinite reverse; opacity: 0.5; }
+  .wave3 { animation: waveAnim3 10s ease-in-out infinite; opacity: 0.3; }
+  @keyframes waveAnim1 { 0%,100%{d:path("M0,30 C150,60 350,0 500,30 C650,60 850,0 1000,30 L1000,60 L0,60 Z");} 50%{d:path("M0,20 C200,50 300,10 500,20 C700,30 800,60 1000,20 L1000,60 L0,60 Z");} }
+  @keyframes waveAnim2 { 0%,100%{d:path("M0,40 C200,10 400,60 600,40 C800,20 900,50 1000,40 L1000,60 L0,60 Z");} 50%{d:path("M0,25 C150,55 350,15 550,35 C750,55 900,25 1000,45 L1000,60 L0,60 Z");} }
+  @keyframes waveAnim3 { 0%,100%{d:path("M0,50 C100,30 300,60 500,45 C700,30 900,60 1000,50 L1000,60 L0,60 Z");} 50%{d:path("M0,35 C200,65 400,25 600,50 C800,65 900,35 1000,55 L1000,60 L0,60 Z");} }
+
+  /* ========= FOOTER ========= */
+  .footer { text-align:center; padding:3rem 1.5rem 2rem; background:var(--footer-bg); transition:background 0.4s; }
+  .footer-icon { font-size:1.5rem; margin-bottom:.6rem; letter-spacing:5px; filter:drop-shadow(0 0 8px #8a4fff); }
+  .footer h3 { font-family:'Cinzel',serif; font-size:clamp(1.05rem,3vw,1.25rem); margin-bottom:.5rem; background:linear-gradient(135deg,#8a4fff,#4ecdc4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .footer p { font-size:clamp(.78rem,2vw,.88rem); color:var(--text-secondary); margin-bottom:1.5rem; line-height:1.6; }
+  .chips { display:flex; justify-content:center; gap:.9rem; flex-wrap:wrap; }
+  .chip { background:var(--chip-bg); border:1px solid rgba(78,205,196,.3); color:var(--text-primary); padding:.65rem 1.4rem; border-radius:50px; font-size:clamp(.8rem,2vw,.92rem); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:.5rem; transition:all .25s ease; }
+  .chip:hover { border-color:#4ecdc4; color:#4ecdc4; box-shadow:0 0 15px rgba(78,205,196,.35); transform:translateY(-3px); }
 
   .hidden { display: none !important; }
 
-  /* HUMAREDA DE ENTRADA */
-  .smoke-screen {
-    position: fixed; inset: 0; z-index: 9998;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .smoke-layer {
-    position: absolute; left: -10%; width: 120%;
-    background: radial-gradient(ellipse at center, rgba(138,79,255,0.55) 0%, rgba(78,205,196,0.3) 40%, rgba(7,18,18,0.9) 100%);
-    animation: smokeRise var(--dur, 1.8s) ease-in forwards;
-    filter: blur(18px);
-    transform-origin: top center;
-  }
-  .smoke-layer:nth-child(1) { height: 110%; top: 0; --dur: 1.6s; animation-delay: 0s; background: radial-gradient(ellipse at 30% 50%, rgba(138,79,255,0.6) 0%, rgba(10,24,24,0.95) 70%); }
-  .smoke-layer:nth-child(2) { height: 110%; top: 0; --dur: 2s;   animation-delay: 0.15s; background: radial-gradient(ellipse at 70% 40%, rgba(78,205,196,0.5) 0%, rgba(13,10,30,0.9) 70%); }
-  .smoke-layer:nth-child(3) { height: 110%; top: 0; --dur: 1.8s; animation-delay: 0.05s; background: radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.35) 0%, rgba(7,18,18,0.85) 65%); }
+  /* ========= FUEGOS ARTIFICIALES ========= */
+  .fireworks-screen { position:fixed; inset:0; z-index:9998; pointer-events:none; background:#071212; animation:fwFade 0.6s ease forwards 2.8s; }
+  @keyframes fwFade { to{opacity:0;} }
+  .fw-particle { position:absolute; border-radius:50%; animation:fw-explode var(--d) cubic-bezier(0.15,0.5,0.5,1) var(--delay) forwards; opacity:0; }
+  @keyframes fw-explode { 0%{opacity:1;transform:translate(0,0) scale(1.2);} 80%{opacity:0.8;} 100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0.2);} }
+  .fw-trail { position:absolute; width:3px; background:linear-gradient(to top,transparent,#c9a84c); transform-origin:bottom center; border-radius:2px; animation:fw-trail var(--td) ease-out var(--tdelay) forwards; opacity:0; }
+  @keyframes fw-trail { 0%{opacity:1;transform:scaleY(0) translateY(0);} 60%{opacity:1;transform:scaleY(1) translateY(0);} 100%{opacity:0;transform:scaleY(0.2) translateY(-10px);} }
 
-  @keyframes smokeRise {
-    0%   { transform: translateY(110%) scaleY(1); opacity: 1; }
-    30%  { opacity: 1; }
-    100% { transform: translateY(0%) scaleY(1); opacity: 0; }
-  }
+  /* ========= MODAL SPARKLE ========= */
+  .modal-sparkle { position:absolute; border-radius:50%; pointer-events:none; z-index:10; animation:modalSparkleAnim var(--d,0.9s) ease-out forwards; }
+  @keyframes modalSparkleAnim { 0%{opacity:1;transform:scale(1.2) translate(0,0);} 100%{opacity:0;transform:scale(0.1) translate(var(--mx,0px),var(--my,0px));} }
 
-  /* DESTELLOS EN MODAL */
-  .modal-sparkle {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 10;
-    animation: modalSparkleAnim var(--d, 0.9s) ease-out forwards;
-  }
-  @keyframes modalSparkleAnim {
-    0%   { opacity: 1; transform: scale(1.2) translate(0,0); }
-    100% { opacity: 0; transform: scale(0.1) translate(var(--mx,0px), var(--my,0px)); }
-  }
+  /* ========= MODAL ========= */
+  .modal-overlay { position:fixed; inset:0; background:var(--modal-overlay); z-index:1000; display:flex; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(6px); transition:opacity .3s ease; }
+  .modal-box { background:var(--modal-bg); backdrop-filter:blur(10px); border:1px solid rgba(78,205,196,.45); box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 40px rgba(78,205,196,0.15); border-radius:20px; overflow:hidden; max-width:490px; width:100%; position:relative; transform:scale(0.92); transition:transform .3s cubic-bezier(0.34,1.56,0.64,1); }
+  body.modal-open .modal-box { transform:scale(1); }
+  .modal-close { position:absolute; top:12px; right:14px; z-index:10; background:rgba(13,26,26,.85); border:1px solid rgba(78,205,196,.4); color:#4ecdc4; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s ease; }
+  .modal-close:hover { background:#ef4444; color:#fff; border-color:transparent; transform:rotate(90deg); }
+  .modal-carousel { position:relative; }
+  .modal-track { display:flex; transition:transform .4s cubic-bezier(0.4,0,0.2,1); }
+  .modal-track img { width:100%; flex-shrink:0; object-fit:contain; max-height:68vh; background:var(--carousel-bg); }
+  .modal-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(13,26,26,.75); border:1px solid rgba(78,205,196,.4); color:#4ecdc4; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s ease; z-index:2; }
+  .modal-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 10px #4ecdc4; }
+  .modal-btn.prev { left:10px; }
+  .modal-btn.next { right:10px; }
+  .modal-dots { display:flex; justify-content:center; gap:6px; padding:11px; background:var(--carousel-bg); }
+  .modal-info { padding:1.2rem; }
+  .modal-title { font-family:'Cinzel',serif; font-size:1.05rem; color:var(--text-primary); margin-bottom:.4rem; letter-spacing:0.5px; }
+  .modal-desc { font-size:.84rem; color:var(--text-secondary); line-height:1.5; margin-bottom:1.2rem; }
 
-  /* MODAL DE FOTOS CRISTAL (GLASSMORPHISM MÁGICO) */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(5,10,10,.88);
-    z-index: 1000; display: flex; align-items: center; justify-content: center;
-    padding: 1rem; backdrop-filter: blur(6px); transition: opacity .3s ease;
-  }
-  .modal-box {
-    background: rgba(15, 32, 32, 0.9);
-    backdrop-filter: blur(10px);
+  /* ========= BOTÓN VOLVER ARRIBA ========= */
+  .scroll-top-btn {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--scroll-btn-bg);
     border: 1px solid rgba(78,205,196,.45);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 40px rgba(78,205,196,0.15);
-    border-radius: 20px; overflow: hidden; max-width: 490px; width: 100%; position: relative;
-    transform: scale(0.92); transition: transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #4ecdc4; font-size: 1.3rem;
+    cursor: pointer; z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3), 0 0 15px rgba(78,205,196,0.2);
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    opacity: 0; pointer-events: none;
+    transform: translateY(20px) scale(0.8);
+    backdrop-filter: blur(6px);
   }
-  body.modal-open .modal-box { transform: scale(1); }
-  
-  .modal-close {
-    position: absolute; top: 12px; right: 14px; z-index: 10;
-    background: rgba(13,26,26,.85); border: 1px solid rgba(78,205,196,.4);
-    color: #4ecdc4; width: 34px; height: 34px; border-radius: 50%;
-    font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all .2s ease;
-  }
-  .modal-close:hover { background: #ef4444; color: #fff; border-color: transparent; transform: rotate(90deg); }
-  .modal-carousel { position: relative; }
-  .modal-track { display: flex; transition: transform .4s cubic-bezier(0.4, 0, 0.2, 1); }
-  .modal-track img { width: 100%; flex-shrink: 0; object-fit: contain; max-height: 68vh; background: #0a1515; }
-  
-  .modal-btn {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    background: rgba(13,26,26,.75); border: 1px solid rgba(78,205,196,.4);
-    color: #4ecdc4; width: 36px; height: 36px; border-radius: 50%;
-    font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: all .2s ease; z-index: 2;
-  }
-  .modal-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 0 10px #4ecdc4; }
-  .modal-btn.prev { left: 10px; }
-  .modal-btn.next { right: 10px; }
-  .modal-dots { display: flex; justify-content: center; gap: 6px; padding: 11px; background: #0a1515; }
-  .modal-info { padding: 1.2rem; }
-  .modal-title { font-family: 'Cinzel', serif; font-size: 1.05rem; color: #f0ece4; margin-bottom: .4rem; letter-spacing: 0.5px; }
-  .modal-desc { font-size: .84rem; color: #9bcfcb; line-height: 1.5; margin-bottom: 1.2rem; }
+  .scroll-top-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+  .scroll-top-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 6px 25px rgba(78,205,196,0.5); transform: translateY(-3px) scale(1.1); }
 </style>
 </head>
 <body>
 
 <div class="fairy-dust" id="dust"></div>
+<div class="bubbles-layer" id="bubblesLayer"></div>
+<div class="plankton-layer" id="planktonLayer"></div>
 
-<!-- HUMAREDA DE ENTRADA -->
-<div class="smoke-screen" id="smokeScreen">
-  <div class="smoke-layer"></div>
-  <div class="smoke-layer"></div>
-  <div class="smoke-layer"></div>
-</div>
+<!-- FUEGOS ARTIFICIALES DE ENTRADA -->
+<div class="fireworks-screen" id="fireworksScreen"></div>
+
+<!-- BOTÓN VOLVER ARRIBA -->
+<button class="scroll-top-btn" id="scrollTopBtn" title="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <div class="page">
 
@@ -406,16 +564,49 @@
     </div>
   </div>
 
-  <div class="nav-filters">
-    <button class="filter-btn active" onclick="filtrar('todos',this)">Todo</button>
-    <button class="filter-btn" onclick="filtrar('pedido',this)">A pedido</button>
-    <button class="filter-btn" onclick="filtrar('accesorio',this)">Accesorios</button>
-    <button class="filter-btn" onclick="filtrar('tematico',this)">Creaciones Temáticas</button>
-    <button class="filter-btn" onclick="filtrar('deco',this)">Decoración</button>
-    <button class="filter-btn" onclick="filtrar('llave',this)">Llaveros</button>
+  <!-- BARRA DE BÚSQUEDA -->
+  <div class="search-wrap" style="margin-top:1.2rem;">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="Buscar producto..." oninput="handleSearch(this.value)" autocomplete="off">
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
   </div>
 
-  <div class="catalog-wrap">
+  <!-- TOOLBAR: SORT + MODO -->
+  <div class="toolbar" style="margin-bottom:1rem;">
+    <div class="sort-wrap">
+      <select class="sort-select" id="sortSelect" onchange="handleSort(this.value)" title="Ordenar por precio">
+        <option value="default">💰 Precio</option>
+        <option value="asc">↑ Menor precio</option>
+        <option value="desc">↓ Mayor precio</option>
+      </select>
+    </div>
+    <div class="theme-group">
+      <span class="theme-toggle-label" id="themeLabel">🌙</span>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Modo claro/oscuro">
+        <div class="theme-toggle-thumb" id="themeThumb">🌙</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL: SIDEBAR + CATÁLOGO -->
+  <div class="main-layout">
+
+    <!-- SIDEBAR CATEGORÍAS -->
+    <aside class="sidebar">
+      <div class="sidebar-title">✦ Categorías</div>
+      <div class="nav-filters" id="navFilters">
+        <button class="filter-btn active" data-cat="todos" onclick="filtrar('todos',this)">Todo <span class="cat-count" id="cnt-todos">0</span></button>
+        <button class="filter-btn" data-cat="pedido" onclick="filtrar('pedido',this)">A pedido <span class="cat-count" id="cnt-pedido">0</span></button>
+        <button class="filter-btn" data-cat="accesorio" onclick="filtrar('accesorio',this)">Accesorios <span class="cat-count" id="cnt-accesorio">0</span></button>
+        <button class="filter-btn" data-cat="tematico" onclick="filtrar('tematico',this)">Creaciones Temáticas <span class="cat-count" id="cnt-tematico">0</span></button>
+        <button class="filter-btn" data-cat="deco" onclick="filtrar('deco',this)">Decoración <span class="cat-count" id="cnt-deco">0</span></button>
+        <button class="filter-btn" data-cat="llave" onclick="filtrar('llave',this)">Llaveros <span class="cat-count" id="cnt-llave">0</span></button>
+      </div>
+    </aside>
+
+    <!-- CATÁLOGO PRINCIPAL -->
+    <div class="catalog-main">
+    <div class="catalog-wrap">
     <div class="section-divider">
       <div class="section-divider-line"></div>
       <span class="section-divider-icon">✦</span>
@@ -423,7 +614,8 @@
     </div>
     <div class="grid" id="grid">
 
-      <div class="featured-card reveal-card" data-cat="deco">
+      <!-- FEATURED: Espiral del Viento Colores -->
+      <div class="featured-card reveal-card" data-cat="deco" data-price="450" data-name="Espiral del Viento Colores Combinados" data-new="false">
         <div class="featured-carousel">
           <div class="carousel" data-idx="0">
             <div class="carousel-track">
@@ -448,15 +640,14 @@
                 <button class="btn-ver" onclick="abrirModal('Espiral del Viento · Colores Combinados','Tejido a mano con hilos premium. Combinación de colores mágicos.',['cortavientocelestes.jpg','cortavientocelestes2.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Celeste%20%F0%9F%8C%80" target="_blank">Consultar ✨</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$450</span>
-</div>
+            <span class="p-price" data-value="450">$450</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="deco">
+      <!-- Espiral Monocromatico -->
+      <div class="product-card reveal-card" data-cat="deco" data-price="400" data-name="Espiral del Viento Monocromático" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientoverde.jpg" alt="Cortavientos Verde">
@@ -476,15 +667,14 @@
                 <button class="btn-ver" onclick="abrirModal('Espiral del Viento Monocromático','Tejido a mano · Un solo color a elección',['cortavientoverde.jpg','cortavientoverde2.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Monocrom%C3%A1tico%20%F0%9F%8C%BF" target="_blank">Consultar ✨</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$400</span>
-</div>
+            <span class="p-price" data-value="400">$400</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="llave">
+      <!-- Llavero Margarita Simple -->
+      <div class="product-card reveal-card" data-cat="llave" data-price="250" data-name="Llavero Margarita Simple" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita.jpg" alt="Margarita Simple">
@@ -500,15 +690,15 @@
                 <button class="btn-ver" onclick="abrirModal('Llavero Margarita Simple','Flor tejida a crochet · Solo llavero',['margarita.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Llavero%20Margarita%20%F0%9F%8C%BC" target="_blank">Consultar 🌼</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$250</span>
-</div>
+            <span class="p-price" data-value="250">$250</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="llave">
+      <!-- Llavero Ppyopuli -->
+      <div class="product-card reveal-card" data-cat="llave" data-price="350" data-name="Llavero Ppyopuli Amigurumi Woozi" data-new="true">
+        <div class="badge-new">✨ Nuevo</div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/ppyopuli.jpg" alt="Ppyopuli">
@@ -524,15 +714,14 @@
                 <button class="btn-ver" onclick="abrirModal('Llavero Ppyopuli (Amigurumi Woozi)','Amigurumi tejido a crochet · Representante de Woozi en Miniteen',['ppyopuli.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Llavero%20Ppyopuli%20(Amigurumi%20Woozi)%20%F0%9F%92%9C" target="_blank">Consultar 🌙</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$350</span>
-</div>
+            <span class="p-price" data-value="350">$350</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="tematico">
+      <!-- Kit de Música V1 -->
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 1" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/dosguitarras.jpg" alt="Dos Guitarras">
@@ -559,15 +748,14 @@
                 <button class="btn-ver" onclick="abrirModal('Kit de Música · Versión 1','Toppers en Goma Eva · Ideales para tortas y decoración',['dosguitarras.jpg','guitarra.jpg','microfononegro.jpg','nota1.jpg','nota2.jpg','nota3.jpg','nota4.jpg','notas.jpg','tortadeseventeen.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20M%C3%BAsica%20Versi%C3%B3n%201%20%F0%9F%8E%82" target="_blank">Consultar 🎂</a>
               </div>
-              
             </div>
-          
-<span class="p-price">Consultar precio</span>
-</div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="tematico">
+      <!-- Kit de Música V2 -->
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 2" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/coraznconmano.jpg" alt="Corazón con Mano">
@@ -591,15 +779,14 @@
                 <button class="btn-ver" onclick="abrirModal('Kit de Música · Versión 2','Toppers en Goma Eva · Ideales para tortas y decoración',['coraznconmano.jpg','estrellasrosas.jpg','microfonoblanco.jpg','notassinborde.jpg','audifonos.jpg','tortabts.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20M%C3%BAsica%20Versi%C3%B3n%202%20%F0%9F%8E%82" target="_blank">Consultar 🎂</a>
               </div>
-              
             </div>
-          
-<span class="p-price">Consultar precio</span>
-</div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="tematico">
+      <!-- Kit de Piratas -->
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Piratas" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/barco.jpg" alt="Barco">
@@ -622,15 +809,14 @@
                 <button class="btn-ver" onclick="abrirModal('Kit de Piratas','Toppers temáticos · Ideales para tortas y decoración',['barco.jpg','cofre.jpg','ancla.jpg','palmera.jpg','tortadepirata.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20Piratas%20%F0%9F%8E%82" target="_blank">Consultar 🎂</a>
               </div>
-              
             </div>
-          
-<span class="p-price">Consultar precio</span>
-</div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="tematico">
+      <!-- Kit Nacional sin palo -->
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Nacional" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudodenacionalsinpalo.jpg" alt="Escudo Nacional">
@@ -638,11 +824,10 @@
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/felizcumplesinpalo.jpg" alt="Feliz Cumple Nacional">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/numerosinpalo.jpg" alt="Número Nacional">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pelotassinpalo.jpg" alt="Pelotas Nacional">
-            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/tortadenacional.jpg" alt="Torta Nacional">
           </div>
           <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
           <button class="carousel-btn next" onclick="mover(this,1)">›</button>
-          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
           <span class="p-tag">Creaciones Temáticas 🎂</span>
@@ -651,24 +836,26 @@
           <div class="p-footer">
             <div class="p-footer-left">
               <div class="btn-group">
-                <button class="btn-ver" onclick="abrirModal('Kit de Nacional','Toppers en Goma Eva · Ideales para tortas y decoración',['escudodenacionalsinpalo.jpg','estrellasdenacionalsinpalo.jpg','felizcumplesinpalo.jpg','numerosinpalo.jpg','pelotassinpalo.jpg','tortadenacional.jpg'], event)">Ver 🖼️</button>
+                <button class="btn-ver" onclick="abrirModal('Kit de Nacional','Toppers en Goma Eva · Ideales para tortas y decoración',['escudodenacionalsinpalo.jpg','estrellasdenacionalsinpalo.jpg','felizcumplesinpalo.jpg','numerosinpalo.jpg','pelotassinpalo.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20Nacional%20%F0%9F%8E%82" target="_blank">Consultar 🎂</a>
               </div>
             </div>
-            <span class="p-price">Consultar precio</span>
+            <span class="p-price" data-value="0">Consultar precio</span>
           </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="tematico">
+      <!-- Topper Nacional con palo -->
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Topper para Torta Nacional" data-new="true">
+        <div class="badge-new">✨ Nuevo</div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
-            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/tortadenacional.jpg" alt="Torta Nacional">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudoddenacionalconpalo.jpg" alt="Escudo con Palo">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/estrellasdenacionalconpalo.jpg" alt="Estrellas con Palo">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/felizcumpleconpalo.jpg" alt="Feliz Cumple con Palo">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/numeroconpalo.jpg" alt="Número con Palo">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pelotasconpalodebrochet.jpg" alt="Pelotas con Palo">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/tortadenacional.jpg" alt="Torta Nacional">
           </div>
           <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
           <button class="carousel-btn next" onclick="mover(this,1)">›</button>
@@ -681,18 +868,17 @@
           <div class="p-footer">
             <div class="p-footer-left">
               <div class="btn-group">
-                <button class="btn-ver" onclick="abrirModal('Topper para Torta Nacional','Toppers en Goma Eva con palo · Ideales para decorar tortas',['tortadenacional.jpg','escudoddenacionalconpalo.jpg','estrellasdenacionalconpalo.jpg','felizcumpleconpalo.jpg','numeroconpalo.jpg','pelotasconpalodebrochet.jpg'], event)">Ver 🖼️</button>
+                <button class="btn-ver" onclick="abrirModal('Topper para Torta Nacional','Toppers en Goma Eva con palo · Ideales para decorar tortas',['escudoddenacionalconpalo.jpg','estrellasdenacionalconpalo.jpg','felizcumpleconpalo.jpg','numeroconpalo.jpg','pelotasconpalodebrochet.jpg','tortadenacional.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Topper%20para%20Torta%20Nacional%20%F0%9F%8E%82" target="_blank">Consultar 🎂</a>
               </div>
-              
             </div>
-          
-<span class="p-price">Consultar precio</span>
-</div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="llave">
+      <!-- Margarita + Pompón -->
+      <div class="product-card reveal-card" data-cat="llave" data-price="350" data-name="Margarita Bolitas y Pompón" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon.jpg" alt="Margarita con Pompón">
@@ -713,15 +899,14 @@
                 <button class="btn-ver" onclick="abrirModal('Margarita + Bolitas y Pompón','Flor crochet + cuentas nacaradas + pompón amarillo',['margarita+pompon.jpg','margarita+pompon2.jpg','margarita+pompon3.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20la%20Margarita%20con%20Bolitas%20y%20Pomp%C3%B3n%20%F0%9F%8C%BC%E2%9C%A8" target="_blank">Consultar ✨</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$350</span>
-</div>
+            <span class="p-price" data-value="350">$350</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="accesorio">
+      <!-- Moño Broche con Cadena -->
+      <div class="product-card reveal-card" data-cat="accesorio" data-price="350" data-name="Moño Broche con Cadena" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñoconcadena2.jpg" alt="Moño Broche con Cadena 2">
@@ -742,15 +927,14 @@
                 <button class="btn-ver" onclick="abrirModal('Moño Broche con Cadena','Moño tejido a crochet con broche y cadena',['moñoconcadena2.jpg','moñoconcadena.jpg','moñoconcadena3.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Mo%C3%B1o%20Broche%20con%20Cadena%20%F0%9F%8E%80" target="_blank">Consultar 🎀</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$350</span>
-</div>
+            <span class="p-price" data-value="350">$350</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="accesorio">
+      <!-- Moño Broche Simple -->
+      <div class="product-card reveal-card" data-cat="accesorio" data-price="300" data-name="Moño Broche Simple" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñosimple.jpg" alt="Moño Broche Simple">
@@ -771,15 +955,14 @@
                 <button class="btn-ver" onclick="abrirModal('Moño Broche Simple','Moño tejido a crochet con broche · sin cadena',['moñosimple.jpg','moñosimple2.jpg','moñosimple3.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Mo%C3%B1o%20Broche%20Simple%20%F0%9F%8E%80" target="_blank">Consultar 🎀</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$300</span>
-</div>
+            <span class="p-price" data-value="300">$300</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="llave">
+      <!-- Pompón con Cuentas -->
+      <div class="product-card reveal-card" data-cat="llave" data-price="200" data-name="Pompón con Cuentas" data-new="false">
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pompon.jpg" alt="Pompón con Bolitas">
@@ -795,40 +978,57 @@
                 <button class="btn-ver" onclick="abrirModal('Pompón con Cuentas','Pompón + cuentas nacaradas · Colores disponibles a elección',['pompon.jpg'], event)">Ver 🖼️</button>
                 <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Pomp%C3%B3n%20con%20Bolitas%20%F0%9F%92%9B" target="_blank">Consultar 💛</a>
               </div>
-              
             </div>
-          
-<span class="p-price">$200</span>
-</div>
+            <span class="p-price" data-value="200">$200</span>
+          </div>
         </div>
       </div>
 
-      <div class="product-card reveal-card" data-cat="pedido">
-        <div style="height:205px;background:linear-gradient(135deg,#1c0c3a,#0f2b2b);display:flex;align-items:center;justify-content:center;font-size:3rem;text-shadow: 0 0 15px rgba(138,79,255,0.4);">🎨</div>
+      <!-- Diseño Personalizado -->
+      <div class="product-card reveal-card" data-cat="pedido" data-price="0" data-name="Diseño Personalizado a Pedido" data-new="false">
+        <div style="height:205px;background:linear-gradient(135deg,#1c0c3a,#0f2b2b);display:flex;align-items:center;justify-content:center;font-size:3rem;text-shadow:0 0 15px rgba(138,79,255,0.4);">🎨</div>
         <div class="card-body">
           <span class="p-tag">A Pedido 🌙</span>
           <h3 class="p-title">Diseño Personalizado</h3>
           <p class="p-desc">Tu idea hecha realidad a mano · Contáctanos sin compromiso</p>
           <div class="p-footer">
-<span class="p-price">Depende</span>
+            <span class="p-price" data-value="0">Depende</span>
             <div class="p-footer-left">
-              <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Quiero%20consultar%20por%20un%20dise%C3%B1o%20personalizado%20%F0%9F%8E%A8" target="_blank" style="width: 100%; text-align: center;">Consultar 🎨</a>
+              <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Quiero%20consultar%20por%20un%20dise%C3%B1o%20personalizado%20%F0%9F%8E%A8" target="_blank" style="width:100%;text-align:center;">Consultar 🎨</a>
             </div>
-            
           </div>
         </div>
       </div>
 
+      <!-- Sin resultados -->
+      <div class="no-results" id="noResults">
+        <div style="font-size:2.5rem;margin-bottom:0.8rem;">🔍</div>
+        <div style="font-size:1rem;font-weight:700;">No se encontraron productos</div>
+        <div style="font-size:0.85rem;margin-top:0.4rem;opacity:0.7;">Probá con otro término de búsqueda</div>
+      </div>
+
     </div>
   </div>
+    </div><!-- /catalog-main -->
+  </div><!-- /main-layout -->
 
-  <div class="section-divider" style="margin-top: 1rem;">
+  <div class="section-divider" style="margin-top:1rem;">
     <div class="section-divider-line"></div>
     <span class="section-divider-icon">🌸</span>
     <div class="section-divider-line"></div>
   </div>
 
-  <div class="footer">
+  <!-- FOOTER CON OLAS DETRÁS -->
+  <div class="footer" style="position:relative; overflow:hidden; padding-top:4rem;">
+    <!-- OLAS ANIMADAS (detrás del contenido) -->
+    <div class="footer-waves" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:0;">
+      <svg viewBox="0 0 1000 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="wave3" d="M0,50 C100,30 300,60 500,45 C700,30 900,60 1000,50 L1000,60 L0,60 Z" fill="rgba(138,79,255,0.2)"/>
+        <path class="wave2" d="M0,40 C200,10 400,60 600,40 C800,20 900,50 1000,40 L1000,60 L0,60 Z" fill="rgba(78,205,196,0.2)"/>
+        <path class="wave1" d="M0,30 C150,60 350,0 500,30 C650,60 850,0 1000,30 L1000,60 L0,60 Z" fill="rgba(201,168,76,0.15)"/>
+      </svg>
+    </div>
+    <div style="position:relative;z-index:1;">
     <div class="footer-icon">🦋✨🧜‍♀️</div>
     <h3>¿Te enamoraste de algo?</h3>
     <p>Pedidos especiales y diseños únicos · ¡Contáctanos y lo hacemos realidad!</p>
@@ -836,10 +1036,12 @@
       <a class="chip" href="https://wa.me/59898458675" target="_blank">📱 WhatsApp</a>
       <a class="chip" href="https://www.instagram.com/_fantasia_artesana_" target="_blank">📸 Instagram</a>
     </div>
+    </div>
   </div>
 
 </div>
 
+<!-- MODAL -->
 <div class="modal-overlay" id="modal" style="display:none; opacity:0;" onclick="cerrarModal(event)">
   <div class="modal-box">
     <button class="modal-close" onclick="apagarModal()">×</button>
@@ -852,15 +1054,88 @@
     <div class="modal-info">
       <div class="modal-title" id="modalTitle"></div>
       <div class="modal-desc" id="modalDesc"></div>
-      <div class="modal-footer" style="display: flex; justify-content: center; width: 100%;">
-        <a class="btn-buy" id="modalWa" href="#" target="_blank" style="width: 100%; text-align: center; padding: 0.6rem;">✨ ¡Lo quiero! Encargar ahora</a>
+      <div class="modal-footer" style="display:flex;justify-content:center;width:100%;">
+        <a class="btn-buy" id="modalWa" href="#" target="_blank" style="width:100%;text-align:center;padding:0.6rem;">✨ ¡Lo quiero! Encargar ahora</a>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Base de destellos de fondo estáticos
+// ========= BURBUJAS FLOTANTES =========
+(function() {
+  const layer = document.getElementById('bubblesLayer');
+  const bubbleColors = [
+    'var(--bubble-color1)',
+    'var(--bubble-color2)',
+    'var(--bubble-color3)',
+    'rgba(78,205,196,0.08)',
+    'rgba(201,168,76,0.06)',
+    'rgba(255,133,200,0.07)'
+  ];
+  const borderColors = [
+    'rgba(78,205,196,0.3)','rgba(138,79,255,0.25)','rgba(201,168,76,0.2)',
+    'rgba(78,205,196,0.2)','rgba(255,133,200,0.2)','rgba(100,232,224,0.25)'
+  ];
+
+  for (let i = 0; i < 22; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const sz = Math.random() * 55 + 15;
+    const left = Math.random() * 100;
+    const dur = (Math.random() * 12 + 7).toFixed(1);
+    const delay = (Math.random() * -15).toFixed(1);
+    const drift = ((Math.random() - 0.5) * 80).toFixed(0);
+    const ci = Math.floor(Math.random() * bubbleColors.length);
+    const maxOp = (Math.random() * 0.5 + 0.15).toFixed(2);
+
+    b.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      left:${left}%;
+      bottom:-${sz + 20}px;
+      background: ${bubbleColors[ci]};
+      border: 1px solid ${borderColors[ci]};
+      box-shadow: inset 0 0 ${sz*0.3}px rgba(255,255,255,0.1), 0 0 ${sz*0.2}px ${borderColors[ci]};
+      --dur:${dur}s; --delay:${delay}s; --drift:${drift}px; --max-op:${maxOp};
+      backdrop-filter: blur(1px);
+    `;
+    layer.appendChild(b);
+  }
+})();
+
+// ========= PLANCTON BRILLANTE =========
+(function() {
+  const layer = document.getElementById('planktonLayer');
+  const plankColors = [
+    '#4ecdc4','#8a4fff','#c9a84c','#ff85c8','#64e8e0','#c084fc','#f9d76b'
+  ];
+
+  for (let i = 0; i < 35; i++) {
+    const p = document.createElement('div');
+    p.className = 'plankton';
+    const sz = Math.random() * 4 + 1.5;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const col = plankColors[Math.floor(Math.random() * plankColors.length)];
+    const dur = (Math.random() * 8 + 4).toFixed(1);
+    const pdur = (Math.random() * 4 + 2).toFixed(1);
+    const delay = (Math.random() * 8).toFixed(1);
+    const dx = ((Math.random() - 0.5) * 80).toFixed(0);
+    const dy = ((Math.random() - 0.5) * 60).toFixed(0);
+
+    p.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      left:${left}%; top:${top}%;
+      background:${col};
+      --col:${col};
+      --dur:${dur}s; --pdur:${pdur}s; --delay:${delay}s;
+      --dx:${dx}px; --dy:${dy}px;
+    `;
+    layer.appendChild(p);
+  }
+})();
+
+// ========= DESTELLOS FONDO =========
 const cols = ['#8a4fff','#4ecdc4','#c9a84c','#b388ff','#64e8e0','#f0d080'];
 const c = document.getElementById('dust');
 
@@ -875,56 +1150,41 @@ const c = document.getElementById('dust');
   }
 })();
 
-// Generador de destellos interactivos corregido (Soporta scroll de página)
+// ========= DESTELLOS INTERACTIVOS =========
 function createInteractiveSparkle(x, y, isExplosion = false) {
   const s = document.createElement('div');
   s.className = 'interactive-sparkle';
-  
   const sz = Math.random() * 7 + 4;
   const col = cols[Math.floor(Math.random() * cols.length)];
   const duration = (Math.random() * 0.7 + 0.5).toFixed(2) + 's';
-  
   const range = isExplosion ? 130 : 40;
-  const moveX = (Math.random() * range - (range/2)) + 'px'; 
+  const moveX = (Math.random() * range - (range/2)) + 'px';
   const moveY = (Math.random() * range - (range/2)) + 'px';
-
-  s.style.cssText = `
-    width: ${sz}px; height: ${sz}px;
-    left: ${x - sz/2}px; top: ${y - sz/2}px;
-    background: ${col};
-    box-shadow: 0 0 ${sz * 4}px ${col}, 0 0 ${sz * 8}px ${col}, 0 0 ${sz * 14}px ${col};
-    --d: ${duration}; --mx: ${moveX}; --my: ${moveY};
-  `;
-  
+  s.style.cssText = `width:${sz}px;height:${sz}px;left:${x-sz/2}px;top:${y-sz/2}px;background:${col};box-shadow:0 0 ${sz*4}px ${col},0 0 ${sz*8}px ${col},0 0 ${sz*14}px ${col};--d:${duration};--mx:${moveX};--my:${moveY};`;
   c.appendChild(s);
   setTimeout(() => s.remove(), parseFloat(duration) * 1000);
 }
 
-// Estela al mover mouse (PC)
 let lastMove = 0;
 window.addEventListener('mousemove', (e) => {
   const now = Date.now();
-  if (now - lastMove > 30) { 
+  if (now - lastMove > 30) {
     createInteractiveSparkle(e.clientX + window.scrollX, e.clientY + window.scrollY);
     lastMove = now;
   }
 });
 
-// Estela al arrastrar dedo (Celulares)
 let lastTouchMove = 0;
 window.addEventListener('touchmove', (e) => {
   const now = Date.now();
-  if (now - lastTouchMove > 35) { 
+  if (now - lastTouchMove > 35) {
     const touch = e.touches[0];
     createInteractiveSparkle(touch.clientX + window.scrollX, touch.clientY + window.scrollY);
     lastTouchMove = now;
   }
 }, { passive: true });
 
-
-/* ----------------------------------------------------
-   EFECTO REVELACIÓN MÁGICA OPTIMIZADO
----------------------------------------------------- */
+// ========= REVELACIÓN MÁGICA =========
 const observerOptions = { threshold: 0.05, rootMargin: "0px 0px -20px 0px" };
 const cardObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -934,62 +1194,201 @@ const cardObserver = new IntersectionObserver((entries) => {
     }
   });
 }, observerOptions);
-
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('.reveal-card').forEach(card => cardObserver.observe(card));
+  updateCounts();
 });
 
+// ========= BOTÓN VOLVER ARRIBA =========
+const scrollBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 350) {
+    scrollBtn.classList.add('visible');
+  } else {
+    scrollBtn.classList.remove('visible');
+  }
+}, { passive: true });
 
-/* ----------------------------------------------------
-   ESTALLIDO AL APRETAR EL BOTÓN ABRIR ("Ver 🖼️")
----------------------------------------------------- */
+// ========= MODO CLARO / OSCURO =========
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  const label = document.getElementById('themeLabel');
+  const thumb = document.getElementById('themeThumb');
+  if (next === 'light') {
+    label.textContent = '☀️';
+    thumb.textContent = '☀️';
+  } else {
+    label.textContent = '🌙';
+    thumb.textContent = '🌙';
+  }
+  localStorage.setItem('fa-theme', next);
+}
+// Restaurar tema guardado
+(function() {
+  const saved = localStorage.getItem('fa-theme');
+  if (saved && saved !== 'dark') {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeLabel').textContent = '☀️';
+    document.getElementById('themeThumb').textContent = '☀️';
+  }
+})();
+
+// ========= FILTROS =========
+let currentCat = 'todos';
+let currentSearch = '';
+let currentSort = 'default';
+
+function updateCounts() {
+  const all = document.querySelectorAll('.featured-card[data-cat], .product-card[data-cat]');
+  const counts = { todos: 0, pedido: 0, accesorio: 0, tematico: 0, deco: 0, llave: 0 };
+  all.forEach(c => {
+    const cat = c.dataset.cat;
+    counts.todos++;
+    if (counts[cat] !== undefined) counts[cat]++;
+  });
+  Object.keys(counts).forEach(k => {
+    const el = document.getElementById('cnt-' + k);
+    if (el) el.textContent = counts[k];
+  });
+}
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.featured-card[data-cat], .product-card[data-cat]');
+  const query = currentSearch.toLowerCase().trim();
+  let visible = 0;
+
+  // Collect and sort if needed
+  const grid = document.getElementById('grid');
+  let cardArr = Array.from(cards);
+
+  if (currentSort !== 'default') {
+    cardArr.sort((a, b) => {
+      const pa = parseInt(a.dataset.price) || 0;
+      const pb = parseInt(b.dataset.price) || 0;
+      if (pa === 0 && pb === 0) return 0;
+      if (pa === 0) return 1;
+      if (pb === 0) return -1;
+      return currentSort === 'asc' ? pa - pb : pb - pa;
+    });
+    cardArr.forEach(c => grid.appendChild(c));
+  }
+
+  cardArr.forEach(card => {
+    const catMatch = currentCat === 'todos' || card.dataset.cat === currentCat;
+    const name = (card.dataset.name || '').toLowerCase();
+    const desc = card.querySelector('.p-desc') ? card.querySelector('.p-desc').textContent.toLowerCase() : '';
+    const title = card.querySelector('.p-title') ? card.querySelector('.p-title').textContent.toLowerCase() : '';
+    const searchMatch = !query || name.includes(query) || desc.includes(query) || title.includes(query);
+    const show = catMatch && searchMatch;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  const noResults = document.getElementById('noResults');
+  noResults.classList.toggle('show', visible === 0);
+}
+
+function filtrar(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function handleSearch(val) {
+  currentSearch = val;
+  const clearBtn = document.getElementById('searchClear');
+  clearBtn.classList.toggle('visible', val.length > 0);
+  applyFilters();
+}
+
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  handleSearch('');
+  input.focus();
+}
+
+function handleSort(val) {
+  currentSort = val;
+  applyFilters();
+}
+
+// ========= EXPLOSIÓN DE BOTÓN =========
 function triggerButtonExplosion(clickEvent) {
   let posX = clickEvent.clientX + window.scrollX;
   let posY = clickEvent.clientY + window.scrollY;
-
   if (!clickEvent.clientX && clickEvent.target) {
     const rect = clickEvent.target.getBoundingClientRect();
     posX = rect.left + rect.width / 2 + window.scrollX;
     posY = rect.top + rect.height / 2 + window.scrollY;
   }
-
-  for (let i = 0; i < 16; i++) {
-    createInteractiveSparkle(posX, posY, true);
-  }
+  for (let i = 0; i < 16; i++) createInteractiveSparkle(posX, posY, true);
 }
 
-
-// HUMAREDA DE ENTRADA — se elimina al terminar la animación
+// ========= FUEGOS ARTIFICIALES =========
 (function() {
-  const smoke = document.getElementById('smokeScreen');
-  if (!smoke) return;
-  // La capa más lenta dura 2s + 0.15s delay = ~2.15s total
+  const screen = document.getElementById('fireworksScreen');
+  if (!screen) return;
+  const colors = ['#7b5ea7','#3dbfbf','#c9a84c','#ffffff','#b06ddb','#4ee8e0','#f7d87c','#ff85c8','#a78bfa'];
+  function launch(xPct, yPct, delay) {
+    const cx = xPct * window.innerWidth;
+    const cy = yPct * window.innerHeight;
+    const particleCount = 38 + Math.floor(Math.random() * 20);
+    const color1 = colors[Math.floor(Math.random() * colors.length)];
+    const color2 = colors[Math.floor(Math.random() * colors.length)];
+    const trail = document.createElement('div');
+    trail.className = 'fw-trail';
+    const trailH = cy * 0.7 + Math.random() * 40;
+    trail.style.cssText = `left:${cx}px;bottom:${window.innerHeight-cy}px;height:${trailH}px;--td:${delay*0.8}s;--tdelay:${delay*0.05}s;`;
+    screen.appendChild(trail);
+    for (let i = 0; i < particleCount; i++) {
+      const p = document.createElement('div');
+      p.className = 'fw-particle';
+      const angle = (i / particleCount) * Math.PI * 2;
+      const radius = 60 + Math.random() * 80;
+      const tx = Math.cos(angle) * radius + (Math.random()-0.5)*30;
+      const ty = Math.sin(angle) * radius + (Math.random()-0.5)*30;
+      const sz = Math.random() * 5 + 2;
+      const col = Math.random() > 0.5 ? color1 : color2;
+      const dur = (0.8 + Math.random() * 0.7).toFixed(2);
+      p.style.cssText = `width:${sz}px;height:${sz}px;left:${cx}px;top:${cy}px;background:${col};box-shadow:0 0 ${sz*3}px ${col},0 0 ${sz*6}px ${col};--tx:${tx}px;--ty:${ty}px;--d:${dur}s;--delay:${delay}s;`;
+      screen.appendChild(p);
+    }
+  }
+  launch(0.25,0.25,0.1); launch(0.75,0.20,0.3); launch(0.50,0.35,0.6);
+  launch(0.15,0.55,0.8); launch(0.85,0.45,0.9); launch(0.40,0.18,1.1);
+  launch(0.65,0.60,1.3); launch(0.50,0.50,1.5);
   setTimeout(() => {
-    smoke.style.transition = 'opacity 0.4s ease';
-    smoke.style.opacity = '0';
-    setTimeout(() => smoke.remove(), 400);
-  }, 2000);
+    screen.style.transition = 'opacity 0.5s ease';
+    screen.style.opacity = '0';
+    setTimeout(() => screen.remove(), 500);
+  }, 2800);
 })();
 
-// DESTELLOS EN MODAL al abrir
+// ========= MODAL =========
 function spawnModalSparkles(container) {
   const modalCols = ['#8a4fff','#4ecdc4','#c9a84c','#ff85c8','#ffffff','#c084fc'];
   const rect = container.getBoundingClientRect();
   for (let i = 0; i < 22; i++) {
     const s = document.createElement('div');
     s.className = 'modal-sparkle';
-    const sz = Math.random() * 6 + 3;
-    const col = modalCols[Math.floor(Math.random() * modalCols.length)];
-    const x = Math.random() * rect.width;
-    const y = Math.random() * rect.height * 0.5;
-    const mx = (Math.random() * 160 - 80) + 'px';
-    const my = (Math.random() * 160 - 80) + 'px';
-    const dur = (Math.random() * 0.6 + 0.6).toFixed(2) + 's';
+    const sz = Math.random()*6+3;
+    const col = modalCols[Math.floor(Math.random()*modalCols.length)];
+    const x = Math.random()*rect.width;
+    const y = Math.random()*rect.height*0.5;
+    const mx = (Math.random()*160-80)+'px';
+    const my = (Math.random()*160-80)+'px';
+    const dur = (Math.random()*0.6+0.6).toFixed(2)+'s';
     s.style.cssText = `width:${sz}px;height:${sz}px;left:${x}px;top:${y}px;background:${col};box-shadow:0 0 ${sz*3}px ${col};--d:${dur};--mx:${mx};--my:${my};`;
     container.appendChild(s);
-    setTimeout(() => s.remove(), parseFloat(dur) * 1000 + 100);
+    setTimeout(() => s.remove(), parseFloat(dur)*1000+100);
   }
 }
+
 function mover(btn, dir) {
   const carousel = btn.closest('.carousel');
   const track = carousel.querySelector('.carousel-track');
@@ -998,16 +1397,8 @@ function mover(btn, dir) {
   let idx = parseInt(carousel.dataset.idx) || 0;
   idx = (idx + dir + imgs.length) % imgs.length;
   carousel.dataset.idx = idx;
-  track.style.transform = `translateX(-${idx * 100}%)`;
-  dots.forEach((d, i) => d.classList.toggle('on', i === idx));
-}
-
-function filtrar(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.featured-card, .product-card').forEach(c => {
-    c.classList.toggle('hidden', cat !== 'todos' && c.dataset.cat !== cat);
-  });
+  track.style.transform = `translateX(-${idx*100}%)`;
+  dots.forEach((d,i) => d.classList.toggle('on', i===idx));
 }
 
 const BASE = 'https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/';
@@ -1016,27 +1407,19 @@ let modalImgs = [];
 
 function abrirModal(titulo, desc, fotos, clickEvent) {
   if (clickEvent) triggerButtonExplosion(clickEvent);
-
-  modalImgs = fotos;
-  modalIdx = 0;
+  modalImgs = fotos; modalIdx = 0;
   const track = document.getElementById('modalTrack');
   const dots = document.getElementById('modalDots');
   const modalEl = document.getElementById('modal');
-  
   track.innerHTML = fotos.map(f => `<img src="${BASE}${f}" alt="${titulo}">`).join('');
-  dots.innerHTML = fotos.map((_, i) => `<div class="cdot${i===0?' on':''}" onclick="modalIr(${i})"></div>`).join('');
-  
+  dots.innerHTML = fotos.map((_,i) => `<div class="cdot${i===0?' on':''}" onclick="modalIr(${i})"></div>`).join('');
   document.getElementById('modalTitle').textContent = titulo;
   document.getElementById('modalDesc').textContent = desc;
-  
   const waText = encodeURIComponent("Hola! Me interesa: " + titulo + " ✨");
   document.getElementById('modalWa').href = "https://wa.me/59898458675?text=" + waText;
-  
   document.getElementById('modalPrev').style.display = fotos.length > 1 ? 'flex' : 'none';
   document.getElementById('modalNext').style.display = fotos.length > 1 ? 'flex' : 'none';
-  
   track.style.transform = 'translateX(0)';
-  
   modalEl.style.display = 'flex';
   setTimeout(() => {
     modalEl.style.opacity = '1';
