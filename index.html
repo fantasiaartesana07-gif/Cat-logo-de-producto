@@ -38,7 +38,7 @@
 
   body {
     font-family: 'Nunito', sans-serif;
-    background: #020d18;
+    background: #0a0e2a;
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
@@ -69,27 +69,78 @@
     50%     { opacity: 0.9; box-shadow: 0 0 12px var(--col,#4ecdc4), 0 0 24px var(--col,#4ecdc4); }
   }
 
-  /* ========= NEBULOSAS DE FONDO ========= */
+  /* ========= FONDO VAN GOGH — NOCHE ESTRELLADA ========= */
   .fairy-dust { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:-1; overflow:hidden; }
-  .nebula-orb {
+
+  /* Canvas SVG de remolinos */
+  .vangogh-canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+
+  /* Estrellas que pulsan */
+  .vg-star {
     position: absolute;
     border-radius: 50%;
-    filter: blur(var(--blur, 60px));
+    animation: starGlow var(--sg, 3s) ease-in-out infinite,
+               starDrift var(--sd, 20s) ease-in-out infinite alternate;
+    animation-delay: var(--sdelay, 0s);
+  }
+  @keyframes starGlow {
+    0%,100% { transform: scale(0.7); opacity: 0.4;
+               box-shadow: 0 0 4px var(--sc,#ffe87a), 0 0 10px var(--sc,#ffe87a); }
+    50%     { transform: scale(1.4); opacity: 1;
+               box-shadow: 0 0 10px var(--sc,#ffe87a), 0 0 28px var(--sc,#ffe87a), 0 0 50px var(--sc,#ffe87a); }
+  }
+  @keyframes starDrift {
+    0%   { margin-left: 0; margin-top: 0; }
+    100% { margin-left: var(--sdx,8px); margin-top: var(--sdy,5px); }
+  }
+
+  /* Remolinos / vórtices */
+  .vg-swirl {
+    position: absolute;
+    border-radius: 50%;
+    border: var(--sw, 3px) solid transparent;
+    animation: swirlSpin var(--ss, 18s) linear infinite,
+               swirlPulse var(--sp, 8s) ease-in-out infinite;
+    animation-delay: var(--swdelay, 0s);
     opacity: 0;
-    animation: nebulaFloat var(--nd, 20s) ease-in-out infinite alternate,
-               nebulaFade  var(--nf, 12s) ease-in-out infinite;
-    animation-delay: var(--ndelay, 0s);
-    will-change: transform, opacity;
   }
-  @keyframes nebulaFloat {
-    0%   { transform: translate(0, 0) scale(1); }
-    33%  { transform: translate(var(--nx1, 40px), var(--ny1, -30px)) scale(1.08); }
-    66%  { transform: translate(var(--nx2, -25px), var(--ny2, 20px)) scale(0.95); }
-    100% { transform: translate(var(--nx3, 30px), var(--ny3, -15px)) scale(1.05); }
+  @keyframes swirlSpin {
+    from { transform: rotate(0deg) scale(1); }
+    to   { transform: rotate(360deg) scale(1.04); }
   }
-  @keyframes nebulaFade {
-    0%,100% { opacity: 0.04; }
-    50%     { opacity: var(--nop, 0.13); }
+  @keyframes swirlPulse {
+    0%,100% { opacity: 0.07; }
+    50%     { opacity: var(--sop, 0.22); }
+  }
+
+  /* Nubes de color tipo pinceladas */
+  .vg-cloud {
+    position: absolute;
+    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+    filter: blur(var(--cb, 35px));
+    animation: cloudFloat var(--cd, 22s) ease-in-out infinite alternate,
+               cloudFade  var(--cf, 11s) ease-in-out infinite;
+    animation-delay: var(--cdelay, 0s);
+    opacity: 0;
+  }
+  @keyframes cloudFloat {
+    0%   { transform: translate(0,0) rotate(0deg) scale(1); }
+    50%  { transform: translate(var(--cx,30px), var(--cy,-20px)) rotate(8deg) scale(1.06); }
+    100% { transform: translate(var(--cx2,-20px), var(--cy2,15px)) rotate(-4deg) scale(0.96); }
+  }
+  @keyframes cloudFade {
+    0%,100% { opacity: 0.06; }
+    50%     { opacity: var(--cop, 0.18); }
+  }
+
+  /* Pinceladas de fondo */
+  .vg-stroke {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(var(--stb, 55px));
+    opacity: var(--stop, 0.08);
   }
 
   .interactive-sparkle {
@@ -1101,36 +1152,142 @@
   }
 })();
 
-// ========= NEBULOSAS DE FONDO =========
-const cols = ['#8a4fff','#4ecdc4','#c9a84c','#b388ff','#64e8e0','#f0d080'];
+// ========= FONDO VAN GOGH — NOCHE ESTRELLADA =========
+const cols = ['#ffe87a','#ffd700','#4ecdc4','#a8d8ff','#ffffff','#ffc84a'];
 const c = document.getElementById('dust');
 
 (function() {
-  const nebulas = [
-    { col:'#8a4fff', size:420, left:10,  top:15,  blur:90,  op:0.14, nd:28, nf:14, delay:0,    nx1: 60, ny1:-40, nx2:-30, ny2: 50, nx3: 40, ny3:-20 },
-    { col:'#4ecdc4', size:380, left:65,  top:5,   blur:80,  op:0.12, nd:24, nf:16, delay:-5,   nx1:-50, ny1: 30, nx2: 40, ny2:-35, nx3:-20, ny3: 25 },
-    { col:'#c9a84c', size:300, left:80,  top:55,  blur:70,  op:0.10, nd:32, nf:18, delay:-9,   nx1:-40, ny1:-30, nx2: 30, ny2: 40, nx3:-25, ny3:-15 },
-    { col:'#ff85c8', size:350, left:20,  top:65,  blur:85,  op:0.11, nd:22, nf:13, delay:-3,   nx1: 45, ny1: 35, nx2:-35, ny2:-25, nx3: 20, ny3: 30 },
-    { col:'#b388ff', size:460, left:45,  top:35,  blur:100, op:0.09, nd:36, nf:20, delay:-12,  nx1:-55, ny1: 20, nx2: 35, ny2:-45, nx3:-15, ny3: 30 },
-    { col:'#64e8e0', size:280, left:5,   top:80,  blur:65,  op:0.10, nd:20, nf:11, delay:-7,   nx1: 35, ny1:-25, nx2:-20, ny2: 30, nx3: 25, ny3:-20 },
-    { col:'#8a4fff', size:320, left:88,  top:25,  blur:75,  op:0.09, nd:26, nf:15, delay:-2,   nx1:-45, ny1: 40, nx2: 25, ny2:-30, nx3:-30, ny3: 20 },
-    { col:'#4ecdc4', size:400, left:50,  top:80,  blur:90,  op:0.08, nd:30, nf:17, delay:-15,  nx1: 30, ny1:-50, nx2:-40, ny2: 25, nx3: 20, ny3:-35 },
+  // — PINCELADAS DE FONDO (grandes manchas de color) —
+  const strokes = [
+    { col:'#1a2a6c', w:900, h:500, left:'10%', top:'5%'  },
+    { col:'#0d1b4b', w:700, h:400, left:'50%', top:'0%'  },
+    { col:'#162456', w:800, h:350, left:'0%',  top:'30%' },
+    { col:'#0a1535', w:600, h:500, left:'60%', top:'25%' },
+    { col:'#1e3a5f', w:500, h:300, left:'25%', top:'50%' },
+    { col:'#112040', w:750, h:400, left:'40%', top:'55%' },
   ];
-  nebulas.forEach(n => {
+  strokes.forEach(s => {
     const el = document.createElement('div');
-    el.className = 'nebula-orb';
+    el.className = 'vg-stroke';
+    el.style.cssText = `width:${s.w}px;height:${s.h}px;left:${s.left};top:${s.top};background:${s.col};--stb:80px;--stop:0.9;`;
+    c.appendChild(el);
+  });
+
+  // — NUBES DE COLOR (pinceladas tipo Van Gogh) —
+  const clouds = [
+    { col:'#1a3a8f', w:500, h:200, left:'5%',  top:'8%',  cx: 40, cy:-15, cx2:-25, cy2:10, cop:0.35, cd:24, cf:12, cdelay:0   },
+    { col:'#2244aa', w:420, h:170, left:'35%', top:'3%',  cx:-30, cy: 20, cx2: 35, cy2:-8, cop:0.30, cd:20, cf:10, cdelay:-4  },
+    { col:'#1e3d99', w:460, h:190, left:'60%', top:'10%', cx: 25, cy:-10, cx2:-20, cy2:18, cop:0.28, cd:28, cf:14, cdelay:-8  },
+    { col:'#162878', w:380, h:160, left:'15%', top:'25%', cx:-35, cy: 12, cx2: 28, cy2:-15,cop:0.22, cd:22, cf:11, cdelay:-2  },
+    { col:'#0f2060', w:550, h:220, left:'45%', top:'18%', cx: 20, cy:-25, cx2:-30, cy2: 20,cop:0.25, cd:32, cf:16, cdelay:-10 },
+    { col:'#3355bb', w:300, h:130, left:'80%', top:'5%',  cx:-20, cy: 15, cx2: 15, cy2:-10,cop:0.20, cd:18, cf: 9, cdelay:-6  },
+  ];
+  clouds.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'vg-cloud';
+    el.style.cssText = `width:${n.w}px;height:${n.h}px;left:${n.left};top:${n.top};
+      background:${n.col};--cb:30px;--cop:${n.cop};
+      --cd:${n.cd}s;--cf:${n.cf}s;--cdelay:${n.cdelay}s;
+      --cx:${n.cx}px;--cy:${n.cy}px;--cx2:${n.cx2}px;--cy2:${n.cy2}px;`;
+    c.appendChild(el);
+  });
+
+  // — REMOLINOS SVG —
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svgEl = document.createElementNS(svgNS, 'svg');
+  svgEl.classList.add('vangogh-canvas');
+  svgEl.setAttribute('xmlns', svgNS);
+
+  // Función para crear arco espiral
+  function spiralPath(cx, cy, r1, r2, turns) {
+    let d = '';
+    const steps = turns * 36;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const angle = t * turns * Math.PI * 2;
+      const r = r1 + (r2 - r1) * t;
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+      d += i === 0 ? `M${x.toFixed(1)},${y.toFixed(1)}` : ` L${x.toFixed(1)},${y.toFixed(1)}`;
+    }
+    return d;
+  }
+
+  const swirls = [
+    { cx:'22%', cy:'18%', r1:8,  r2:80,  turns:3.5, col:'#4a7fd4', w:2.5, op:0.25, dur:22 },
+    { cx:'65%', cy:'12%', r1:10, r2:100, turns:4,   col:'#5588e0', w:2,   op:0.20, dur:28 },
+    { cx:'45%', cy:'30%', r1:6,  r2:65,  turns:3,   col:'#3a6abf', w:1.8, op:0.18, dur:20 },
+    { cx:'80%', cy:'22%', r1:5,  r2:55,  turns:3,   col:'#4070cc', w:1.5, op:0.15, dur:24 },
+    { cx:'10%', cy:'40%', r1:7,  r2:70,  turns:3.5, col:'#3560bb', w:2,   op:0.18, dur:26 },
+  ];
+
+  swirls.forEach((s, idx) => {
+    // Convertir % a valores relativos para el SVG viewBox
+    const vbW = 1000, vbH = 700;
+    const cx = parseFloat(s.cx) / 100 * vbW;
+    const cy = parseFloat(s.cy) / 100 * vbH;
+
+    const path = document.createElementNS(svgNS, 'path');
+    path.setAttribute('d', spiralPath(cx, cy, s.r1, s.r2, s.turns));
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', s.col);
+    path.setAttribute('stroke-width', s.w);
+    path.setAttribute('opacity', s.op);
+    path.style.cssText = `animation: swirlSpin ${s.dur}s linear infinite; transform-origin: ${s.cx} ${s.cy};`;
+    svgEl.appendChild(path);
+  });
+
+  svgEl.setAttribute('viewBox', '0 0 1000 700');
+  svgEl.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  c.appendChild(svgEl);
+
+  // — ESTRELLAS —
+  const starData = [
+    { left:'8%',  top:'6%',  sz:14, col:'#fff7aa', sg:2.2, sdx: 5, sdy: 3 },
+    { left:'18%', top:'12%', sz:10, col:'#ffe87a', sg:3.1, sdx:-4, sdy: 5 },
+    { left:'30%', top:'5%',  sz:16, col:'#ffffff', sg:2.5, sdx: 6, sdy:-3 },
+    { left:'42%', top:'9%',  sz:9,  col:'#ffd966', sg:3.8, sdx:-5, sdy: 4 },
+    { left:'55%', top:'4%',  sz:13, col:'#fff0aa', sg:2.8, sdx: 4, sdy: 6 },
+    { left:'63%', top:'14%', sz:11, col:'#ffe87a', sg:2.0, sdx:-6, sdy:-3 },
+    { left:'72%', top:'7%',  sz:15, col:'#ffffff', sg:3.3, sdx: 5, sdy: 4 },
+    { left:'82%', top:'10%', sz:8,  col:'#ffc84a', sg:4.0, sdx:-4, sdy: 5 },
+    { left:'90%', top:'5%',  sz:12, col:'#fff5cc', sg:2.6, sdx: 6, sdy:-4 },
+    { left:'25%', top:'20%', sz:7,  col:'#ffe87a', sg:3.5, sdx:-3, sdy: 6 },
+    { left:'50%', top:'18%', sz:10, col:'#ffffff', sg:2.3, sdx: 5, sdy: 3 },
+    { left:'75%', top:'20%', sz:8,  col:'#ffd700', sg:3.0, sdx:-5, sdy:-4 },
+    { left:'5%',  top:'22%', sz:6,  col:'#ffe87a', sg:4.2, sdx: 4, sdy: 5 },
+    { left:'95%', top:'15%', sz:9,  col:'#fff0aa', sg:2.9, sdx:-4, sdy: 3 },
+    { left:'38%', top:'15%', sz:6,  col:'#ffd966', sg:3.6, sdx: 3, sdy:-5 },
+  ];
+
+  starData.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'vg-star';
     el.style.cssText = `
-      width:${n.size}px; height:${n.size}px;
-      left:${n.left}%; top:${n.top}%;
-      background: radial-gradient(circle, ${n.col} 0%, transparent 70%);
-      --blur:${n.blur}px; --nop:${n.op};
-      --nd:${n.nd}s; --nf:${n.nf}s; --ndelay:${n.delay}s;
-      --nx1:${n.nx1}px; --ny1:${n.ny1}px;
-      --nx2:${n.nx2}px; --ny2:${n.ny2}px;
-      --nx3:${n.nx3}px; --ny3:${n.ny3}px;
+      width:${s.sz}px; height:${s.sz}px;
+      left:${s.left}; top:${s.top};
+      background:${s.col}; --sc:${s.col};
+      --sg:${s.sg}s; --sd:${(15+i*1.3).toFixed(1)}s;
+      --sdelay:-${(i*0.7).toFixed(1)}s;
+      --sdx:${s.sdx}px; --sdy:${s.sdy}px;
     `;
     c.appendChild(el);
   });
+
+  // — LUNA (gran círculo dorado) —
+  const moon = document.createElement('div');
+  moon.style.cssText = `
+    position:absolute; width:90px; height:90px;
+    right:12%; top:6%;
+    border-radius:50%;
+    background: radial-gradient(circle at 38% 38%, #fff8c0, #ffd700 55%, #c9830a);
+    box-shadow: 0 0 30px #ffd70088, 0 0 80px #ffd70044, 0 0 140px #c9a84c22;
+    animation: starGlow 4s ease-in-out infinite;
+    --sc:#ffd700;
+    pointer-events:none;
+  `;
+  c.appendChild(moon);
+
 })();
 
 // ========= DESTELLOS INTERACTIVOS =========
