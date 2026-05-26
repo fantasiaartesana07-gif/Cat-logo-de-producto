@@ -44,9 +44,30 @@
     overflow-x: hidden;
     transition: color 0.4s ease;
   }
-  10%  { opacity: var(--max-op, 0.6); }
-    80%  { opacity: var(--max-op, 0.5); }
-    100% { opacity: 0; transform: translateY(-110vh) translateX(var(--drift, 20px)) scale(1.1); }
+
+  /* ========= FONDO MÓVIL SIMPLIFICADO ========= */
+  @media (max-width: 700px) {
+    body {
+      background: #0a0e2a;
+      background-image: none !important;
+    }
+    /* Gradiente suave estático en lugar del animado */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(138,79,255,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 5%,  rgba(78,205,196,0.14) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(201,168,76,0.10) 0%, transparent 55%),
+        linear-gradient(175deg, #020d18 0%, #051e2e 40%, #073544 70%, #04231a 100%);
+      pointer-events: none;
+    }
+    /* Ocultar capa de plancton en móvil (se recreará reducida via JS) */
+    .plankton-layer { opacity: 0.5; }
+    /* Destellos de cursor desactivados en táctil */
+    .interactive-sparkle { display: none !important; }
   }
 
   /* ========= PLANCTON BRILLANTE ========= */
@@ -69,80 +90,7 @@
     50%     { opacity: 0.9; box-shadow: 0 0 12px var(--col,#4ecdc4), 0 0 24px var(--col,#4ecdc4); }
   }
 
-  /* ========= FONDO VAN GOGH — NOCHE ESTRELLADA ========= */
-  .fairy-dust { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:-1; overflow:hidden; }
-
-  /* Canvas SVG de remolinos */
-  .vangogh-canvas {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-  }
-
-  /* Estrellas que pulsan */
-  .vg-star {
-    position: absolute;
-    border-radius: 50%;
-    animation: starGlow var(--sg, 3s) ease-in-out infinite,
-               starDrift var(--sd, 20s) ease-in-out infinite alternate;
-    animation-delay: var(--sdelay, 0s);
-  }
-  @keyframes starGlow {
-    0%,100% { transform: scale(0.7); opacity: 0.4;
-               box-shadow: 0 0 4px var(--sc,#ffe87a), 0 0 10px var(--sc,#ffe87a); }
-    50%     { transform: scale(1.4); opacity: 1;
-               box-shadow: 0 0 10px var(--sc,#ffe87a), 0 0 28px var(--sc,#ffe87a), 0 0 50px var(--sc,#ffe87a); }
-  }
-  @keyframes starDrift {
-    0%   { margin-left: 0; margin-top: 0; }
-    100% { margin-left: var(--sdx,8px); margin-top: var(--sdy,5px); }
-  }
-
-  /* Remolinos / vórtices */
-  .vg-swirl {
-    position: absolute;
-    border-radius: 50%;
-    border: var(--sw, 3px) solid transparent;
-    animation: swirlSpin var(--ss, 18s) linear infinite,
-               swirlPulse var(--sp, 8s) ease-in-out infinite;
-    animation-delay: var(--swdelay, 0s);
-    opacity: 0;
-  }
-  @keyframes swirlSpin {
-    from { transform: rotate(0deg) scale(1); }
-    to   { transform: rotate(360deg) scale(1.04); }
-  }
-  @keyframes swirlPulse {
-    0%,100% { opacity: 0.07; }
-    50%     { opacity: var(--sop, 0.22); }
-  }
-
-  /* Nubes de color tipo pinceladas */
-  .vg-cloud {
-    position: absolute;
-    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
-    filter: blur(var(--cb, 35px));
-    animation: cloudFloat var(--cd, 22s) ease-in-out infinite alternate,
-               cloudFade  var(--cf, 11s) ease-in-out infinite;
-    animation-delay: var(--cdelay, 0s);
-    opacity: 0;
-  }
-  @keyframes cloudFloat {
-    0%   { transform: translate(0,0) rotate(0deg) scale(1); }
-    50%  { transform: translate(var(--cx,30px), var(--cy,-20px)) rotate(8deg) scale(1.06); }
-    100% { transform: translate(var(--cx2,-20px), var(--cy2,15px)) rotate(-4deg) scale(0.96); }
-  }
-  @keyframes cloudFade {
-    0%,100% { opacity: 0.06; }
-    50%     { opacity: var(--cop, 0.18); }
-  }
-
-  /* Pinceladas de fondo */
-  .vg-stroke {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(var(--stb, 55px));
-    opacity: var(--stop, 0.08);
-  }
-
+  
   .interactive-sparkle {
     position: absolute; border-radius: 50%; pointer-events: none; z-index: 9999; opacity: 1;
     animation: fadeOutSparkle var(--d, 1.2s) forwards cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -181,7 +129,7 @@
     background: linear-gradient(90deg, #8a4fff, #4ecdc4, #f9d76b, #ff85c8, #4ecdc4, #8a4fff);
     background-size: 300% auto;
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    animation: textShimmer 4s linear infinite;
+    animation: textShimmer 10s linear infinite;
   }
   @keyframes textShimmer { to { background-position: 300% center; } }
   .header-emoji {
@@ -534,8 +482,6 @@
   }
   .scroll-top-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
   .scroll-top-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 6px 25px rgba(78,205,196,0.5); transform: translateY(-3px) scale(1.1); }
-    100% { margin-top: -8px; }
-  }
 
   /* ========= LUNA CON FASES ========= */
   .moon-widget {
@@ -557,17 +503,19 @@
     font-size: .65rem; color: var(--text-gold); letter-spacing: 1px;
     font-family: 'Cinzel', serif; opacity: .8; text-align: center;
   }
-  @media (max-width:700px) { .moon-widget { display: none; } }/* ========= LUCIÉRNAGAS ========= */
+  @media (max-width:700px) { .moon-widget { display: none; } }
+
+  /* ========= LUCIÉRNAGAS ========= */
   .firefly {
-    position: fixed; border-radius: 50%; pointer-events: none; z-index: -1;
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 1;
     width: var(--fsz,5px); height: var(--fsz,5px);
     background: var(--fcol,#c9a84c);
-    box-shadow: 0 0 6px var(--fcol,#c9a84c), 0 0 14px var(--fcol,#c9a84c);
+    box-shadow: 0 0 8px 2px var(--fcol,#c9a84c), 0 0 20px 4px var(--fcol,#c9a84c), 0 0 35px 6px var(--fcol,#c9a84c);
     animation:
       ffX var(--fxd,18s) ease-in-out infinite alternate var(--fxdelay,0s),
       ffY var(--fyd,13s) ease-in-out infinite alternate var(--fydelay,0s),
-      ffPulse var(--fpd,2.5s) ease-in-out infinite var(--fpdel,0s);
-    will-change: transform, opacity;
+      ffColorPulse var(--fpd,2.5s) ease-in-out infinite var(--fpdel,0s);
+    will-change: transform, opacity, filter;
   }
   @keyframes ffX {
     0%{left:var(--fx0,5%)} 30%{left:var(--fx1,40%)} 65%{left:var(--fx2,20%)} 100%{left:var(--fx3,70%)}
@@ -575,9 +523,10 @@
   @keyframes ffY {
     0%{top:var(--fy0,20%)} 35%{top:var(--fy1,65%)} 65%{top:var(--fy2,35%)} 100%{top:var(--fy3,80%)}
   }
-  @keyframes ffPulse {
-    0%,100%{ opacity:0.1; transform:scale(0.6); }
-    50%    { opacity:1;   transform:scale(1.4); }
+  @keyframes ffColorPulse {
+    0%   { opacity:0.08; transform:scale(0.5); filter:brightness(0.6) saturate(0.5); }
+    50%  { opacity:1;    transform:scale(1.6); filter:brightness(1.8) saturate(2) drop-shadow(0 0 8px var(--fcol,#c9a84c)); }
+    100% { opacity:0.08; transform:scale(0.5); filter:brightness(0.6) saturate(0.5); }
   }
 
   /* ========= HOVER MÁGICO EN TARJETAS ========= */
@@ -1126,8 +1075,10 @@
   const plankColors = [
     '#4ecdc4','#8a4fff','#c9a84c','#ff85c8','#64e8e0','#c084fc','#f9d76b'
   ];
+  const isMobile = window.innerWidth <= 700;
+  const planktonCount = isMobile ? 10 : 35;
 
-  for (let i = 0; i < 35; i++) {
+  for (let i = 0; i < planktonCount; i++) {
     const p = document.createElement('div');
     p.className = 'plankton';
     const sz = Math.random() * 4 + 1.5;
@@ -1152,156 +1103,22 @@
   }
 })();
 
-// ========= FONDO VAN GOGH — NOCHE ESTRELLADA =========
-const cols = ['#ffe87a','#ffd700','#4ecdc4','#a8d8ff','#ffffff','#ffc84a'];
-const c = document.getElementById('dust');
-
-(function() {
-  // — PINCELADAS DE FONDO (grandes manchas de color) —
-  const strokes = [
-    { col:'#1a2a6c', w:900, h:500, left:'10%', top:'5%'  },
-    { col:'#0d1b4b', w:700, h:400, left:'50%', top:'0%'  },
-    { col:'#162456', w:800, h:350, left:'0%',  top:'30%' },
-    { col:'#0a1535', w:600, h:500, left:'60%', top:'25%' },
-    { col:'#1e3a5f', w:500, h:300, left:'25%', top:'50%' },
-    { col:'#112040', w:750, h:400, left:'40%', top:'55%' },
-  ];
-  strokes.forEach(s => {
-    const el = document.createElement('div');
-    el.className = 'vg-stroke';
-    el.style.cssText = `width:${s.w}px;height:${s.h}px;left:${s.left};top:${s.top};background:${s.col};--stb:80px;--stop:0.9;`;
-    c.appendChild(el);
-  });
-
-  // — NUBES DE COLOR (pinceladas tipo Van Gogh) —
-  const clouds = [
-    { col:'#1a3a8f', w:500, h:200, left:'5%',  top:'8%',  cx: 40, cy:-15, cx2:-25, cy2:10, cop:0.35, cd:24, cf:12, cdelay:0   },
-    { col:'#2244aa', w:420, h:170, left:'35%', top:'3%',  cx:-30, cy: 20, cx2: 35, cy2:-8, cop:0.30, cd:20, cf:10, cdelay:-4  },
-    { col:'#1e3d99', w:460, h:190, left:'60%', top:'10%', cx: 25, cy:-10, cx2:-20, cy2:18, cop:0.28, cd:28, cf:14, cdelay:-8  },
-    { col:'#162878', w:380, h:160, left:'15%', top:'25%', cx:-35, cy: 12, cx2: 28, cy2:-15,cop:0.22, cd:22, cf:11, cdelay:-2  },
-    { col:'#0f2060', w:550, h:220, left:'45%', top:'18%', cx: 20, cy:-25, cx2:-30, cy2: 20,cop:0.25, cd:32, cf:16, cdelay:-10 },
-    { col:'#3355bb', w:300, h:130, left:'80%', top:'5%',  cx:-20, cy: 15, cx2: 15, cy2:-10,cop:0.20, cd:18, cf: 9, cdelay:-6  },
-  ];
-  clouds.forEach(n => {
-    const el = document.createElement('div');
-    el.className = 'vg-cloud';
-    el.style.cssText = `width:${n.w}px;height:${n.h}px;left:${n.left};top:${n.top};
-      background:${n.col};--cb:30px;--cop:${n.cop};
-      --cd:${n.cd}s;--cf:${n.cf}s;--cdelay:${n.cdelay}s;
-      --cx:${n.cx}px;--cy:${n.cy}px;--cx2:${n.cx2}px;--cy2:${n.cy2}px;`;
-    c.appendChild(el);
-  });
-
-  // — REMOLINOS SVG —
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svgEl = document.createElementNS(svgNS, 'svg');
-  svgEl.classList.add('vangogh-canvas');
-  svgEl.setAttribute('xmlns', svgNS);
-
-  // Función para crear arco espiral
-  function spiralPath(cx, cy, r1, r2, turns) {
-    let d = '';
-    const steps = turns * 36;
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const angle = t * turns * Math.PI * 2;
-      const r = r1 + (r2 - r1) * t;
-      const x = cx + Math.cos(angle) * r;
-      const y = cy + Math.sin(angle) * r;
-      d += i === 0 ? `M${x.toFixed(1)},${y.toFixed(1)}` : ` L${x.toFixed(1)},${y.toFixed(1)}`;
-    }
-    return d;
-  }
-
-  const swirls = [
-    { cx:'22%', cy:'18%', r1:8,  r2:80,  turns:3.5, col:'#4a7fd4', w:2.5, op:0.25, dur:22 },
-    { cx:'65%', cy:'12%', r1:10, r2:100, turns:4,   col:'#5588e0', w:2,   op:0.20, dur:28 },
-    { cx:'45%', cy:'30%', r1:6,  r2:65,  turns:3,   col:'#3a6abf', w:1.8, op:0.18, dur:20 },
-    { cx:'80%', cy:'22%', r1:5,  r2:55,  turns:3,   col:'#4070cc', w:1.5, op:0.15, dur:24 },
-    { cx:'10%', cy:'40%', r1:7,  r2:70,  turns:3.5, col:'#3560bb', w:2,   op:0.18, dur:26 },
-  ];
-
-  swirls.forEach((s, idx) => {
-    // Convertir % a valores relativos para el SVG viewBox
-    const vbW = 1000, vbH = 700;
-    const cx = parseFloat(s.cx) / 100 * vbW;
-    const cy = parseFloat(s.cy) / 100 * vbH;
-
-    const path = document.createElementNS(svgNS, 'path');
-    path.setAttribute('d', spiralPath(cx, cy, s.r1, s.r2, s.turns));
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', s.col);
-    path.setAttribute('stroke-width', s.w);
-    path.setAttribute('opacity', s.op);
-    path.style.cssText = `animation: swirlSpin ${s.dur}s linear infinite; transform-origin: ${s.cx} ${s.cy};`;
-    svgEl.appendChild(path);
-  });
-
-  svgEl.setAttribute('viewBox', '0 0 1000 700');
-  svgEl.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-  c.appendChild(svgEl);
-
-  // — ESTRELLAS —
-  const starData = [
-    { left:'8%',  top:'6%',  sz:14, col:'#fff7aa', sg:2.2, sdx: 5, sdy: 3 },
-    { left:'18%', top:'12%', sz:10, col:'#ffe87a', sg:3.1, sdx:-4, sdy: 5 },
-    { left:'30%', top:'5%',  sz:16, col:'#ffffff', sg:2.5, sdx: 6, sdy:-3 },
-    { left:'42%', top:'9%',  sz:9,  col:'#ffd966', sg:3.8, sdx:-5, sdy: 4 },
-    { left:'55%', top:'4%',  sz:13, col:'#fff0aa', sg:2.8, sdx: 4, sdy: 6 },
-    { left:'63%', top:'14%', sz:11, col:'#ffe87a', sg:2.0, sdx:-6, sdy:-3 },
-    { left:'72%', top:'7%',  sz:15, col:'#ffffff', sg:3.3, sdx: 5, sdy: 4 },
-    { left:'82%', top:'10%', sz:8,  col:'#ffc84a', sg:4.0, sdx:-4, sdy: 5 },
-    { left:'90%', top:'5%',  sz:12, col:'#fff5cc', sg:2.6, sdx: 6, sdy:-4 },
-    { left:'25%', top:'20%', sz:7,  col:'#ffe87a', sg:3.5, sdx:-3, sdy: 6 },
-    { left:'50%', top:'18%', sz:10, col:'#ffffff', sg:2.3, sdx: 5, sdy: 3 },
-    { left:'75%', top:'20%', sz:8,  col:'#ffd700', sg:3.0, sdx:-5, sdy:-4 },
-    { left:'5%',  top:'22%', sz:6,  col:'#ffe87a', sg:4.2, sdx: 4, sdy: 5 },
-    { left:'95%', top:'15%', sz:9,  col:'#fff0aa', sg:2.9, sdx:-4, sdy: 3 },
-    { left:'38%', top:'15%', sz:6,  col:'#ffd966', sg:3.6, sdx: 3, sdy:-5 },
-  ];
-
-  starData.forEach((s, i) => {
-    const el = document.createElement('div');
-    el.className = 'vg-star';
-    el.style.cssText = `
-      width:${s.sz}px; height:${s.sz}px;
-      left:${s.left}; top:${s.top};
-      background:${s.col}; --sc:${s.col};
-      --sg:${s.sg}s; --sd:${(15+i*1.3).toFixed(1)}s;
-      --sdelay:-${(i*0.7).toFixed(1)}s;
-      --sdx:${s.sdx}px; --sdy:${s.sdy}px;
-    `;
-    c.appendChild(el);
-  });
-
-  // — LUNA (gran círculo dorado) —
-  const moon = document.createElement('div');
-  moon.style.cssText = `
-    position:absolute; width:90px; height:90px;
-    right:12%; top:6%;
-    border-radius:50%;
-    background: radial-gradient(circle at 38% 38%, #fff8c0, #ffd700 55%, #c9830a);
-    box-shadow: 0 0 30px #ffd70088, 0 0 80px #ffd70044, 0 0 140px #c9a84c22;
-    animation: starGlow 4s ease-in-out infinite;
-    --sc:#ffd700;
-    pointer-events:none;
-  `;
-  c.appendChild(moon);
-
-})();
 
 // ========= DESTELLOS INTERACTIVOS =========
+const sparkleColors = ['#ffe87a','#ffd700','#4ecdc4','#a8d8ff','#ffffff','#ffc84a','#ff85c8','#c084fc'];
+const sparkleContainer = document.getElementById('dust');
+
 function createInteractiveSparkle(x, y, isExplosion = false) {
   const s = document.createElement('div');
   s.className = 'interactive-sparkle';
   const sz = Math.random() * 7 + 4;
-  const col = cols[Math.floor(Math.random() * cols.length)];
+  const col = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
   const duration = (Math.random() * 0.7 + 0.5).toFixed(2) + 's';
   const range = isExplosion ? 130 : 40;
   const moveX = (Math.random() * range - (range/2)) + 'px';
   const moveY = (Math.random() * range - (range/2)) + 'px';
   s.style.cssText = `width:${sz}px;height:${sz}px;left:${x-sz/2}px;top:${y-sz/2}px;background:${col};box-shadow:0 0 ${sz*4}px ${col},0 0 ${sz*8}px ${col},0 0 ${sz*14}px ${col};--d:${duration};--mx:${moveX};--my:${moveY};`;
-  c.appendChild(s);
+  sparkleContainer.appendChild(s);
   setTimeout(() => s.remove(), parseFloat(duration) * 1000);
 }
 
@@ -1615,8 +1432,11 @@ function modalIr(i) {
   const bgFull  = `linear-gradient(125deg, #031a2e, #082e48, #0a4560, #063528, #0a3850, #042030, #0d4040)`;
   // Interpolamos mezclando opacidades via CSS custom property en body
   document.documentElement.style.setProperty('--moon-brightness', b);
-  document.body.style.backgroundImage = b < 0.5 ? bgDark : bgFull;
-  document.body.style.backgroundSize  = '400% 400%';
+  // Solo cambiar backgroundImage en escritorio; en móvil el ::before hace el fondo estático
+  if (window.innerWidth > 700) {
+    document.body.style.backgroundImage = b < 0.5 ? bgDark : bgFull;
+    document.body.style.backgroundSize  = '400% 400%';
+  }
 
   // Intensidad del plancton: más visible cuanto más llena
   const planktonOp = 0.08 + b * 0.82; // 0.08 a 0.9
@@ -1644,12 +1464,13 @@ function modalIr(i) {
 (function() {
   const layer  = document.getElementById('fireflyLayer');
   const colors = ['#c9a84c','#4ecdc4','#ff85c8','#c084fc','#f9d76b','#64e8e0'];
-  const count  = 12;
+  const isMobile = window.innerWidth <= 700;
+  const count  = isMobile ? 10 : 20;
   for (let i=0;i<count;i++) {
     const el = document.createElement('div');
     el.className = 'firefly';
     const col = colors[Math.floor(Math.random()*colors.length)];
-    const sz  = (3+Math.random()*4).toFixed(1);
+    const sz  = isMobile ? (3+Math.random()*3).toFixed(1) : (4+Math.random()*6).toFixed(1);
     el.style.cssText = `
       --fcol:${col};--fsz:${sz}px;
       --fx0:${(Math.random()*90).toFixed(0)}%;--fx1:${(Math.random()*90).toFixed(0)}%;
