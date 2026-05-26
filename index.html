@@ -35,32 +35,6 @@
     --badge-new-bg: linear-gradient(135deg,#8a4fff,#c084fc);
     --body-bg-grad: linear-gradient(125deg, #020d18, #051e2e, #073544, #04231a, #062a3a, #031520, #083028);
   }
-  [data-theme="light"] {
-    --bg1: #e8f4f8; --bg2: #d4edf5; --bg3: #c8e8f0; --bg4: #daf0e8;
-    --card-bg: rgba(255,255,255,0.85);
-    --card-border: rgba(78,150,196,.25);
-    --text-primary: #1a3040;
-    --text-secondary: #3a7080;
-    --text-gold: #8a6010;
-    --header-bg: rgba(200,235,245,0.7);
-    --filter-bg: rgba(220,240,248,0.8);
-    --filter-border: rgba(78,150,196,.35);
-    --filter-color: #2a6070;
-    --search-bg: rgba(255,255,255,0.9);
-    --search-border: rgba(78,150,196,0.4);
-    --modal-overlay: rgba(20,40,60,.75);
-    --modal-bg: rgba(240,250,255,0.97);
-    --carousel-bg: #d0eaf5;
-    --footer-bg: linear-gradient(to top, rgba(190,225,240,0.9), transparent);
-    --chip-bg: rgba(210,238,250,0.9);
-    --bubble-color1: rgba(78,180,196,0.18);
-    --bubble-color2: rgba(100,80,200,0.12);
-    --bubble-color3: rgba(180,140,40,0.12);
-    --scroll-btn-bg: rgba(200,235,248,.95);
-    --sort-bg: rgba(220,240,252,0.95);
-    --badge-new-bg: linear-gradient(135deg,#7040dd,#a060e0);
-    --body-bg-grad: linear-gradient(125deg, #d0ecf5, #c8e5f0, #d5f0e8, #c4e8f5, #d0ecfa, #d8f0ec, #c8eaf5);
-  }
 
   body {
     font-family: 'Nunito', sans-serif;
@@ -91,6 +65,7 @@
     animation: bubbleRise var(--dur, 8s) ease-in infinite;
     animation-delay: var(--delay, 0s);
     opacity: 0;
+    will-change: transform, opacity;
   }
   @keyframes bubbleRise {
     0%   { opacity: 0; transform: translateY(0) translateX(0) scale(0.5); }
@@ -133,11 +108,7 @@
     100% { opacity: 0; transform: scale(0.1) translate(var(--mx, 0px), var(--my, 0px)); }
   }
 
-  .reveal-card {
-    opacity: 0; transform: translateY(15px); will-change: opacity, transform;
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  }
-  .reveal-card.revealed { opacity: 1; transform: translateY(0); }
+  .reveal-card { opacity: 1; }
 
   .page { position: relative; z-index: 1; padding-bottom: 3rem; }
 
@@ -305,39 +276,6 @@
   }
   .sort-select:hover { border-color: #4ecdc4; }
 
-  /* ========= MODO CLARO/OSCURO ========= */
-  .theme-toggle {
-    flex-shrink: 0;
-    width: 44px; height: 24px;
-    background: rgba(13,34,34,0.6);
-    border: 1px solid rgba(78,205,196,.3);
-    border-radius: 12px; cursor: pointer;
-    position: relative; transition: all 0.4s ease;
-    backdrop-filter: blur(4px);
-    overflow: hidden;
-  }
-  [data-theme="light"] .theme-toggle {
-    background: rgba(180,225,245,0.7);
-    border-color: rgba(78,150,196,.4);
-  }
-  .theme-toggle-thumb {
-    position: absolute; top: 3px; left: 3px;
-    width: 16px; height: 16px; border-radius: 50%;
-    background: linear-gradient(135deg, #4ecdc4, #8a4fff);
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 9px;
-  }
-  [data-theme="light"] .theme-toggle-thumb {
-    transform: translateX(20px);
-    background: linear-gradient(135deg, #f9d76b, #ff85c8);
-  }
-  .theme-toggle-label {
-    font-size: .68rem; color: var(--text-secondary); margin-right: 4px;
-    font-weight: 700; white-space: nowrap; align-self: center;
-  }
-  .theme-group { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-
   /* ========= NO RESULTS ========= */
   .no-results {
     grid-column: 1/-1;
@@ -362,7 +300,6 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     position: relative;
   }
-  [data-theme="light"] .featured-card {
     background: linear-gradient(145deg, rgba(220,245,250,0.9), rgba(200,220,250,0.9));
     box-shadow: 0 8px 30px rgba(100,160,200,.2);
   }
@@ -387,7 +324,6 @@
     transition: transform .3s cubic-bezier(0.175,0.885,0.32,1.2), box-shadow 0.3s ease, border-color 0.3s ease;
     position: relative;
   }
-  [data-theme="light"] .product-card { box-shadow: 0 6px 20px rgba(100,160,200,.15); }
   .product-card::after { content:''; position:absolute; inset:0; border-radius:18px; background:linear-gradient(135deg,rgba(138,79,255,0.08),rgba(78,205,196,0.08)); opacity:0; transition:opacity 0.3s ease; pointer-events:none; }
   .product-card:hover::after { opacity:1; }
   .product-card:hover { transform:translateY(-8px) scale(1.01); border-color:rgba(138,79,255,0.6); box-shadow:0 16px 35px rgba(138,79,255,.3),0 8px 20px rgba(78,205,196,.15); }
@@ -451,7 +387,6 @@
   .btn-buy span, .btn-buy { position:relative; z-index:1; }
   .badge { font-size:.63rem; padding:.2rem .55rem; border-radius:6px; font-weight:700; letter-spacing:0.5px; }
   .b-pop { background:#1a1800; color:#c9a84c; border:1px solid rgba(201,168,76,.4); }
-  [data-theme="light"] .b-pop { background:rgba(255,240,180,0.7); color:#8a6010; }
   .btn-group { display:flex; flex-direction:column; gap:6px; }
   .btn-ver {
     background:rgba(138,79,255,.08); border:1px solid #8a4fff;
@@ -579,12 +514,6 @@
         <option value="desc">↓ Mayor precio</option>
       </select>
     </div>
-    <div class="theme-group">
-      <span class="theme-toggle-label" id="themeLabel">🌙</span>
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Modo claro/oscuro">
-        <div class="theme-toggle-thumb" id="themeThumb">🌙</div>
-      </button>
-    </div>
   </div>
 
   <!-- LAYOUT PRINCIPAL: SIDEBAR + CATÁLOGO -->
@@ -595,7 +524,7 @@
       <div class="sidebar-title">✦ Categorías</div>
       <div class="nav-filters" id="navFilters">
         <button class="filter-btn active" data-cat="todos" onclick="filtrar('todos',this)">Todo <span class="cat-count" id="cnt-todos">0</span></button>
-        <button class="filter-btn" data-cat="pedido" onclick="filtrar('pedido',this)">A pedido <span class="cat-count" id="cnt-pedido">0</span></button>
+        <button class="filter-btn" data-cat="pedido" onclick="filtrar('pedido',this)">A pedido</button>
         <button class="filter-btn" data-cat="accesorio" onclick="filtrar('accesorio',this)">Accesorios <span class="cat-count" id="cnt-accesorio">0</span></button>
         <button class="filter-btn" data-cat="tematico" onclick="filtrar('tematico',this)">Creaciones Temáticas <span class="cat-count" id="cnt-tematico">0</span></button>
         <button class="filter-btn" data-cat="deco" onclick="filtrar('deco',this)">Decoración <span class="cat-count" id="cnt-deco">0</span></button>
@@ -1170,18 +1099,7 @@ window.addEventListener('touchmove', (e) => {
   }
 }, { passive: true });
 
-// ========= REVELACIÓN MÁGICA =========
-const observerOptions = { threshold: 0.05, rootMargin: "0px 0px -20px 0px" };
-const cardObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('revealed');
-      cardObserver.unobserve(entry.target);
-    }
-  });
-}, observerOptions);
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll('.reveal-card').forEach(card => cardObserver.observe(card));
   updateCounts();
 });
 
@@ -1195,32 +1113,7 @@ window.addEventListener('scroll', () => {
   }
 }, { passive: true });
 
-// ========= MODO CLARO / OSCURO =========
-function toggleTheme() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  const label = document.getElementById('themeLabel');
-  const thumb = document.getElementById('themeThumb');
-  if (next === 'light') {
-    label.textContent = '☀️';
-    thumb.textContent = '☀️';
-  } else {
-    label.textContent = '🌙';
-    thumb.textContent = '🌙';
-  }
-  localStorage.setItem('fa-theme', next);
-}
-// Restaurar tema guardado
-(function() {
-  const saved = localStorage.getItem('fa-theme');
-  if (saved && saved !== 'dark') {
-    document.documentElement.setAttribute('data-theme', saved);
-    document.getElementById('themeLabel').textContent = '☀️';
-    document.getElementById('themeThumb').textContent = '☀️';
-  }
-})();
+
 
 // ========= FILTROS =========
 let currentCat = 'todos';
