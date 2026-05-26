@@ -236,7 +236,7 @@
   /* ========= SIDEBAR DE CATEGORÍAS ========= */
   .sidebar {
     width: 190px; min-width: 190px; flex-shrink: 0;
-    position: sticky; top: 1rem;
+    align-self: flex-start;
   }
   .sidebar-title {
     font-family: 'Cinzel', serif;
@@ -275,7 +275,7 @@
   }
 
   /* Contenido principal (grid) dentro del layout */
-  .catalog-main { flex: 1; min-width: 0; }
+  .catalog-main { flex: 1; min-width: 0; overflow: hidden; }
 
   /* Responsive: sidebar arriba en móvil */
   @media (max-width: 700px) {
@@ -348,7 +348,6 @@
   .no-results.show { display: block; }
 
   /* ========= LAYOUT PRINCIPAL ========= */
-  .catalog-wrap { width: 100%; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
 
   /* ========= FEATURED CARD ========= */
@@ -606,7 +605,6 @@
 
     <!-- CATÁLOGO PRINCIPAL -->
     <div class="catalog-main">
-    <div class="catalog-wrap">
     <div class="section-divider">
       <div class="section-divider-line"></div>
       <span class="section-divider-icon">✦</span>
@@ -1008,7 +1006,6 @@
       </div>
 
     </div>
-  </div>
     </div><!-- /catalog-main -->
   </div><!-- /main-layout -->
 
@@ -1018,24 +1015,13 @@
     <div class="section-divider-line"></div>
   </div>
 
-  <!-- FOOTER CON OLAS DETRÁS -->
-  <div class="footer" style="position:relative; overflow:hidden; padding-top:4rem;">
-    <!-- OLAS ANIMADAS (detrás del contenido) -->
-    <div class="footer-waves" style="position:absolute;top:0;left:0;width:100%;pointer-events:none;z-index:0;">
-      <svg viewBox="0 0 1000 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path class="wave3" d="M0,50 C100,30 300,60 500,45 C700,30 900,60 1000,50 L1000,60 L0,60 Z" fill="rgba(138,79,255,0.2)"/>
-        <path class="wave2" d="M0,40 C200,10 400,60 600,40 C800,20 900,50 1000,40 L1000,60 L0,60 Z" fill="rgba(78,205,196,0.2)"/>
-        <path class="wave1" d="M0,30 C150,60 350,0 500,30 C650,60 850,0 1000,30 L1000,60 L0,60 Z" fill="rgba(201,168,76,0.15)"/>
-      </svg>
-    </div>
-    <div style="position:relative;z-index:1;">
+  <div class="footer">
     <div class="footer-icon">🦋✨🧜‍♀️</div>
     <h3>¿Te enamoraste de algo?</h3>
     <p>Pedidos especiales y diseños únicos · ¡Contáctanos y lo hacemos realidad!</p>
     <div class="chips">
       <a class="chip" href="https://wa.me/59898458675" target="_blank">📱 WhatsApp</a>
       <a class="chip" href="https://www.instagram.com/_fantasia_artesana_" target="_blank">📸 Instagram</a>
-    </div>
     </div>
   </div>
 
