@@ -53,23 +53,7 @@
     75%  { background-position: 50% 0%; }
     100% { background-position: 0% 50%; }
   }
-
-  /* ========= BURBUJAS FLOTANTES ========= */
-  .bubbles-layer {
-    position: fixed; top:0; left:0; right:0; bottom:0;
-    pointer-events:none; z-index:0; overflow:hidden;
-  }
-  .bubble {
-    position: absolute;
-    border-radius: 50%;
-    animation: bubbleRise var(--dur, 8s) ease-in infinite;
-    animation-delay: var(--delay, 0s);
-    opacity: 0;
-    will-change: transform, opacity;
-  }
-  @keyframes bubbleRise {
-    0%   { opacity: 0; transform: translateY(0) translateX(0) scale(0.5); }
-    10%  { opacity: var(--max-op, 0.6); }
+  10%  { opacity: var(--max-op, 0.6); }
     80%  { opacity: var(--max-op, 0.5); }
     100% { opacity: 0; transform: translateY(-110vh) translateX(var(--drift, 20px)) scale(1.1); }
   }
@@ -110,7 +94,11 @@
 
   .reveal-card { opacity: 1; }
 
-  .page { position: relative; z-index: 1; padding-bottom: 3rem; }
+  .page { position: relative; z-index: 2; padding-bottom: 3rem;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .page.page-visible { opacity: 1; transform: translateY(0); }
 
   /* ========= HEADER ========= */
   .header {
@@ -207,8 +195,24 @@
   /* ========= SIDEBAR DE CATEGORÍAS ========= */
   .sidebar {
     width: 190px; min-width: 190px; flex-shrink: 0;
-    align-self: flex-start;
+    position: sticky; top: 1.2rem; align-self: flex-start;
   }
+  .sidebar-deco {
+    margin-top: 1.5rem; padding-top: 1.2rem;
+    border-top: 1px solid rgba(78,205,196,0.15);
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .sidebar-deco-item {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 0.3rem;
+    opacity: 0.75;
+  }
+  .sidebar-deco-icon { font-size: 1.6rem; filter: drop-shadow(0 0 6px rgba(78,205,196,0.5)); animation: sideFloat 4s ease-in-out infinite; }
+  .sidebar-deco-item:nth-child(2) .sidebar-deco-icon { animation-delay: 1.3s; }
+  .sidebar-deco-item:nth-child(3) .sidebar-deco-icon { animation-delay: 2.6s; }
+  @keyframes sideFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-5px);} }
+  .sidebar-deco-label { font-size: .7rem; color: var(--text-secondary); font-weight: 600; letter-spacing: 0.5px; line-height: 1.3; }
+  @media (max-width: 700px) { .sidebar-deco { display: none; } }
   .sidebar-title {
     font-family: 'Cinzel', serif;
     font-size: .78rem; letter-spacing: 2px; text-transform: uppercase;
@@ -470,12 +474,84 @@
   }
   .scroll-top-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
   .scroll-top-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 6px 25px rgba(78,205,196,0.5); transform: translateY(-3px) scale(1.1); }
+    100% { margin-top: -8px; }
+  }
+
+  /* ========= LUNA CON FASES ========= */
+  .moon-widget {
+    margin-top: 1.8rem; padding-top: 1.2rem;
+    border-top: 1px solid rgba(78,205,196,0.15);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .moon-face {
+    font-size: 2rem; line-height: 1;
+    filter: drop-shadow(0 0 10px rgba(201,168,76,0.8)) drop-shadow(0 0 22px rgba(201,168,76,0.4));
+    animation: moonGlow 3s ease-in-out infinite alternate;
+    cursor: default; user-select: none;
+  }
+  @keyframes moonGlow {
+    0%   { filter: drop-shadow(0 0 6px rgba(201,168,76,0.6)) drop-shadow(0 0 14px rgba(201,168,76,0.3)); }
+    100% { filter: drop-shadow(0 0 14px rgba(201,168,76,1))  drop-shadow(0 0 28px rgba(201,168,76,0.6)); }
+  }
+  .moon-label {
+    font-size: .65rem; color: var(--text-gold); letter-spacing: 1px;
+    font-family: 'Cinzel', serif; opacity: .8; text-align: center;
+  }
+  @media (max-width:700px) { .moon-widget { display: none; } }/* ========= LUCIÉRNAGAS ========= */
+  .firefly {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+    width: var(--fsz,5px); height: var(--fsz,5px);
+    background: var(--fcol,#c9a84c);
+    box-shadow: 0 0 6px var(--fcol,#c9a84c), 0 0 14px var(--fcol,#c9a84c);
+    animation:
+      ffX var(--fxd,18s) ease-in-out infinite alternate var(--fxdelay,0s),
+      ffY var(--fyd,13s) ease-in-out infinite alternate var(--fydelay,0s),
+      ffPulse var(--fpd,2.5s) ease-in-out infinite var(--fpdel,0s);
+    will-change: transform, opacity;
+  }
+  @keyframes ffX {
+    0%{left:var(--fx0,5%)} 30%{left:var(--fx1,40%)} 65%{left:var(--fx2,20%)} 100%{left:var(--fx3,70%)}
+  }
+  @keyframes ffY {
+    0%{top:var(--fy0,20%)} 35%{top:var(--fy1,65%)} 65%{top:var(--fy2,35%)} 100%{top:var(--fy3,80%)}
+  }
+  @keyframes ffPulse {
+    0%,100%{ opacity:0.1; transform:scale(0.6); }
+    50%    { opacity:1;   transform:scale(1.4); }
+  }
+
+  /* ========= HOVER MÁGICO EN TARJETAS ========= */
+  .product-card .magic-border, .featured-card .magic-border {
+    position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; z-index:4;
+    opacity:0; transition:opacity 0.3s ease;
+    background: conic-gradient(from var(--angle,0deg), #8a4fff, #4ecdc4, #f9d76b, #ff85c8, #8a4fff);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out; mask-composite: exclude;
+    padding: 2px;
+  }
+  .product-card:hover .magic-border,
+  .featured-card:hover .magic-border { opacity:1; animation: rotateBorder 1.8s linear infinite; }
+  @keyframes rotateBorder { to { --angle: 360deg; } }
+  @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+
+  /* ========= PARTÍCULAS HOVER TARJETA ========= */
+  .card-particle {
+    position:absolute; border-radius:50%; pointer-events:none; z-index:10;
+    animation: cardParticleFly var(--cpd,0.9s) ease-out forwards;
+  }
+  @keyframes cardParticleFly {
+    0%  { opacity:1; transform: translate(0,0) scale(1.2); }
+    100%{ opacity:0; transform: translate(var(--cpx,0px), var(--cpy,-40px)) scale(0.1); }
+  }
+
 </style>
 </head>
 <body>
 
 <div class="fairy-dust" id="dust"></div>
-<div class="bubbles-layer" id="bubblesLayer"></div>
+
+<div id="fireflyLayer"  style="position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden;"></div>
+
 <div class="plankton-layer" id="planktonLayer"></div>
 
 <!-- FUEGOS ARTIFICIALES DE ENTRADA -->
@@ -493,7 +569,7 @@
     <div class="slogan">Donde el destino y las manos se encuentran para crear magia</div>
     <div class="divider">
       <div class="divider-line l"></div>
-      <span style="color:#c9a84c;font-size:14px">✦</span>
+      <span id="moonFace" style="font-size:1.4rem;line-height:1;filter:drop-shadow(0 0 10px rgba(201,168,76,0.8));cursor:default;user-select:none;" title="">🌕</span>
       <div class="divider-line r"></div>
     </div>
   </div>
@@ -530,6 +606,24 @@
         <button class="filter-btn" data-cat="deco" onclick="filtrar('deco',this)">Decoración <span class="cat-count" id="cnt-deco">0</span></button>
         <button class="filter-btn" data-cat="llave" onclick="filtrar('llave',this)">Llaveros <span class="cat-count" id="cnt-llave">0</span></button>
       </div>
+      <div class="sidebar-deco">
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">🧶</span>
+          <span class="sidebar-deco-label">Tejido a mano con amor</span>
+        </div>
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">✨</span>
+          <span class="sidebar-deco-label">Piezas únicas</span>
+        </div>
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">🌸</span>
+          <span class="sidebar-deco-label">Diseños a pedido</span>
+        </div>
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">🦋</span>
+          <span class="sidebar-deco-label">Magia artesanal</span>
+        </div>
+      </div>
     </aside>
 
     <!-- CATÁLOGO PRINCIPAL -->
@@ -542,7 +636,7 @@
     <div class="grid" id="grid">
 
       <!-- FEATURED: Espiral del Viento Colores -->
-      <div class="featured-card reveal-card" data-cat="deco" data-price="450" data-name="Espiral del Viento Colores Combinados" data-new="false">
+      <div class="featured-card reveal-card" data-cat="deco" data-price="450" data-name="Espiral del Viento Colores Combinados" data-new="false"><div class="magic-border"></div>
         <div class="featured-carousel">
           <div class="carousel" data-idx="0">
             <div class="carousel-track">
@@ -574,7 +668,7 @@
       </div>
 
       <!-- Espiral Monocromatico -->
-      <div class="product-card reveal-card" data-cat="deco" data-price="400" data-name="Espiral del Viento Monocromático" data-new="false">
+      <div class="product-card reveal-card" data-cat="deco" data-price="400" data-name="Espiral del Viento Monocromático" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientoverde.jpg" alt="Cortavientos Verde">
@@ -601,7 +695,7 @@
       </div>
 
       <!-- Llavero Margarita Simple -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="250" data-name="Llavero Margarita Simple" data-new="false">
+      <div class="product-card reveal-card" data-cat="llave" data-price="250" data-name="Llavero Margarita Simple" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita.jpg" alt="Margarita Simple">
@@ -624,8 +718,7 @@
       </div>
 
       <!-- Llavero Ppyopuli -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="350" data-name="Llavero Ppyopuli Amigurumi Woozi" data-new="true">
-        <div class="badge-new">✨ Nuevo</div>
+      <div class="product-card reveal-card" data-cat="llave" data-price="350" data-name="Llavero Ppyopuli Amigurumi Woozi" data-new="true"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/ppyopuli.jpg" alt="Ppyopuli">
@@ -648,7 +741,7 @@
       </div>
 
       <!-- Kit de Música V1 -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 1" data-new="false">
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 1" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/dosguitarras.jpg" alt="Dos Guitarras">
@@ -682,7 +775,7 @@
       </div>
 
       <!-- Kit de Música V2 -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 2" data-new="false">
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 2" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/coraznconmano.jpg" alt="Corazón con Mano">
@@ -713,7 +806,7 @@
       </div>
 
       <!-- Kit de Piratas -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Piratas" data-new="false">
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Piratas" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/barco.jpg" alt="Barco">
@@ -743,7 +836,7 @@
       </div>
 
       <!-- Kit Nacional sin palo -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Nacional" data-new="false">
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Nacional" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudodenacionalsinpalo.jpg" alt="Escudo Nacional">
@@ -773,8 +866,7 @@
       </div>
 
       <!-- Topper Nacional con palo -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Topper para Torta Nacional" data-new="true">
-        <div class="badge-new">✨ Nuevo</div>
+      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Topper para Torta Nacional" data-new="true"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudoddenacionalconpalo.jpg" alt="Escudo con Palo">
@@ -805,7 +897,7 @@
       </div>
 
       <!-- Margarita + Pompón -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="350" data-name="Margarita Bolitas y Pompón" data-new="false">
+      <div class="product-card reveal-card" data-cat="llave" data-price="350" data-name="Margarita Bolitas y Pompón" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon.jpg" alt="Margarita con Pompón">
@@ -833,7 +925,7 @@
       </div>
 
       <!-- Moño Broche con Cadena -->
-      <div class="product-card reveal-card" data-cat="accesorio" data-price="350" data-name="Moño Broche con Cadena" data-new="false">
+      <div class="product-card reveal-card" data-cat="accesorio" data-price="350" data-name="Moño Broche con Cadena" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñoconcadena2.jpg" alt="Moño Broche con Cadena 2">
@@ -861,7 +953,7 @@
       </div>
 
       <!-- Moño Broche Simple -->
-      <div class="product-card reveal-card" data-cat="accesorio" data-price="300" data-name="Moño Broche Simple" data-new="false">
+      <div class="product-card reveal-card" data-cat="accesorio" data-price="300" data-name="Moño Broche Simple" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñosimple.jpg" alt="Moño Broche Simple">
@@ -889,7 +981,7 @@
       </div>
 
       <!-- Pompón con Cuentas -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="200" data-name="Pompón con Cuentas" data-new="false">
+      <div class="product-card reveal-card" data-cat="llave" data-price="200" data-name="Pompón con Cuentas" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pompon.jpg" alt="Pompón con Bolitas">
@@ -912,7 +1004,7 @@
       </div>
 
       <!-- Diseño Personalizado -->
-      <div class="product-card reveal-card" data-cat="pedido" data-price="0" data-name="Diseño Personalizado a Pedido" data-new="false">
+      <div class="product-card reveal-card" data-cat="pedido" data-price="0" data-name="Diseño Personalizado a Pedido" data-new="false"><div class="magic-border"></div>
         <div style="height:205px;background:linear-gradient(135deg,#1c0c3a,#0f2b2b);display:flex;align-items:center;justify-content:center;font-size:3rem;text-shadow:0 0 15px rgba(138,79,255,0.4);">🎨</div>
         <div class="card-body">
           <span class="p-tag">A Pedido 🌙</span>
@@ -977,46 +1069,6 @@
 </div>
 
 <script>
-// ========= BURBUJAS FLOTANTES =========
-(function() {
-  const layer = document.getElementById('bubblesLayer');
-  const bubbleColors = [
-    'var(--bubble-color1)',
-    'var(--bubble-color2)',
-    'var(--bubble-color3)',
-    'rgba(78,205,196,0.08)',
-    'rgba(201,168,76,0.06)',
-    'rgba(255,133,200,0.07)'
-  ];
-  const borderColors = [
-    'rgba(78,205,196,0.3)','rgba(138,79,255,0.25)','rgba(201,168,76,0.2)',
-    'rgba(78,205,196,0.2)','rgba(255,133,200,0.2)','rgba(100,232,224,0.25)'
-  ];
-
-  for (let i = 0; i < 22; i++) {
-    const b = document.createElement('div');
-    b.className = 'bubble';
-    const sz = Math.random() * 55 + 15;
-    const left = Math.random() * 100;
-    const dur = (Math.random() * 12 + 7).toFixed(1);
-    const delay = (Math.random() * -15).toFixed(1);
-    const drift = ((Math.random() - 0.5) * 80).toFixed(0);
-    const ci = Math.floor(Math.random() * bubbleColors.length);
-    const maxOp = (Math.random() * 0.5 + 0.15).toFixed(2);
-
-    b.style.cssText = `
-      width:${sz}px; height:${sz}px;
-      left:${left}%;
-      bottom:-${sz + 20}px;
-      background: ${bubbleColors[ci]};
-      border: 1px solid ${borderColors[ci]};
-      box-shadow: inset 0 0 ${sz*0.3}px rgba(255,255,255,0.1), 0 0 ${sz*0.2}px ${borderColors[ci]};
-      --dur:${dur}s; --delay:${delay}s; --drift:${drift}px; --max-op:${maxOp};
-      backdrop-filter: blur(1px);
-    `;
-    layer.appendChild(b);
-  }
-})();
 
 // ========= PLANCTON BRILLANTE =========
 (function() {
@@ -1244,7 +1296,7 @@ function triggerButtonExplosion(clickEvent) {
   setTimeout(() => {
     screen.style.transition = 'opacity 0.5s ease';
     screen.style.opacity = '0';
-    setTimeout(() => screen.remove(), 500);
+    setTimeout(() => { screen.remove(); document.querySelector('.page').classList.add('page-visible'); }, 500);
   }, 2800);
 })();
 
@@ -1329,6 +1381,134 @@ function modalIr(i) {
   document.getElementById('modalTrack').style.transform = "translateX(-" + (i*100) + "%)";
   document.querySelectorAll('#modalDots .cdot').forEach((d,j) => d.classList.toggle('on', j===i));
 }
+
+
+
+// ========= LUNA REAL + EFECTOS POR FASE =========
+(function() {
+  // Calcula la fase lunar real usando el ciclo sinódico (29.53059 días)
+  // Referencia: luna nueva conocida el 6 enero 2000 00:18 UTC (JD 2451549.5125)
+  function getRealMoonPhase() {
+    const knownNewMoon = new Date('2000-01-06T00:18:00Z').getTime();
+    const synodicMs    = 29.53059 * 24 * 60 * 60 * 1000;
+    const now          = Date.now();
+    const elapsed      = ((now - knownNewMoon) % synodicMs + synodicMs) % synodicMs;
+    const fraction     = elapsed / synodicMs; // 0=luna nueva, 0.5=luna llena
+    // 8 fases
+    const idx = Math.floor((fraction * 8 + 0.5) % 8);
+    return idx;
+  }
+
+  const phases = [
+    { e:'🌑', n:'Luna nueva',         brightness: 0.0 },
+    { e:'🌒', n:'Luna creciente',     brightness: 0.25 },
+    { e:'🌓', n:'Cuarto creciente',   brightness: 0.5 },
+    { e:'🌔', n:'Gibosa creciente',   brightness: 0.75 },
+    { e:'🌕', n:'Luna llena',         brightness: 1.0 },
+    { e:'🌖', n:'Gibosa menguante',   brightness: 0.75 },
+    { e:'🌗', n:'Cuarto menguante',   brightness: 0.5 },
+    { e:'🌘', n:'Luna menguante',     brightness: 0.25 },
+  ];
+
+  const face  = document.getElementById('moonFace');
+  if (!face) return;
+
+  const idx   = getRealMoonPhase();
+  const phase = phases[idx];
+
+  // Mostrar fase real con fade
+  face.style.opacity = '0';
+  face.style.transition = 'opacity 1s ease';
+  setTimeout(() => {
+    face.textContent  = phase.e;
+    face.style.opacity = '1';
+  }, 300);
+
+  // Aplicar efectos según brillo de la fase
+  const b = phase.brightness; // 0 (nueva) → 1 (llena)
+
+  // Fondo: más oscuro/azul en luna nueva, más cálido/brillante en luna llena
+  const bgDark  = `linear-gradient(125deg, #020d18, #051e2e, #073544, #04231a, #062a3a, #031520, #083028)`;
+  const bgFull  = `linear-gradient(125deg, #031a2e, #082e48, #0a4560, #063528, #0a3850, #042030, #0d4040)`;
+  // Interpolamos mezclando opacidades via CSS custom property en body
+  document.documentElement.style.setProperty('--moon-brightness', b);
+  document.body.style.backgroundImage = b < 0.5 ? bgDark : bgFull;
+  document.body.style.backgroundSize  = '400% 400%';
+
+  // Intensidad del plancton: más visible cuanto más llena
+  const planktonOp = 0.08 + b * 0.82; // 0.08 a 0.9
+  document.querySelectorAll('.plankton').forEach(p => {
+    p.style.setProperty('--max-plankton-op', planktonOp.toFixed(2));
+  });
+
+  // Intensidad luciérnagas: más brillantes con luna nueva (sin luz de luna)
+  // y más tenues con luna llena (ya hay mucha luz)
+  const fireflyBright = 1.0 - b * 0.55; // 1.0 → 0.45
+  document.querySelectorAll('.firefly').forEach(f => {
+    f.style.opacity = fireflyBright.toFixed(2);
+    const scale = (0.7 + fireflyBright * 0.8).toFixed(2);
+    f.style.setProperty('--ff-scale', scale);
+  });
+
+  // Recalcular una vez por día (check cada hora si cambió la fase)
+  setInterval(() => {
+    const newIdx = getRealMoonPhase();
+    if (newIdx !== idx) location.reload();
+  }, 3600000);
+})();
+
+// ========= LUCIÉRNAGAS =========
+(function() {
+  const layer  = document.getElementById('fireflyLayer');
+  const colors = ['#c9a84c','#4ecdc4','#ff85c8','#c084fc','#f9d76b','#64e8e0'];
+  const count  = 12;
+  for (let i=0;i<count;i++) {
+    const el = document.createElement('div');
+    el.className = 'firefly';
+    const col = colors[Math.floor(Math.random()*colors.length)];
+    const sz  = (3+Math.random()*4).toFixed(1);
+    el.style.cssText = `
+      --fcol:${col};--fsz:${sz}px;
+      --fx0:${(Math.random()*90).toFixed(0)}%;--fx1:${(Math.random()*90).toFixed(0)}%;
+      --fx2:${(Math.random()*90).toFixed(0)}%;--fx3:${(Math.random()*90).toFixed(0)}%;
+      --fy0:${(Math.random()*85).toFixed(0)}%;--fy1:${(Math.random()*85).toFixed(0)}%;
+      --fy2:${(Math.random()*85).toFixed(0)}%;--fy3:${(Math.random()*85).toFixed(0)}%;
+      --fxd:${(32+Math.random()*22).toFixed(1)}s;--fyd:${(24+Math.random()*18).toFixed(1)}s;
+      --fxdelay:-${(Math.random()*14).toFixed(1)}s;--fydelay:-${(Math.random()*10).toFixed(1)}s;
+      --fpd:${(1.8+Math.random()*2.5).toFixed(1)}s;--fpdel:-${(Math.random()*2.5).toFixed(1)}s;
+    `;
+    layer.appendChild(el);
+  }
+})();
+
+// ========= PARTÍCULAS HOVER TARJETA =========
+(function() {
+  const pCols = ['#8a4fff','#4ecdc4','#f9d76b','#ff85c8','#c084fc','#ffffff','#64e8e0'];
+  document.querySelectorAll('.product-card, .featured-card').forEach(card => {
+    let active = false;
+    card.addEventListener('mouseenter', function() {
+      if (active) return; active = true;
+      const rect = card.getBoundingClientRect();
+      for (let i=0;i<18;i++) {
+        const p   = document.createElement('div');
+        p.className = 'card-particle';
+        const sz  = (Math.random()*6+3).toFixed(1);
+        const col = pCols[Math.floor(Math.random()*pCols.length)];
+        const dur = (0.6+Math.random()*0.7).toFixed(2)+'s';
+        const cpx = ((Math.random()-0.5)*100).toFixed(0)+'px';
+        const cpy = (-(30+Math.random()*60)).toFixed(0)+'px';
+        const rx  = Math.random()*rect.width;
+        const ry  = Math.random()*rect.height*0.6;
+        p.style.cssText = `width:${sz}px;height:${sz}px;left:${rx}px;top:${ry}px;background:${col};box-shadow:0 0 ${parseFloat(sz)*3}px ${col};--cpd:${dur};--cpx:${cpx};--cpy:${cpy};`;
+        card.appendChild(p);
+        setTimeout(()=>p.remove(), parseFloat(dur)*1000+100);
+      }
+      setTimeout(()=>{ active=false; }, 800);
+    });
+  });
+})();
+
 </script>
 </body>
 </html>
+ 
