@@ -121,7 +121,7 @@
     margin-bottom: 12px;
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
-  .logo2-img:hover { transform: scale(1.08) rotate(4deg); }
+  @media (hover: hover) { .logo2-img:hover { transform: scale(1.08) rotate(4deg); } }
   .header h1 {
     font-family: 'Cinzel', serif;
     font-size: clamp(1.5rem, 5.5vw, 2.4rem);
@@ -184,7 +184,7 @@
     padding: 0; line-height: 1;
   }
   .search-clear.visible { opacity: 0.7; }
-  .search-clear:hover { opacity: 1; color: #ef4444; }
+  @media (hover: hover) { .search-clear:hover { opacity: 1; color: #ef4444; } }
 
   /* ========= TOOLBAR: SORT + MODO ========= */
   .toolbar {
@@ -239,7 +239,7 @@
     display: flex; align-items: center; justify-content: space-between; gap: 5px;
     width: 100%; text-align: left;
   }
-  .filter-btn:hover { background: rgba(78,205,196,.15); border-color: #4ecdc4; transform: translateX(3px); }
+  @media (hover: hover) { .filter-btn:hover { background: rgba(78,205,196,.15); border-color: #4ecdc4; transform: translateX(3px); } }
   .filter-btn.active {
     background: linear-gradient(135deg, #4ecdc4, #8a4fff);
     border-color: transparent; color: #fff;
@@ -266,7 +266,6 @@
     .sidebar { width: 100%; min-width: unset; position: static; }
     .nav-filters { flex-direction: row; flex-wrap: wrap; gap: .4rem; }
     .filter-btn { width: auto; border-radius: 20px; padding: .45rem .9rem; justify-content: center; }
-    .filter-btn:hover { transform: translateY(-2px); }
     .filter-btn.active { transform: translateY(-1px); }
   }
 
@@ -286,7 +285,7 @@
     transition: all 0.3s ease;
     backdrop-filter: blur(4px);
   }
-  .sort-select:hover { border-color: #4ecdc4; }
+  @media (hover: hover) { .sort-select:hover { border-color: #4ecdc4; } }
 
   /* ========= NO RESULTS ========= */
   .no-results {
@@ -315,7 +314,7 @@
     background: linear-gradient(145deg, rgba(220,245,250,0.9), rgba(200,220,250,0.9));
     box-shadow: 0 8px 30px rgba(100,160,200,.2);
   }
-  .featured-card:hover { transform: translateY(-5px); border-color: rgba(78,205,196,0.7); box-shadow: 0 12px 35px rgba(78,205,196,.25), 0 12px 35px rgba(138,79,255,.2); }
+  @media (hover: hover) { .featured-card:hover { transform: translateY(-5px); border-color: rgba(78,205,196,0.7); box-shadow: 0 12px 35px rgba(78,205,196,.25), 0 12px 35px rgba(138,79,255,.2); } }
   .featured-card::before { content:''; display:block; width:4px; background:linear-gradient(180deg,#8a4fff,#4ecdc4,#c9a84c); flex-shrink:0; }
   @media (max-width:600px) {
     .featured-card { flex-direction:column; }
@@ -337,8 +336,10 @@
     position: relative; z-index: 2; isolation: isolate;
   }
   .product-card::after { content:''; position:absolute; inset:0; border-radius:18px; background:linear-gradient(135deg,rgba(138,79,255,0.08),rgba(78,205,196,0.08)); opacity:0; transition:opacity 0.3s ease; pointer-events:none; }
-  .product-card:hover::after { opacity:1; }
-  .product-card:hover { transform:translateY(-8px) scale(1.01); border-color:rgba(138,79,255,0.6); box-shadow:0 16px 35px rgba(138,79,255,.3),0 8px 20px rgba(78,205,196,.15); }
+  @media (hover: hover) {
+    .product-card:hover::after { opacity:1; }
+    .product-card:hover { transform:translateY(-8px) scale(1.01); border-color:rgba(138,79,255,0.6); box-shadow:0 16px 35px rgba(138,79,255,.3),0 8px 20px rgba(78,205,196,.15); }
+  }
 
   /* ========= BADGE NUEVO ========= */
   .badge-new {
@@ -356,7 +357,7 @@
   .carousel { position:relative; overflow:hidden; background:var(--carousel-bg); }
   .carousel-track { display:flex; transition:transform .4s cubic-bezier(0.4,0,0.2,1); }
   .carousel-track img { width:100%; flex-shrink:0; object-fit:cover; display:block; transition:transform 0.6s ease; }
-  .carousel:hover .carousel-track img { transform:scale(1.04); }
+  @media (hover: hover) { .carousel:hover .carousel-track img { transform:scale(1.04); } }
   .featured-carousel .carousel-track img { height:320px; }
   @media (max-width:600px) { .featured-carousel .carousel-track img { height:245px; } }
   .product-card .carousel-track img { height:205px; }
@@ -368,7 +369,7 @@
     font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
     transition:all .2s ease; z-index:2; backdrop-filter:blur(2px);
   }
-  .carousel-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 12px #4ecdc4; }
+  @media (hover: hover) { .carousel-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 12px #4ecdc4; } }
   .carousel-btn.prev { left:8px; }
   .carousel-btn.next { right:8px; }
   .carousel-dots { display:flex; justify-content:center; gap:5px; padding:7px 0 5px; background:var(--carousel-bg); }
@@ -394,8 +395,6 @@
     position:relative; overflow:hidden;
   }
   .btn-buy::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#4ecdc4,#8a4fff); opacity:0; transition:opacity 0.25s ease; }
-  .btn-buy:hover::before { opacity:1; }
-  .btn-buy:hover { color:#fff; box-shadow:0 0 20px rgba(78,205,196,0.6),0 0 40px rgba(78,205,196,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
   .btn-buy span, .btn-buy { position:relative; z-index:1; }
   .badge { font-size:.63rem; padding:.2rem .55rem; border-radius:6px; font-weight:700; letter-spacing:0.5px; }
   .b-pop { background:#1a1800; color:#c9a84c; border:1px solid rgba(201,168,76,.4); }
@@ -408,8 +407,12 @@
     position:relative; overflow:hidden;
   }
   .btn-ver::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#8a4fff,#c084fc); opacity:0; transition:opacity 0.25s ease; }
-  .btn-ver:hover::before { opacity:1; }
-  .btn-ver:hover { color:#fff; box-shadow:0 0 20px rgba(138,79,255,0.6),0 0 40px rgba(138,79,255,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
+  @media (hover: hover) {
+    .btn-buy:hover::before { opacity:1; }
+    .btn-buy:hover { color:#fff; box-shadow:0 0 20px rgba(78,205,196,0.6),0 0 40px rgba(78,205,196,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
+    .btn-ver:hover::before { opacity:1; }
+    .btn-ver:hover { color:#fff; box-shadow:0 0 20px rgba(138,79,255,0.6),0 0 40px rgba(138,79,255,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
+  }
 
   /* ========= OLAS DEL FOOTER ========= */
   .footer-waves {
@@ -431,7 +434,7 @@
   .footer p { font-size:clamp(.78rem,2vw,.88rem); color:var(--text-secondary); margin-bottom:1.5rem; line-height:1.6; }
   .chips { display:flex; justify-content:center; gap:.9rem; flex-wrap:wrap; }
   .chip { background:var(--chip-bg); border:1px solid rgba(78,205,196,.3); color:var(--text-primary); padding:.65rem 1.4rem; border-radius:50px; font-size:clamp(.8rem,2vw,.92rem); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:.5rem; transition:all .25s ease; }
-  .chip:hover { border-color:#4ecdc4; color:#4ecdc4; box-shadow:0 0 15px rgba(78,205,196,.35); transform:translateY(-3px); }
+  @media (hover: hover) { .chip:hover { border-color:#4ecdc4; color:#4ecdc4; box-shadow:0 0 15px rgba(78,205,196,.35); transform:translateY(-3px); } }
 
   .hidden { display: none !important; }
 
@@ -452,12 +455,12 @@
   .modal-box { background:var(--modal-bg); backdrop-filter:blur(10px); border:1px solid rgba(78,205,196,.45); box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 40px rgba(78,205,196,0.15); border-radius:20px; overflow:hidden; max-width:490px; width:100%; position:relative; transform:scale(0.92); transition:transform .3s cubic-bezier(0.34,1.56,0.64,1); }
   body.modal-open .modal-box { transform:scale(1); }
   .modal-close { position:absolute; top:12px; right:14px; z-index:10; background:rgba(13,26,26,.85); border:1px solid rgba(78,205,196,.4); color:#4ecdc4; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s ease; }
-  .modal-close:hover { background:#ef4444; color:#fff; border-color:transparent; transform:rotate(90deg); }
+  @media (hover: hover) { .modal-close:hover { background:#ef4444; color:#fff; border-color:transparent; transform:rotate(90deg); } }
   .modal-carousel { position:relative; }
   .modal-track { display:flex; transition:transform .4s cubic-bezier(0.4,0,0.2,1); }
   .modal-track img { width:100%; flex-shrink:0; object-fit:contain; max-height:68vh; background:var(--carousel-bg); }
   .modal-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(13,26,26,.75); border:1px solid rgba(78,205,196,.4); color:#4ecdc4; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s ease; z-index:2; }
-  .modal-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 10px #4ecdc4; }
+  @media (hover: hover) { .modal-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 10px #4ecdc4; } }
   .modal-btn.prev { left:10px; }
   .modal-btn.next { right:10px; }
   .modal-dots { display:flex; justify-content:center; gap:6px; padding:11px; background:var(--carousel-bg); }
@@ -481,7 +484,7 @@
     backdrop-filter: blur(6px);
   }
   .scroll-top-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
-  .scroll-top-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 6px 25px rgba(78,205,196,0.5); transform: translateY(-3px) scale(1.1); }
+  @media (hover: hover) { .scroll-top-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 6px 25px rgba(78,205,196,0.5); transform: translateY(-3px) scale(1.1); } }
 
   /* ========= LUNA CON FASES ========= */
   .moon-widget {
@@ -538,8 +541,10 @@
     -webkit-mask-composite: destination-out; mask-composite: exclude;
     padding: 2px;
   }
-  .product-card:hover .magic-border,
-  .featured-card:hover .magic-border { opacity:1; animation: rotateBorder 1.8s linear infinite; }
+  @media (hover: hover) {
+    .product-card:hover .magic-border,
+    .featured-card:hover .magic-border { opacity:1; animation: rotateBorder 1.8s linear infinite; }
+  }
   @keyframes rotateBorder { to { --angle: 360deg; } }
   @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
 
@@ -578,9 +583,157 @@
     50%     { opacity: 0.9;  transform: scale(1.4); }
   }
 
-  /* Ocultar rastro de cursor en móvil (tap ya funciona via touchstart) */
-  @media (max-width: 700px) {
-    .stardust { display: none; }
+  /* BANNER COLECCIÓN */
+  .coleccion-banner {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height .4s ease, opacity .35s ease, margin .4s ease;
+    margin-bottom: 0;
+  }
+  .coleccion-banner.visible {
+    max-height: 120px;
+    opacity: 1;
+    margin-bottom: 1.2rem;
+  }
+  .coleccion-banner-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: .3rem;
+    padding: .9rem 1.2rem;
+    border-radius: 14px;
+    text-align: center;
+  }
+  .coleccion-banner-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(.95rem, 2.5vw, 1.15rem);
+    font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .coleccion-banner-frase {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(.72rem, 1.8vw, .82rem);
+    font-style: italic;
+    opacity: .85;
+  }
+  .coleccion-banner[data-col="aurora"] .coleccion-banner-inner {
+    background: rgba(201,120,60,0.15); border: 1px solid rgba(201,140,60,0.35);
+  }
+  .coleccion-banner[data-col="aurora"] .coleccion-banner-name { color: #f0c070; }
+  .coleccion-banner[data-col="aurora"] .coleccion-banner-frase { color: #c89050; }
+  .coleccion-banner[data-col="brisa"] .coleccion-banner-inner {
+    background: rgba(60,140,100,0.15); border: 1px solid rgba(60,160,110,0.35);
+  }
+  .coleccion-banner[data-col="brisa"] .coleccion-banner-name { color: #7ddba8; }
+  .coleccion-banner[data-col="brisa"] .coleccion-banner-frase { color: #4fa878; }
+  .coleccion-banner[data-col="bosque"] .coleccion-banner-inner {
+    background: rgba(80,60,130,0.2); border: 1px solid rgba(100,70,180,0.35);
+  }
+  .coleccion-banner[data-col="bosque"] .coleccion-banner-name { color: #b89ef0; }
+  .coleccion-banner[data-col="bosque"] .coleccion-banner-frase { color: #8870c0; }
+  .coleccion-banner[data-col="pasiones"] .coleccion-banner-inner {
+    background: rgba(130,50,160,0.18); border: 1px solid rgba(160,60,200,0.35);
+  }
+  .coleccion-banner[data-col="pasiones"] .coleccion-banner-name { color: #d88ef0; }
+  .coleccion-banner[data-col="pasiones"] .coleccion-banner-frase { color: #a060c0; }
+
+  .coleccion-btn {
+    display: flex; flex-direction: column;
+    width: 100%;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .78rem;
+    padding: .35rem .85rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: .3rem;
+    gap: .05rem;
+    font-weight: 600;
+  }
+  .coleccion-btn[data-col="aurora"] {
+    background: rgba(201, 120, 60, 0.18);
+    border: 1px solid rgba(201,140,60,0.45);
+    color: #f0c070;
+  }
+  .coleccion-btn[data-col="aurora"] .col-sub { color: #c8974a; }
+  .coleccion-btn[data-col="aurora"].active {
+    background: rgba(201,120,60,0.38);
+    border-color: #f0a040;
+    box-shadow: 0 0 10px rgba(240,160,60,0.5), inset 0 0 8px rgba(240,160,60,0.15);
+    color: #ffd080;
+  }
+  .coleccion-btn[data-col="aurora"].active .col-sub { color: #e0a050; }
+
+  .coleccion-btn[data-col="brisa"] {
+    background: rgba(60, 140, 100, 0.18);
+    border: 1px solid rgba(60,160,110,0.4);
+    color: #7ddba8;
+  }
+  .coleccion-btn[data-col="brisa"] .col-sub { color: #4fa878; }
+  .coleccion-btn[data-col="brisa"].active {
+    background: rgba(60,140,100,0.35);
+    border-color: #5ecb8a;
+    box-shadow: 0 0 10px rgba(94,203,138,0.5), inset 0 0 8px rgba(94,203,138,0.12);
+    color: #9aefc0;
+  }
+  .coleccion-btn[data-col="brisa"].active .col-sub { color: #60c890; }
+
+  .coleccion-btn[data-col="bosque"] {
+    background: rgba(80, 60, 130, 0.22);
+    border: 1px solid rgba(100,70,180,0.4);
+    color: #b89ef0;
+  }
+  .coleccion-btn[data-col="bosque"] .col-sub { color: #8870c0; }
+  .coleccion-btn[data-col="bosque"].active {
+    background: rgba(80,60,130,0.42);
+    border-color: #a080e0;
+    box-shadow: 0 0 10px rgba(160,128,224,0.5), inset 0 0 8px rgba(160,128,224,0.12);
+    color: #d0b8ff;
+  }
+  .coleccion-btn[data-col="bosque"].active .col-sub { color: #a090d8; }
+
+  .coleccion-btn[data-col="pasiones"] {
+    background: rgba(130, 50, 160, 0.2);
+    border: 1px solid rgba(160,60,200,0.4);
+    color: #d88ef0;
+  }
+  .coleccion-btn[data-col="pasiones"] .col-sub { color: #a060c0; }
+  .coleccion-btn[data-col="pasiones"].active {
+    background: rgba(130,50,160,0.4);
+    border-color: #c060e0;
+    box-shadow: 0 0 10px rgba(192,96,224,0.5), inset 0 0 8px rgba(192,96,224,0.12);
+    color: #f0a8ff;
+  }
+  .coleccion-btn[data-col="pasiones"].active .col-sub { color: #c070d8; }
+
+  .col-sub {
+    font-size: .62rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  @media (hover: hover) { .coleccion-btn:hover { filter: brightness(1.15); } }
+
+  /* META CATEGORÍA + COLECCIÓN en cards */
+  .card-meta {
+    display: flex; gap: .4rem; flex-wrap: wrap; align-items: center;
+    margin-bottom: .35rem;
+  }
+  .meta-cat {
+    font-size: .65rem; font-family: 'Poppins', sans-serif;
+    background: rgba(255,255,255,0.07);
+    color: #b8a0d0;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: .15rem .55rem;
+    letter-spacing: .03em;
+  }
+  .meta-col {
+    font-size: .65rem; font-family: 'Poppins', sans-serif;
+    background: rgba(201,168,76,0.12);
+    color: #f0d080;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px; padding: .15rem .55rem;
+    letter-spacing: .03em;
   }
 </style>
 </head>
@@ -638,12 +791,19 @@
     <aside class="sidebar">
       <div class="sidebar-title">✦ Categorías</div>
       <div class="nav-filters" id="navFilters">
-        <button class="filter-btn active" data-cat="todos" onclick="filtrar('todos',this)">Todo <span class="cat-count" id="cnt-todos">0</span></button>
-        <button class="filter-btn" data-cat="pedido" onclick="filtrar('pedido',this)">A pedido</button>
-        <button class="filter-btn" data-cat="accesorio" onclick="filtrar('accesorio',this)">Accesorios <span class="cat-count" id="cnt-accesorio">0</span></button>
-        <button class="filter-btn" data-cat="tematico" onclick="filtrar('tematico',this)">Creaciones Temáticas <span class="cat-count" id="cnt-tematico">0</span></button>
-        <button class="filter-btn" data-cat="deco" onclick="filtrar('deco',this)">Decoración <span class="cat-count" id="cnt-deco">0</span></button>
-        <button class="filter-btn" data-cat="llave" onclick="filtrar('llave',this)">Llaveros <span class="cat-count" id="cnt-llave">0</span></button>
+        <button class="filter-btn active" data-cat="todos" onclick="filtrar('todos',this)">🪄 Todos <span class="cat-count" id="cnt-todos">0</span></button>
+        <button class="filter-btn" data-cat="decoracion" onclick="filtrar('decoracion',this)">🏡 Decoración <span class="cat-count" id="cnt-decoracion">0</span></button>
+        <button class="filter-btn" data-cat="accesorios" onclick="filtrar('accesorios',this)">🎀 Accesorios <span class="cat-count" id="cnt-accesorios">0</span></button>
+        <button class="filter-btn" data-cat="eventos" onclick="filtrar('eventos',this)">🎉 Eventos <span class="cat-count" id="cnt-eventos">0</span></button>
+        <button class="filter-btn" data-cat="pedido" onclick="filtrar('pedido',this)">💜 Personalizados <span class="cat-count" id="cnt-pedido">0</span></button>
+      </div>
+
+      <div class="sidebar-title" style="margin-top:1.5rem;">🌙 Colecciones</div>
+      <div class="nav-filters" id="coleccionFilters">
+        <button class="coleccion-btn" data-col="aurora" onclick="filtrarColeccion('aurora',this)">🌅 Aurora<span class="col-sub">Color y energía.</span></button>
+        <button class="coleccion-btn" data-col="brisa" onclick="filtrarColeccion('brisa',this)">🌿 Brisa Serena<span class="col-sub">Calma y delicadeza.</span></button>
+        <button class="coleccion-btn" data-col="bosque" onclick="filtrarColeccion('bosque',this)">🧚 Bosque Encantado<span class="col-sub">Flores, naturaleza y un toque de magia.</span></button>
+        <button class="coleccion-btn" data-col="pasiones" onclick="filtrarColeccion('pasiones',this)">💜 Pasiones<span class="col-sub">Creaciones inspiradas en lo que amas.</span></button>
       </div>
       <div class="sidebar-deco">
         <div class="sidebar-deco-item">
@@ -667,6 +827,15 @@
 
     <!-- CATÁLOGO PRINCIPAL -->
     <div class="catalog-main">
+
+    <!-- BANNER COLECCIÓN -->
+    <div class="coleccion-banner" id="coleccionBanner">
+      <div class="coleccion-banner-inner">
+        <span class="coleccion-banner-name" id="coleccionBannerName"></span>
+        <span class="coleccion-banner-frase" id="coleccionBannerFrase"></span>
+      </div>
+    </div>
+
     <div class="section-divider">
       <div class="section-divider-line"></div>
       <span class="section-divider-icon">✦</span>
@@ -675,7 +844,7 @@
     <div class="grid" id="grid">
 
       <!-- FEATURED: Espiral del Viento Colores -->
-      <div class="featured-card reveal-card" data-cat="deco" data-price="450" data-name="Espiral del Viento Colores Combinados" data-new="false"><div class="magic-border"></div>
+      <div class="featured-card reveal-card" data-cat="decoracion" data-coleccion="aurora" data-price="450" data-name="Espiral del Viento Colores Combinados" data-new="false"><div class="magic-border"></div>
         <div class="featured-carousel">
           <div class="carousel" data-idx="0">
             <div class="carousel-track">
@@ -689,10 +858,11 @@
         </div>
         <div class="featured-info">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
-            <span class="p-tag">Decoración Mágica 🦋</span>
+            <span class="p-tag">🌈 Aurora</span>
             <span class="badge b-pop">⭐ El más vendido</span>
           </div>
           <h2 class="p-title" style="font-size:clamp(1rem,3vw,1.3rem);">Espiral del Viento · Colores Combinados</h2>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🏡 Decoración</span><span class="meta-col">✨ 🌅 Aurora</span></div>
           <p class="p-desc" style="margin-top:.5rem;">¡Dale una explosión de color y alegría a tus espacios! Tejido a crochet combinando tonos vibrantes que crean un efecto visual hermoso y súper dinámico cuando se mueve. Es la opción perfecta para llenar de vida el patio, el balcón o el cuarto de los más chicos. 🌀🎈</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -707,7 +877,7 @@
       </div>
 
       <!-- Espiral Monocromatico -->
-      <div class="product-card reveal-card" data-cat="deco" data-price="400" data-name="Espiral del Viento Monocromático" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="decoracion" data-coleccion="brisa" data-price="400" data-name="Espiral del Viento Monocromático" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientoverde.jpg" alt="Cortavientos Verde">
@@ -718,8 +888,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Decoración 🌿</span>
+          <span class="p-tag">🍃 Brisa Serena</span>
           <h3 class="p-title">Espiral del Viento Monocromático</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🏡 Decoración</span><span class="meta-col">✨ 🌿 Brisa Serena</span></div>
           <p class="p-desc">Un toque de calma y elegancia para tu rincón favorito. Tejido a mano en un solo tono, ideal para quienes buscan una decoración más minimalista y zen. Colgalo cerca de una ventana y relajate viendo cómo gira suavemente con la brisa. 🌿✨</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -734,15 +905,16 @@
       </div>
 
       <!-- Llavero Margarita Simple -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="250" data-name="Llavero Margarita Simple" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="bosque" data-price="250" data-name="Llavero Margarita Simple" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita.jpg" alt="Margarita Simple">
           </div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Llaveros 🌼</span>
+          <span class="p-tag">🌸 Florecer · 🌿 Naturaleza</span>
           <h3 class="p-title">Llavero Margarita Simple</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🧚 Bosque Encantado</span></div>
           <p class="p-desc">Un clásico que nunca falla. Esta margarita tejida a crochet es pequeña, liviana y llena de encanto. El llavero ideal para quienes aman lo simple y bonito. ¡También es un regalo perfecto para cualquier ocasión! 🌼</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -757,15 +929,16 @@
       </div>
 
       <!-- Llavero Ppyopuli -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="350" data-name="Llavero Ppyopuli Amigurumi Woozi" data-new="true"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="pasiones" data-price="350" data-name="Llavero Ppyopuli Amigurumi Woozi" data-new="true"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/ppyopuli.jpg" alt="Ppyopuli">
           </div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Llaveros ✨</span>
+          <span class="p-tag">✨ Tus Pasiones · 🎵 Música</span>
           <h3 class="p-title">Llavero Ppyopuli (Amigurumi Woozi)</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 💜 Pasiones</span></div>
           <p class="p-desc">¡Llevá a tu bias a todos lados! Este tierno llavero de Ppyopuli está tejido a crochet con todo el amor que un Carat se merece. El compañero ideal para colgar en tu mochila, cartera o lightstick. 💖</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -780,7 +953,7 @@
       </div>
 
       <!-- Kit de Música V1 -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 1" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Música Versión 1" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/dosguitarras.jpg" alt="Dos Guitarras">
@@ -798,8 +971,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Creaciones Temáticas 🎂</span>
+          <span class="p-tag">🎵 Música · ✨ Tus Pasiones</span>
           <h3 class="p-title">Kit de Música · Versión 1</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
           <p class="p-desc">¡Hacé que tu cumpleaños sea un verdadero comeback! Toppers temáticos en goma eva con capas en relieve que capturan la esencia de tu grupo favorito. El toque definitivo para que tu torta sea tan icónica como un concierto. 🎶💜</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -814,7 +988,7 @@
       </div>
 
       <!-- Kit de Música V2 -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Música Versión 2" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Música Versión 2" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/coraznconmano.jpg" alt="Corazón con Mano">
@@ -829,8 +1003,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Creaciones Temáticas 🎂</span>
+          <span class="p-tag">🎵 Música · ✨ Tus Pasiones</span>
           <h3 class="p-title">Kit de Música · Versión 2</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
           <p class="p-desc">¡Hacé que tu cumpleaños sea un verdadero comeback! Toppers temáticos en goma eva con capas en relieve que capturan la esencia de tu grupo favorito. El toque definitivo para que tu torta sea tan icónica como un concierto. 🎶💜</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -845,15 +1020,16 @@
       </div>
 
       <!-- Cofre Pirata -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="300" data-name="Cofre Pirata" data-new="true"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="decoracion" data-coleccion="pasiones" data-price="300" data-name="Cofre Pirata" data-new="true"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cofre.jpg" alt="Cofre Pirata">
           </div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Creaciones Temáticas 🎂</span>
+          <span class="p-tag">🏴 Aventuras · ✨ Tus Pasiones</span>
           <h3 class="p-title">Cofre Pirata</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🏡 Decoración</span><span class="meta-col">✨ 💜 Pasiones</span></div>
           <p class="p-desc">El tesoro más tierno del océano. Este cofre en goma eva con detalles en relieve es perfecto para sumar drama y aventura a cualquier torta. ¿Querés algo épico? Combinalo con el Kit Pirata completo. 🏴‍☠️✨</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -868,7 +1044,7 @@
       </div>
 
       <!-- Kit de Piratas -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Piratas" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Piratas" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/barco.jpg" alt="Barco">
@@ -881,8 +1057,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Creaciones Temáticas 🎂</span>
+          <span class="p-tag">🏴 Aventuras · ✨ Tus Pasiones</span>
           <h3 class="p-title">Kit de Piratas</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
           <p class="p-desc">¡Al abordaje! Transformá cualquier torta en una aventura de alta mar. Este kit incluye un barco pirata y un cofre del tesoro llenos de detalles tridimensionales que van a fascinar al cumpleañero. 🏴‍☠️🦜</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -897,7 +1074,7 @@
       </div>
 
       <!-- Kit Nacional sin palo -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Kit de Nacional" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Nacional" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudodenacionalsinpalo.jpg" alt="Escudo Nacional">
@@ -911,8 +1088,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Creaciones Temáticas 🎂</span>
+          <span class="p-tag">⚽ Deportes · ✨ Tus Pasiones</span>
           <h3 class="p-title">Kit de Nacional</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
           <p class="p-desc">Para los que llevan los colores en el corazón. Festejá tu pasión tricolor con toppers personalizados en goma eva que van a dejar a tu torta en lo más alto de la tabla. 🔴⚪🔵</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -927,7 +1105,7 @@
       </div>
 
       <!-- Topper Nacional con palo -->
-      <div class="product-card reveal-card" data-cat="tematico" data-price="0" data-name="Topper para Torta Nacional" data-new="true"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Topper para Torta Nacional" data-new="true"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudoddenacionalconpalo.jpg" alt="Escudo con Palo">
@@ -942,8 +1120,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Creaciones Temáticas 🎂</span>
+          <span class="p-tag">⚽ Deportes · ✨ Tus Pasiones</span>
           <h3 class="p-title">Topper para Torta Nacional</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
           <p class="p-desc">Los mismos toppers temáticos del Kit Nacional, ahora con palito incluido para que queden perfectos sobre la torta sin necesidad de nada más. Listos para clavar y lucir. 🔴⚪🔵</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -958,7 +1137,7 @@
       </div>
 
       <!-- Margarita + Pompón -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="300" data-name="Margarita Bolitas y Pompón" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="bosque" data-price="300" data-name="Margarita Bolitas y Pompón" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon.jpg" alt="Margarita con Pompón">
@@ -970,8 +1149,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Llaveros 🌼</span>
+          <span class="p-tag">🌸 Florecer · 🌿 Naturaleza</span>
           <h3 class="p-title">Margarita + Bolitas y Pompón</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🧚 Bosque Encantado</span></div>
           <p class="p-desc">Un toque de primavera para tus llaves. Esta margarita tejida a mano combina la suavidad de un pompón de lana con cuentas de colores súper combinables. ¡Un detalle tierno y alegre para regalar o regalarte! 🌼</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -986,7 +1166,7 @@
       </div>
 
       <!-- Moño Broche con Cadena -->
-      <div class="product-card reveal-card" data-cat="accesorio" data-price="350" data-name="Moño Broche con Cadena" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="brisa" data-price="350" data-name="Moño Broche con Cadena" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñoconcadena2.jpg" alt="Moño Broche con Cadena 2">
@@ -998,8 +1178,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Accesorios 🎀</span>
+          <span class="p-tag">🎀 Estilo Libre</span>
           <h3 class="p-title">Moño Broche con Cadena</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🌿 Brisa Serena</span></div>
           <p class="p-desc">El accesorio definitivo para tus peinados. Moño tejido a crochet, grande, con mucha personalidad y broche firme. Con el detalle de la cadena colgante para un look más aesthetic. 🎀</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -1014,7 +1195,7 @@
       </div>
 
       <!-- Moño Broche Simple -->
-      <div class="product-card reveal-card" data-cat="accesorio" data-price="300" data-name="Moño Broche Simple" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="brisa" data-price="300" data-name="Moño Broche Simple" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñosimple.jpg" alt="Moño Broche Simple">
@@ -1026,8 +1207,9 @@
           <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div></div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Accesorios 🎀</span>
+          <span class="p-tag">🎀 Estilo Libre</span>
           <h3 class="p-title">Moño Broche Simple</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🌿 Brisa Serena</span></div>
           <p class="p-desc">El accesorio definitivo para tus peinados. Moño tejido a crochet, grande, con mucha personalidad y broche firme para que no se mueva en todo el día. Sin cadena, para un estilo más clásico y versátil. 🎀</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -1042,15 +1224,16 @@
       </div>
 
       <!-- Pompón con Cuentas -->
-      <div class="product-card reveal-card" data-cat="llave" data-price="150" data-name="Pompón con Cuentas" data-new="false"><div class="magic-border"></div>
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="aurora" data-price="150" data-name="Pompón con Cuentas" data-new="false"><div class="magic-border"></div>
         <div class="carousel" data-idx="0">
           <div class="carousel-track">
             <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pompon.jpg" alt="Pompón con Bolitas">
           </div>
         </div>
         <div class="card-body">
-          <span class="p-tag">Llaveros 💛</span>
+          <span class="p-tag">✨ Pequeños Detalles · 🌈 Aurora</span>
           <h3 class="p-title">Pompón con Cuentas</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🌅 Aurora</span></div>
           <p class="p-desc">Suavidad y brillo en un solo accesorio. Pompón de lana con cuentas nacaradas que le dan ese toque especial. Disponible en distintos colores para que combines con todo. Chico en tamaño, grande en ternura. 💛</p>
           <div class="p-footer">
             <div class="p-footer-left">
@@ -1068,8 +1251,9 @@
       <div class="product-card reveal-card" data-cat="pedido" data-price="0" data-name="Diseño Personalizado a Pedido" data-new="false"><div class="magic-border"></div>
         <div style="height:205px;background:linear-gradient(135deg,#1c0c3a,#0f2b2b);display:flex;align-items:center;justify-content:center;font-size:3rem;text-shadow:0 0 15px rgba(138,79,255,0.4);">🎨</div>
         <div class="card-body">
-          <span class="p-tag">A Pedido 🌙</span>
-          <h3 class="p-title">Diseño Personalizado</h3>
+          <span class="p-tag">Creaciones Únicas 🌙</span>
+          <h3 class="p-title">Creaciones Únicas</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 💜 Personalizados</span></div>
           <p class="p-desc">¿Tenés una idea en la cabeza y no encontrás lo que buscás? ¡Ese es nuestro fuerte! Contanos tu temática y lo hacemos realidad en goma eva o crochet. El precio varía según el diseño — escribinos y lo charlamos. 🎨✨</p>
           <div class="p-footer">
             <span class="p-price" data-value="0">Depende</span>
@@ -1327,12 +1511,13 @@ window.addEventListener('scroll', () => {
 
 // ========= FILTROS =========
 let currentCat = 'todos';
+let currentCol = null;
 let currentSearch = '';
 let currentSort = 'default';
 
 function updateCounts() {
   const all = document.querySelectorAll('.featured-card[data-cat], .product-card[data-cat]');
-  const counts = { todos: 0, pedido: 0, accesorio: 0, tematico: 0, deco: 0, llave: 0 };
+  const counts = { todos: 0, decoracion: 0, accesorios: 0, eventos: 0, pedido: 0 };
   all.forEach(c => {
     const cat = c.dataset.cat;
     counts.todos++;
@@ -1349,7 +1534,6 @@ function applyFilters() {
   const query = currentSearch.toLowerCase().trim();
   let visible = 0;
 
-  // Collect and sort if needed
   const grid = document.getElementById('grid');
   let cardArr = Array.from(cards);
 
@@ -1367,11 +1551,12 @@ function applyFilters() {
 
   cardArr.forEach(card => {
     const catMatch = currentCat === 'todos' || card.dataset.cat === currentCat;
+    const colMatch = !currentCol || card.dataset.coleccion === currentCol;
     const name = (card.dataset.name || '').toLowerCase();
     const desc = card.querySelector('.p-desc') ? card.querySelector('.p-desc').textContent.toLowerCase() : '';
     const title = card.querySelector('.p-title') ? card.querySelector('.p-title').textContent.toLowerCase() : '';
     const searchMatch = !query || name.includes(query) || desc.includes(query) || title.includes(query);
-    const show = catMatch && searchMatch;
+    const show = catMatch && colMatch && searchMatch;
     card.classList.toggle('hidden', !show);
     if (show) visible++;
   });
@@ -1382,8 +1567,46 @@ function applyFilters() {
 
 function filtrar(cat, btn) {
   currentCat = cat;
+  currentCol = null;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.coleccion-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  mostrarBanner(null);
+  applyFilters();
+}
+
+const coleccionData = {
+  aurora:   { name: '🌅 Aurora ☀️',         frase: 'Donde los colores despiertan la imaginación.' },
+  brisa:    { name: '🌿 Brisa Serena 🍃',    frase: 'Creaciones que transmiten calma.' },
+  bosque:   { name: '🧚 Bosque Encantado 🌼', frase: 'La magia florece en cada detalle.' },
+  pasiones: { name: '💜 Pasiones ⭐',         frase: 'Lo que amas, hecho a mano.' },
+};
+
+function mostrarBanner(col) {
+  const banner = document.getElementById('coleccionBanner');
+  if (!col) {
+    banner.classList.remove('visible');
+    banner.removeAttribute('data-col');
+    return;
+  }
+  const data = coleccionData[col];
+  document.getElementById('coleccionBannerName').textContent = data.name;
+  document.getElementById('coleccionBannerFrase').textContent = data.frase;
+  banner.setAttribute('data-col', col);
+  banner.classList.add('visible');
+}
+
+function filtrarColeccion(col, btn) {
+  currentCol = currentCol === col ? null : col;
+  currentCat = 'todos';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.coleccion-btn').forEach(b => b.classList.remove('active'));
+  if (currentCol) {
+    btn.classList.add('active');
+  } else {
+    document.querySelector('.filter-btn[data-cat="todos"]').classList.add('active');
+  }
+  mostrarBanner(currentCol);
   applyFilters();
 }
 
