@@ -1,0 +1,2285 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasía Artesana — Catálogo Mágico</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ========= TEMA VARIABLES ========= */
+  [data-theme="dark"] {
+    --bg1: #020d18; --bg2: #051e2e; --bg3: #073544; --bg4: #04231a;
+    --card-bg: rgba(15, 32, 32, 0.75);
+    --card-border: rgba(78,205,196,.18);
+    --text-primary: #f0ece4;
+    --text-secondary: #9bcfcb;
+    --text-gold: #c9a84c;
+    --header-bg: rgba(10,31,31,0.6);
+    --filter-bg: rgba(13, 34, 34, 0.6);
+    --filter-border: rgba(78,205,196,.25);
+    --filter-color: #9bcfcb;
+    --search-bg: rgba(13,34,34,0.7);
+    --search-border: rgba(78,205,196,0.3);
+    --modal-overlay: rgba(5,10,10,.88);
+    --modal-bg: rgba(15, 32, 32, 0.9);
+    --carousel-bg: #0a1515;
+    --footer-bg: linear-gradient(to top, rgba(7,15,15,0.9), transparent);
+    --chip-bg: rgba(13, 34, 34, 0.7);
+    --bubble-color1: rgba(78,205,196,0.12);
+    --bubble-color2: rgba(138,79,255,0.10);
+    --bubble-color3: rgba(201,168,76,0.08);
+    --scroll-btn-bg: rgba(13,26,26,.9);
+    --sort-bg: rgba(13,34,34,0.85);
+    --badge-new-bg: linear-gradient(135deg,#8a4fff,#c084fc);
+    --body-bg-grad: linear-gradient(125deg, #020d18, #051e2e, #073544, #04231a, #062a3a, #031520, #083028);
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: #0a0e2a;
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: color 0.4s ease;
+  }
+
+  /* ========= FONDO MÓVIL SIMPLIFICADO ========= */
+  @media (max-width: 700px) {
+    body {
+      background: #0a0e2a;
+      background-image: none !important;
+    }
+    /* Gradiente suave estático en lugar del animado */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(138,79,255,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 5%,  rgba(78,205,196,0.14) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(201,168,76,0.10) 0%, transparent 55%),
+        linear-gradient(175deg, #020d18 0%, #051e2e 40%, #073544 70%, #04231a 100%);
+      pointer-events: none;
+    }
+    /* Ocultar capa de plancton en móvil (se recreará reducida via JS) */
+    .plankton-layer { opacity: 0.5; }
+    /* Destellos de cursor desactivados en táctil */
+    .interactive-sparkle { display: none !important; }
+  }
+
+  /* ========= PLANCTON BRILLANTE ========= */
+  .plankton-layer {
+    position: fixed; top:0; left:0; right:0; bottom:0;
+    pointer-events:none; z-index:-1; overflow:hidden;
+  }
+  .plankton {
+    position: absolute;
+    border-radius: 50%;
+    animation: planktonDrift var(--dur,6s) ease-in-out infinite alternate, planktonPulse var(--pdur,3s) ease-in-out infinite;
+    animation-delay: var(--delay,0s);
+  }
+  @keyframes planktonDrift {
+    0%   { transform: translate(0,0) rotate(0deg); }
+    100% { transform: translate(var(--dx,30px), var(--dy,-20px)) rotate(180deg); }
+  }
+  @keyframes planktonPulse {
+    0%,100% { opacity: 0.15; box-shadow: 0 0 4px var(--col,#4ecdc4); }
+    50%     { opacity: 0.9; box-shadow: 0 0 12px var(--col,#4ecdc4), 0 0 24px var(--col,#4ecdc4); }
+  }
+
+  
+  .interactive-sparkle {
+    position: absolute; border-radius: 50%; pointer-events: none; z-index: 9999; opacity: 1;
+    animation: fadeOutSparkle var(--d, 1.2s) forwards cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  @keyframes fadeOutSparkle {
+    0% { opacity: 1; transform: scale(1.3) translate(0, 0); }
+    100% { opacity: 0; transform: scale(0.1) translate(var(--mx, 0px), var(--my, 0px)); }
+  }
+
+  .reveal-card {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  }
+  .reveal-card.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .page { position: relative; z-index: 2; padding-bottom: 3rem;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .page.page-visible { opacity: 1; transform: translateY(0); }
+
+  /* ========= HEADER ========= */
+  .header {
+    padding: 2.5rem 1.5rem 1.5rem; text-align: center;
+    background: var(--header-bg);
+    transition: background 0.4s ease;
+  }
+  .logo2-img {
+    width: 115px; height: 115px; border-radius: 50%; object-fit: cover;
+    border: 2px solid rgba(78,205,196,.6);
+    box-shadow: 0 0 25px rgba(78,205,196,.4), 0 0 50px rgba(138,79,255,.25);
+    margin-bottom: 12px;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @media (hover: hover) { .logo2-img:hover { transform: scale(1.08) rotate(4deg); } }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.5rem, 5.5vw, 2.4rem);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px;
+    background: linear-gradient(90deg, #8a4fff, #4ecdc4, #f9d76b, #ff85c8, #4ecdc4, #8a4fff);
+    background-size: 300% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    animation: textShimmer 10s linear infinite;
+  }
+  @keyframes textShimmer { to { background-position: 300% center; } }
+  .header-emoji {
+    display: inline-block; font-size: 1.6rem;
+    animation: emojiFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(138,79,255,0.7));
+  }
+  @keyframes emojiFloat {
+    0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
+    50% { transform: translateY(-6px) rotate(5deg) scale(1.15); }
+  }
+  .section-divider { display:flex; align-items:center; gap:12px; justify-content:center; margin:0.5rem 1rem 2.2rem; padding:0 1rem; }
+  .section-divider-line { flex:1; height:1px; max-width:200px; background:linear-gradient(90deg,transparent,rgba(138,79,255,0.5),rgba(78,205,196,0.5),transparent); animation:linePulse 3s ease-in-out infinite; }
+  @keyframes linePulse { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+  .section-divider-icon { font-size:.9rem; animation:iconSpin 4s linear infinite; filter:drop-shadow(0 0 5px rgba(201,168,76,0.8)); color:#c9a84c; }
+  @keyframes iconSpin { 0%,100%{transform:scale(1) rotate(0deg);} 50%{transform:scale(1.3) rotate(180deg);} }
+  .header p { font-size: clamp(.8rem, 2vw, .98rem); color: var(--text-secondary); font-style: italic; letter-spacing: 1px; margin-top: .9rem; }
+  .slogan-sub {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(.75rem, 2vw, .88rem);
+    color: #a89bc0;
+    margin-top: 1.1rem;
+    margin-bottom: .2rem;
+    font-style: italic;
+    letter-spacing: .02em;
+  }
+  .slogan { font-size: clamp(.7rem, 1.8vw, .85rem); color: var(--text-gold); letter-spacing: 1px; margin-top: 1rem; opacity: .9; }
+  .divider { display:flex; align-items:center; gap:10px; justify-content:center; margin:1.2rem 0 0; }
+  .divider-line { height:1px; width:65px; }
+  .divider-line.l { background: linear-gradient(to right, transparent, #8a4fff); }
+  .divider-line.r { background: linear-gradient(to left, transparent, #4ecdc4); }
+
+  /* ========= BARRA DE BÚSQUEDA ========= */
+  .search-wrap {
+    max-width: 480px; margin: 0 auto 0.5rem; padding: 0 1rem;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--search-bg);
+    border: 1px solid var(--search-border);
+    color: var(--text-primary);
+    padding: 0.65rem 1rem 0.65rem 2.8rem;
+    border-radius: 25px;
+    font-size: clamp(.82rem, 2vw, .92rem);
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+  }
+  .search-input::placeholder { color: var(--text-secondary); opacity: 0.65; }
+  .search-input:focus { border-color: #4ecdc4; box-shadow: 0 0 0 3px rgba(78,205,196,0.15); }
+  .search-icon {
+    position: absolute; left: 1.8rem; top: 50%; transform: translateY(-50%);
+    color: var(--text-secondary); font-size: 1rem; pointer-events: none;
+  }
+  .search-clear {
+    position: absolute; right: 1.8rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text-secondary); cursor: pointer;
+    font-size: 1.1rem; opacity: 0; transition: opacity 0.2s;
+    padding: 0; line-height: 1;
+  }
+  .search-clear.visible { opacity: 0.7; }
+  @media (hover: hover) { .search-clear:hover { opacity: 1; color: #ef4444; } }
+
+  /* ========= TOOLBAR: SORT + MODO ========= */
+  .toolbar {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.5rem 1rem 0; flex-wrap: wrap;
+    max-width: 1200px; margin: 0 auto;
+    justify-content: flex-end;
+  }
+
+  /* ========= LAYOUT CON SIDEBAR ========= */
+  .main-layout {
+    display: flex; gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 0 1rem;
+    align-items: flex-start;
+  }
+
+  /* ========= SIDEBAR DE CATEGORÍAS ========= */
+  .sidebar {
+    width: 190px; min-width: 190px; flex-shrink: 0;
+    position: sticky; top: 1.2rem; align-self: flex-start;
+  }
+  .sidebar-deco {
+    margin-top: 1.5rem; padding-top: 1.2rem;
+    border-top: 1px solid rgba(78,205,196,0.15);
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .sidebar-deco-item {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 0.3rem;
+    opacity: 0.75;
+  }
+  .sidebar-deco-icon { font-size: 1.6rem; filter: drop-shadow(0 0 6px rgba(78,205,196,0.5)); animation: sideFloat 4s ease-in-out infinite; }
+  .sidebar-deco-item:nth-child(2) .sidebar-deco-icon { animation-delay: 1.3s; }
+  .sidebar-deco-item:nth-child(3) .sidebar-deco-icon { animation-delay: 2.6s; }
+  @keyframes sideFloat { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-5px);} }
+  .sidebar-deco-label { font-size: .7rem; color: var(--text-secondary); font-weight: 600; letter-spacing: 0.5px; line-height: 1.3; }
+  @media (max-width: 700px) { .sidebar-deco { display: none; } }
+  .sidebar-title {
+    font-family: 'Cinzel', serif;
+    font-size: .78rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-gold); margin-bottom: 0.8rem; padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+  }
+  .nav-filters {
+    display: flex; flex-direction: column; gap: .5rem;
+  }
+  .filter-btn {
+    background: var(--filter-bg); border: 1px solid var(--filter-border);
+    backdrop-filter: blur(4px);
+    color: var(--filter-color); padding: .55rem 1rem; border-radius: 12px;
+    font-size: clamp(.75rem, 1.5vw, .85rem); font-weight: 700; cursor: pointer;
+    transition: all .3s ease; white-space: nowrap; font-family: 'Nunito', sans-serif;
+    display: flex; align-items: center; justify-content: space-between; gap: 5px;
+    width: 100%; text-align: left;
+  }
+  @media (hover: hover) { .filter-btn:hover { background: rgba(78,205,196,.15); border-color: #4ecdc4; transform: translateX(3px); } }
+  .filter-btn.active {
+    background: linear-gradient(135deg, #4ecdc4, #8a4fff);
+    border-color: transparent; color: #fff;
+    box-shadow: 0 4px 15px rgba(78,205,196,.4);
+    transform: translateX(2px);
+  }
+  .cat-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.25); color: rgba(255,255,255,0.85);
+    border-radius: 10px; font-size: .68rem; font-weight: 700;
+    padding: 0 5px; min-width: 18px; height: 16px;
+    line-height: 1; flex-shrink: 0;
+  }
+  .filter-btn:not(.active) .cat-count {
+    background: rgba(78,205,196,0.2); color: var(--filter-color);
+  }
+
+  /* Contenido principal (grid) dentro del layout */
+  .catalog-main { flex: 1; min-width: 0; }
+
+  /* Responsive: sidebar arriba en móvil */
+  @media (max-width: 700px) {
+    .main-layout { flex-direction: column; gap: 0.8rem; }
+    .sidebar { width: 100%; min-width: unset; position: static; }
+    .nav-filters { flex-direction: row; flex-wrap: wrap; gap: .4rem; }
+    .filter-btn { width: auto; border-radius: 20px; padding: .45rem .9rem; justify-content: center; }
+    .filter-btn.active { transform: translateY(-1px); }
+
+    /* Ocultar decoraciones laterales */
+    .sidebar-deco { display: none; }
+
+    /* Colecciones colapsables */
+    .sidebar-title { display: flex; align-items: center; justify-content: space-between; }
+    .colecciones-toggle {
+      background: none; border: none; color: var(--text-secondary);
+      font-size: .85rem; cursor: pointer; padding: .1rem .3rem;
+      transition: transform .25s;
+    }
+    .colecciones-body {
+      display: flex; flex-direction: column; gap: .3rem;
+      overflow: hidden; max-height: 0;
+      transition: max-height .35s ease, opacity .3s ease;
+      opacity: 0; pointer-events: none;
+    }
+    .colecciones-body.open {
+      max-height: 400px; opacity: 1; pointer-events: all;
+    }
+    .coleccion-btn { width: 100%; }
+  }
+
+  /* ========= SECCIONES FINALES ========= */
+  .extra-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 18px;
+    text-align: center;
+  }
+  .extra-icon {
+    font-size: 1.8rem;
+    margin-bottom: .5rem;
+  }
+  .extra-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(.95rem, 2.5vw, 1.1rem);
+    color: #c9a84c;
+    margin-bottom: .7rem;
+    letter-spacing: .04em;
+  }
+  .extra-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(.75rem, 2vw, .85rem);
+    color: #a89bc0;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .personaliza-btns {
+    display: flex; gap: .7rem; justify-content: center;
+    flex-wrap: wrap; margin-top: .9rem;
+  }
+  .personaliza-section {
+    background: rgba(201,168,76,0.07);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+  .faq-section {
+    background: rgba(78,205,196,0.05);
+    border: 1px solid rgba(78,205,196,0.15);
+  }
+  .faq-list {
+    display: flex; flex-direction: column; gap: .8rem;
+    margin-top: .8rem; text-align: left;
+    max-width: 480px; margin-left: auto; margin-right: auto;
+  }
+  .faq-item {
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: .7rem 1rem;
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .faq-item:hover { background: rgba(255,255,255,0.07); }
+  .faq-q {
+    font-family: 'Poppins', sans-serif;
+    font-size: .82rem; font-weight: 700;
+    color: #c9a84c;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .faq-arrow {
+    font-size: 1rem; transition: transform .25s;
+    color: #c9a84c; flex-shrink: 0;
+  }
+  .faq-item.open .faq-arrow { transform: rotate(90deg); }
+  .faq-a {
+    font-family: 'Poppins', sans-serif;
+    font-size: .78rem; color: #a89bc0; line-height: 1.6;
+    max-height: 0; overflow: hidden;
+    transition: max-height .3s ease, margin-top .3s ease;
+    margin-top: 0;
+  }
+  .faq-item.open .faq-a { max-height: 120px; margin-top: .5rem; }
+  .farewell-section {
+    background: rgba(138,79,255,0.07);
+    border: 1px solid rgba(138,79,255,0.2);
+    padding: 2rem 1.5rem;
+  }
+  .farewell-main {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: #f0d080; margin-bottom: .6rem;
+    letter-spacing: .04em;
+  }
+  .farewell-sub {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(.75rem, 2vw, .85rem);
+    color: #a89bc0; line-height: 1.8;
+    font-style: italic;
+  }
+
+  .mobile-filter-bar { display: none; }
+
+  /* Drawer base — siempre fixed para que funcione el slide */
+  .drawer-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55); z-index: 9998;
+    backdrop-filter: blur(2px);
+  }
+  .drawer-overlay.open { display: block; }
+
+  .drawer {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+    background: #0f1a2a;
+    border-top: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px 20px 0 0;
+    padding: .6rem 1.2rem 2.5rem;
+    transform: translateY(100%);
+    transition: transform .35s cubic-bezier(.32,.72,0,1);
+    max-height: 75vh; overflow-y: auto;
+  }
+  .drawer.open { transform: translateY(0); }
+  .drawer-handle {
+    width: 40px; height: 4px; border-radius: 2px;
+    background: rgba(255,255,255,0.2); margin: 0 auto .8rem;
+  }
+  .drawer-title {
+    font-family: 'Cinzel', serif; font-size: .95rem;
+    color: #c9a84c; text-align: center;
+    margin-bottom: .9rem; letter-spacing: .05em;
+  }
+  .drawer-content { display: flex; flex-direction: column; gap: .4rem; }
+  .drawer-content .filter-btn {
+    width: 100%; border-radius: 12px; padding: .6rem 1rem;
+    justify-content: space-between;
+  }
+  .drawer-content .coleccion-btn { width: 100%; }
+
+  @media (max-width: 700px) {
+    .main-layout { flex-direction: column; gap: 0.8rem; }
+    .sidebar { display: none; }
+
+    .mobile-filter-bar {
+      display: flex; gap: .6rem; margin-bottom: .8rem;
+    }
+    .mobile-drawer-btn {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: .4rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 20px; color: #d4b8e0;
+      font-family: 'Poppins', sans-serif; font-size: .78rem; font-weight: 600;
+      padding: .5rem .8rem; cursor: pointer; transition: all .2s;
+    }
+    .mobile-drawer-btn.has-filter {
+      border-color: #c9a84c; color: #f0d080;
+      background: rgba(201,168,76,0.12);
+      box-shadow: 0 0 8px rgba(201,168,76,0.2);
+    }
+    .mobile-active-label {
+      font-size: .65rem; font-style: italic; color: #c9a84c;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80px;
+    }
+
+    /* Ocultar decoraciones laterales */
+    .sidebar-deco { display: none; }
+  }
+
+  .sort-wrap { flex-shrink: 0; }
+  .sort-select {
+    background: var(--sort-bg);
+    border: 1px solid var(--search-border);
+    color: var(--text-primary);
+    padding: .5rem .9rem;
+    border-radius: 20px;
+    font-size: clamp(.72rem, 2vw, .84rem);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+  }
+  @media (hover: hover) { .sort-select:hover { border-color: #4ecdc4; } }
+
+  /* ========= NO RESULTS ========= */
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center; padding: 3rem 1rem;
+    color: var(--text-secondary); font-size: 1rem;
+    display: none;
+  }
+  .no-results.show { display: block; }
+
+  /* ========= LAYOUT PRINCIPAL ========= */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+
+  /* ========= FEATURED CARD ========= */
+  .featured-card {
+    grid-column: 1 / -1;
+    background: linear-gradient(145deg, rgba(15,38,38,0.85), rgba(26,13,48,0.85));
+    backdrop-filter: blur(4px);
+    border: 1.5px solid rgba(78,205,196,.35);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,.4);
+    display: flex; flex-direction: row;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative; z-index: 2; isolation: isolate;
+  }
+    background: linear-gradient(145deg, rgba(220,245,250,0.9), rgba(200,220,250,0.9));
+    box-shadow: 0 8px 30px rgba(100,160,200,.2);
+  }
+  @media (hover: hover) { .featured-card:hover { transform: translateY(-5px); border-color: rgba(78,205,196,0.7); box-shadow: 0 12px 35px rgba(78,205,196,.25), 0 12px 35px rgba(138,79,255,.2); } }
+  .featured-card::before { content:''; display:block; width:4px; background:linear-gradient(180deg,#8a4fff,#4ecdc4,#c9a84c); flex-shrink:0; }
+  @media (max-width:600px) {
+    .featured-card { flex-direction:column; }
+    .featured-card::before { width:100%; height:4px; background:linear-gradient(90deg,#8a4fff,#4ecdc4,#c9a84c); }
+  }
+  .featured-carousel { width:340px; min-width:340px; position:relative; }
+  @media (max-width:600px) { .featured-carousel { width:100%; min-width:unset; } }
+  .featured-info { padding:1.5rem; flex:1; display:flex; flex-direction:column; justify-content:center; }
+
+  /* ========= PRODUCT CARD ========= */
+  .product-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--card-border);
+    border-radius: 18px; overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 6px 20px rgba(0,0,0,.4);
+    transition: transform .3s cubic-bezier(0.175,0.885,0.32,1.2), box-shadow 0.3s ease, border-color 0.3s ease;
+    position: relative; z-index: 2; isolation: isolate;
+  }
+  .product-card::after { content:''; position:absolute; inset:0; border-radius:18px; background:linear-gradient(135deg,rgba(138,79,255,0.08),rgba(78,205,196,0.08)); opacity:0; transition:opacity 0.3s ease; pointer-events:none; }
+  @media (hover: hover) {
+    .product-card:hover::after { opacity:1; }
+    .product-card:hover { transform:translateY(-8px) scale(1.01); border-color:rgba(138,79,255,0.6); box-shadow:0 16px 35px rgba(138,79,255,.3),0 8px 20px rgba(78,205,196,.15); }
+  }
+
+  /* ========= BADGE NUEVO ========= */
+  .badge-new {
+    position: absolute; top: 10px; left: 10px; z-index: 3;
+    background: var(--badge-new-bg);
+    color: #fff; font-size: .62rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 10px; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 10px rgba(138,79,255,0.5);
+    animation: badgePop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes badgePop { from{transform:scale(0) rotate(-10deg);} to{transform:scale(1) rotate(0deg);} }
+
+  /* ========= CARRUSELES ========= */
+  .carousel { position:relative; overflow:hidden; background:var(--carousel-bg); }
+  .carousel-track { display:flex; transition:transform .4s cubic-bezier(0.4,0,0.2,1); }
+  .carousel-track img { width:100%; flex-shrink:0; object-fit:cover; display:block; transition:transform 0.6s ease; }
+  @media (hover: hover) { .carousel:hover .carousel-track img { transform:scale(1.04); } }
+  .featured-carousel .carousel-track img { height:320px; }
+  @media (max-width:600px) { .featured-carousel .carousel-track img { height:245px; } }
+  .product-card .carousel-track img { height:205px; }
+  @media (min-width:900px) { .product-card .carousel-track img { height:225px; } }
+  .carousel-btn {
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:rgba(13,26,26,.75); border:1px solid rgba(78,205,196,.4);
+    color:#4ecdc4; width:32px; height:32px; border-radius:50%;
+    font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition:all .2s ease; z-index:2; backdrop-filter:blur(2px);
+  }
+  @media (hover: hover) { .carousel-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 12px #4ecdc4; } }
+  .carousel-btn.prev { left:8px; }
+  .carousel-btn.next { right:8px; }
+  .carousel-dots { display:flex; justify-content:center; gap:5px; padding:7px 0 5px; background:var(--carousel-bg); }
+  .cdot { width:6px; height:6px; border-radius:50%; background:#2a4040; cursor:pointer; transition:all .2s ease; }
+  .cdot.on { background:#4ecdc4; transform:scale(1.25); box-shadow:0 0 6px #4ecdc4; }
+
+  /* ========= TEXTO TARJETAS ========= */
+  .card-body { padding:1rem; flex-grow:1; display:flex; flex-direction:column; }
+  .p-tag { font-size:.68rem; font-weight:700; text-transform:uppercase; color:#4ecdc4; letter-spacing:1.2px; margin-bottom:.3rem; }
+  .p-title { font-family:'Nunito',sans-serif; font-size:clamp(.92rem,2vw,1.05rem); font-weight:700; color:var(--text-primary); margin-bottom:.3rem; line-height:1.35; }
+  .p-desc { font-size:clamp(.74rem,1.8vw,.82rem); color:var(--text-secondary); margin-bottom:.9rem; line-height:1.45; flex-grow:1; }
+  .p-footer { display:flex; flex-direction:row; align-items:flex-end; justify-content:space-between; gap:8px; margin-top:auto; }
+  .p-footer-left { display:flex; gap:6px; align-items:flex-end; }
+  .p-price { font-size:clamp(.95rem,2vw,1.08rem); font-weight:700; color:var(--text-gold); text-shadow:0 0 4px rgba(201,168,76,0.2); text-align:right; align-self:flex-end; }
+  .p-price[data-value] { transition: color 0.3s ease; }
+
+  /* ========= BOTONES ========= */
+  .btn-buy {
+    background:rgba(78,205,196,.08); border:1px solid #4ecdc4;
+    color:#4ecdc4; padding:.45rem .95rem; border-radius:9px;
+    font-size:clamp(.72rem,1.8vw,.82rem); font-weight:700;
+    text-decoration:none; transition:all .25s ease; white-space:nowrap;
+    position:relative; overflow:hidden;
+  }
+  .btn-buy::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#4ecdc4,#8a4fff); opacity:0; transition:opacity 0.25s ease; }
+  .btn-buy span, .btn-buy { position:relative; z-index:1; }
+  .badge { font-size:.63rem; padding:.2rem .55rem; border-radius:6px; font-weight:700; letter-spacing:0.5px; }
+  .b-pop { background:#1a1800; color:#c9a84c; border:1px solid rgba(201,168,76,.4); }
+  .btn-group { display:flex; flex-direction:column; gap:6px; }
+  .btn-ver {
+    background:rgba(138,79,255,.08); border:1px solid #8a4fff;
+    color:#c084fc; padding:.45rem .95rem; border-radius:9px;
+    font-size:clamp(.72rem,1.8vw,.82rem); font-weight:700;
+    cursor:pointer; transition:all .25s ease; white-space:nowrap; font-family:'Nunito',sans-serif;
+    position:relative; overflow:hidden;
+  }
+  .btn-ver::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#8a4fff,#c084fc); opacity:0; transition:opacity 0.25s ease; }
+  @media (hover: hover) {
+    .btn-buy:hover::before { opacity:1; }
+    .btn-buy:hover { color:#fff; box-shadow:0 0 20px rgba(78,205,196,0.6),0 0 40px rgba(78,205,196,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
+    .btn-ver:hover::before { opacity:1; }
+    .btn-ver:hover { color:#fff; box-shadow:0 0 20px rgba(138,79,255,0.6),0 0 40px rgba(138,79,255,0.2); transform:translateY(-2px) scale(1.04); border-color:transparent; }
+  }
+
+  /* ========= OLAS DEL FOOTER ========= */
+  .footer-waves {
+    width: 100%; overflow: hidden;
+    line-height: 0;
+  }
+  .footer-waves svg { display:block; width:100%; height:60px; }
+  .wave1 { animation: waveAnim1 6s ease-in-out infinite; }
+  .wave2 { animation: waveAnim2 8s ease-in-out infinite reverse; opacity: 0.5; }
+  .wave3 { animation: waveAnim3 10s ease-in-out infinite; opacity: 0.3; }
+  @keyframes waveAnim1 { 0%,100%{d:path("M0,30 C150,60 350,0 500,30 C650,60 850,0 1000,30 L1000,60 L0,60 Z");} 50%{d:path("M0,20 C200,50 300,10 500,20 C700,30 800,60 1000,20 L1000,60 L0,60 Z");} }
+  @keyframes waveAnim2 { 0%,100%{d:path("M0,40 C200,10 400,60 600,40 C800,20 900,50 1000,40 L1000,60 L0,60 Z");} 50%{d:path("M0,25 C150,55 350,15 550,35 C750,55 900,25 1000,45 L1000,60 L0,60 Z");} }
+  @keyframes waveAnim3 { 0%,100%{d:path("M0,50 C100,30 300,60 500,45 C700,30 900,60 1000,50 L1000,60 L0,60 Z");} 50%{d:path("M0,35 C200,65 400,25 600,50 C800,65 900,35 1000,55 L1000,60 L0,60 Z");} }
+
+  /* ========= FOOTER ========= */
+  .footer { text-align:center; padding:3rem 1.5rem 2rem; background:var(--footer-bg); transition:background 0.4s; }
+  .footer-icon { font-size:1.5rem; margin-bottom:.6rem; letter-spacing:5px; filter:drop-shadow(0 0 8px #8a4fff); }
+  .footer h3 { font-family:'Cinzel',serif; font-size:clamp(1.05rem,3vw,1.25rem); margin-bottom:.5rem; background:linear-gradient(135deg,#8a4fff,#4ecdc4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .footer p { font-size:clamp(.78rem,2vw,.88rem); color:var(--text-secondary); margin-bottom:1.5rem; line-height:1.6; }
+  .chips { display:flex; justify-content:center; gap:.9rem; flex-wrap:wrap; }
+  .chip { background:var(--chip-bg); border:1px solid rgba(78,205,196,.3); color:var(--text-primary); padding:.65rem 1.4rem; border-radius:50px; font-size:clamp(.8rem,2vw,.92rem); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:.5rem; transition:all .25s ease; }
+  @media (hover: hover) { .chip:hover { border-color:#4ecdc4; color:#4ecdc4; box-shadow:0 0 15px rgba(78,205,196,.35); transform:translateY(-3px); } }
+
+  .hidden { display: none !important; }
+
+  /* ========= INTRO SEQUENCE ========= */
+  .intro-item {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .intro-item.intro-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ========= FUEGOS ARTIFICIALES ========= */
+  .fireworks-screen { position:fixed; inset:0; z-index:9998; pointer-events:none; background:#071212; animation:fwFade 0.6s ease forwards 2.8s; }
+  @keyframes fwFade { to{opacity:0;} }
+  .fw-particle { position:absolute; border-radius:50%; animation:fw-explode var(--d) cubic-bezier(0.15,0.5,0.5,1) var(--delay) forwards; opacity:0; }
+  @keyframes fw-explode { 0%{opacity:1;transform:translate(0,0) scale(1.2);} 80%{opacity:0.8;} 100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0.2);} }
+  .fw-trail { position:absolute; width:3px; background:linear-gradient(to top,transparent,#c9a84c); transform-origin:bottom center; border-radius:2px; animation:fw-trail var(--td) ease-out var(--tdelay) forwards; opacity:0; }
+  @keyframes fw-trail { 0%{opacity:1;transform:scaleY(0) translateY(0);} 60%{opacity:1;transform:scaleY(1) translateY(0);} 100%{opacity:0;transform:scaleY(0.2) translateY(-10px);} }
+
+  /* ========= MODAL SPARKLE ========= */
+  .modal-sparkle { position:absolute; border-radius:50%; pointer-events:none; z-index:10; animation:modalSparkleAnim var(--d,0.9s) ease-out forwards; }
+  @keyframes modalSparkleAnim { 0%{opacity:1;transform:scale(1.2) translate(0,0);} 100%{opacity:0;transform:scale(0.1) translate(var(--mx,0px),var(--my,0px));} }
+
+  /* ========= MODAL ========= */
+  .modal-overlay { position:fixed; inset:0; background:var(--modal-overlay); z-index:1000; display:flex; align-items:center; justify-content:center; padding:1rem; backdrop-filter:blur(6px); transition:opacity .3s ease; }
+  .modal-box { background:var(--modal-bg); backdrop-filter:blur(10px); border:1px solid rgba(78,205,196,.45); box-shadow:0 20px 50px rgba(0,0,0,0.6),0 0 40px rgba(78,205,196,0.15); border-radius:20px; overflow:hidden; max-width:490px; width:100%; position:relative; transform:scale(0.92); transition:transform .3s cubic-bezier(0.34,1.56,0.64,1); }
+  body.modal-open .modal-box { transform:scale(1); }
+  .modal-close { position:absolute; top:12px; right:14px; z-index:10; background:rgba(13,26,26,.85); border:1px solid rgba(78,205,196,.4); color:#4ecdc4; width:34px; height:34px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s ease; }
+  @media (hover: hover) { .modal-close:hover { background:#ef4444; color:#fff; border-color:transparent; transform:rotate(90deg); } }
+  .modal-carousel { position:relative; }
+  .modal-track { display:flex; transition:transform .4s cubic-bezier(0.4,0,0.2,1); }
+  .modal-track img { width:100%; flex-shrink:0; object-fit:contain; max-height:68vh; background:var(--carousel-bg); }
+  .modal-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(13,26,26,.75); border:1px solid rgba(78,205,196,.4); color:#4ecdc4; width:36px; height:36px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s ease; z-index:2; }
+  @media (hover: hover) { .modal-btn:hover { background:#4ecdc4; color:#0d1a1a; box-shadow:0 0 10px #4ecdc4; } }
+  .modal-btn.prev { left:10px; }
+  .modal-btn.next { right:10px; }
+  .modal-dots { display:flex; justify-content:center; gap:6px; padding:11px; background:var(--carousel-bg); }
+  .modal-info { padding:1.2rem; }
+  .modal-title { font-family:'Cinzel',serif; font-size:1.05rem; color:var(--text-primary); margin-bottom:.4rem; letter-spacing:0.5px; }
+  .modal-desc { font-size:.84rem; color:var(--text-secondary); line-height:1.5; margin-bottom:1.2rem; }
+
+  /* ========= BOTÓN VOLVER ARRIBA ========= */
+  .scroll-top-btn {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--scroll-btn-bg);
+    border: 1px solid rgba(78,205,196,.45);
+    color: #4ecdc4; font-size: 1.3rem;
+    cursor: pointer; z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3), 0 0 15px rgba(78,205,196,0.2);
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    opacity: 0; pointer-events: none;
+    transform: translateY(20px) scale(0.8);
+    backdrop-filter: blur(6px);
+  }
+  .scroll-top-btn.visible { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+  @media (hover: hover) { .scroll-top-btn:hover { background: #4ecdc4; color: #0d1a1a; box-shadow: 0 6px 25px rgba(78,205,196,0.5); transform: translateY(-3px) scale(1.1); } }
+
+  /* ========= LUNA CON FASES ========= */
+  .moon-widget {
+    margin-top: 1.8rem; padding-top: 1.2rem;
+    border-top: 1px solid rgba(78,205,196,0.15);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .moon-face {
+    font-size: 2rem; line-height: 1;
+    filter: drop-shadow(0 0 10px rgba(201,168,76,0.8)) drop-shadow(0 0 22px rgba(201,168,76,0.4));
+    animation: moonGlow 3s ease-in-out infinite alternate;
+    cursor: default; user-select: none;
+  }
+  @keyframes moonGlow {
+    0%   { filter: drop-shadow(0 0 6px rgba(201,168,76,0.6)) drop-shadow(0 0 14px rgba(201,168,76,0.3)); }
+    100% { filter: drop-shadow(0 0 14px rgba(201,168,76,1))  drop-shadow(0 0 28px rgba(201,168,76,0.6)); }
+  }
+  .moon-label {
+    font-size: .65rem; color: var(--text-gold); letter-spacing: 1px;
+    font-family: 'Cinzel', serif; opacity: .8; text-align: center;
+  }
+  @media (max-width:700px) { .moon-widget { display: none; } }
+
+  /* ========= LUCIÉRNAGAS ========= */
+  .firefly {
+    position: fixed; border-radius: 50%; pointer-events: none; z-index: 1;
+    width: var(--fsz,5px); height: var(--fsz,5px);
+    background: var(--fcol,#c9a84c);
+    box-shadow: 0 0 8px 2px var(--fcol,#c9a84c), 0 0 20px 4px var(--fcol,#c9a84c), 0 0 35px 6px var(--fcol,#c9a84c);
+    animation:
+      ffX var(--fxd,18s) ease-in-out infinite alternate var(--fxdelay,0s),
+      ffY var(--fyd,13s) ease-in-out infinite alternate var(--fydelay,0s),
+      ffColorPulse var(--fpd,2.5s) ease-in-out infinite var(--fpdel,0s);
+    will-change: transform, opacity, filter;
+  }
+  @keyframes ffX {
+    0%{left:var(--fx0,5%)} 30%{left:var(--fx1,40%)} 65%{left:var(--fx2,20%)} 100%{left:var(--fx3,70%)}
+  }
+  @keyframes ffY {
+    0%{top:var(--fy0,20%)} 35%{top:var(--fy1,65%)} 65%{top:var(--fy2,35%)} 100%{top:var(--fy3,80%)}
+  }
+  @keyframes ffColorPulse {
+    0%   { opacity:0.08; transform:scale(0.5); filter:brightness(0.6) saturate(0.5); }
+    50%  { opacity:1;    transform:scale(1.6); filter:brightness(1.8) saturate(2) drop-shadow(0 0 8px var(--fcol,#c9a84c)); }
+    100% { opacity:0.08; transform:scale(0.5); filter:brightness(0.6) saturate(0.5); }
+  }
+
+  /* ========= HOVER MÁGICO EN TARJETAS ========= */
+  .product-card .magic-border, .featured-card .magic-border {
+    position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; z-index:4;
+    opacity:0; transition:opacity 0.3s ease;
+    background: conic-gradient(from var(--angle,0deg), #8a4fff, #4ecdc4, #f9d76b, #ff85c8, #8a4fff);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out; mask-composite: exclude;
+    padding: 2px;
+  }
+  @media (hover: hover) {
+    .product-card:hover .magic-border,
+    .featured-card:hover .magic-border { opacity:1; animation: rotateBorder 1.8s linear infinite; }
+  }
+  @keyframes rotateBorder { to { --angle: 360deg; } }
+  @property --angle { syntax:'<angle>'; initial-value:0deg; inherits:false; }
+
+  /* ========= POLVO DE ESTRELLAS ========= */
+  #starDustLayer { position:fixed; inset:0; pointer-events:none; z-index:2; overflow:hidden; }
+
+  /* Partículas del rastro (cursor / tap) */
+  .stardust {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    transform-origin: center;
+    animation: starDustFade var(--sd-dur, 0.9s) ease-out forwards;
+  }
+  @keyframes starDustFade {
+    0%   { opacity: 1;   transform: translate(0, 0)          scale(1);   }
+    60%  { opacity: 0.7; transform: translate(var(--sdx), var(--sdy)) scale(0.7); }
+    100% { opacity: 0;   transform: translate(calc(var(--sdx)*1.6), calc(var(--sdy)*1.6)) scale(0.1); }
+  }
+
+  /* Estrellitas flotantes ambientales */
+  .ambient-star {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: ambientFloat var(--af-dur, 8s) ease-in-out var(--af-delay, 0s) infinite alternate,
+               ambientPulse var(--ap-dur, 3s) ease-in-out var(--ap-delay, 0s) infinite;
+  }
+  @keyframes ambientFloat {
+    0%   { transform: translateY(0px)   translateX(0px); }
+    50%  { transform: translateY(var(--af-dy)) translateX(var(--af-dx)); }
+    100% { transform: translateY(calc(var(--af-dy)*0.5)) translateX(calc(var(--af-dx)*1.2)); }
+  }
+  @keyframes ambientPulse {
+    0%,100% { opacity: 0.08; transform: scale(0.4); }
+    50%     { opacity: 0.9;  transform: scale(1.4); }
+  }
+
+  /* BANNER COLECCIÓN */
+  .coleccion-banner {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height .4s ease, opacity .35s ease, margin .4s ease;
+    margin-bottom: 0;
+  }
+  .coleccion-banner.visible {
+    max-height: 120px;
+    opacity: 1;
+    margin-bottom: 1.2rem;
+  }
+  .coleccion-banner-inner {
+    display: flex; flex-direction: column; align-items: center;
+    gap: .3rem;
+    padding: .9rem 1.2rem;
+    border-radius: 14px;
+    text-align: center;
+  }
+  .coleccion-banner-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(.95rem, 2.5vw, 1.15rem);
+    font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .coleccion-banner-frase {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(.72rem, 1.8vw, .82rem);
+    font-style: italic;
+    opacity: .85;
+  }
+  .coleccion-banner[data-col="aurora"] .coleccion-banner-inner {
+    background: rgba(201,120,60,0.15); border: 1px solid rgba(201,140,60,0.35);
+  }
+  .coleccion-banner[data-col="aurora"] .coleccion-banner-name { color: #f0c070; }
+  .coleccion-banner[data-col="aurora"] .coleccion-banner-frase { color: #c89050; }
+  .coleccion-banner[data-col="brisa"] .coleccion-banner-inner {
+    background: rgba(60,140,100,0.15); border: 1px solid rgba(60,160,110,0.35);
+  }
+  .coleccion-banner[data-col="brisa"] .coleccion-banner-name { color: #7ddba8; }
+  .coleccion-banner[data-col="brisa"] .coleccion-banner-frase { color: #4fa878; }
+  .coleccion-banner[data-col="bosque"] .coleccion-banner-inner {
+    background: rgba(80,60,130,0.2); border: 1px solid rgba(100,70,180,0.35);
+  }
+  .coleccion-banner[data-col="bosque"] .coleccion-banner-name { color: #b89ef0; }
+  .coleccion-banner[data-col="bosque"] .coleccion-banner-frase { color: #8870c0; }
+  .coleccion-banner[data-col="pasiones"] .coleccion-banner-inner {
+    background: rgba(130,50,160,0.18); border: 1px solid rgba(160,60,200,0.35);
+  }
+  .coleccion-banner[data-col="pasiones"] .coleccion-banner-name { color: #d88ef0; }
+  .coleccion-banner[data-col="pasiones"] .coleccion-banner-frase { color: #a060c0; }
+
+  .coleccion-btn {
+    display: flex; flex-direction: column;
+    width: 100%;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: .78rem;
+    padding: .35rem .85rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: .3rem;
+    gap: .05rem;
+    font-weight: 600;
+  }
+  .coleccion-btn[data-col="aurora"] {
+    background: rgba(201, 120, 60, 0.18);
+    border: 1px solid rgba(201,140,60,0.45);
+    color: #f0c070;
+  }
+  .coleccion-btn[data-col="aurora"] .col-sub { color: #c8974a; }
+  .coleccion-btn[data-col="aurora"].active {
+    background: rgba(201,120,60,0.38);
+    border-color: #f0a040;
+    box-shadow: 0 0 10px rgba(240,160,60,0.5), inset 0 0 8px rgba(240,160,60,0.15);
+    color: #ffd080;
+  }
+  .coleccion-btn[data-col="aurora"].active .col-sub { color: #e0a050; }
+
+  .coleccion-btn[data-col="brisa"] {
+    background: rgba(60, 140, 100, 0.18);
+    border: 1px solid rgba(60,160,110,0.4);
+    color: #7ddba8;
+  }
+  .coleccion-btn[data-col="brisa"] .col-sub { color: #4fa878; }
+  .coleccion-btn[data-col="brisa"].active {
+    background: rgba(60,140,100,0.35);
+    border-color: #5ecb8a;
+    box-shadow: 0 0 10px rgba(94,203,138,0.5), inset 0 0 8px rgba(94,203,138,0.12);
+    color: #9aefc0;
+  }
+  .coleccion-btn[data-col="brisa"].active .col-sub { color: #60c890; }
+
+  .coleccion-btn[data-col="bosque"] {
+    background: rgba(80, 60, 130, 0.22);
+    border: 1px solid rgba(100,70,180,0.4);
+    color: #b89ef0;
+  }
+  .coleccion-btn[data-col="bosque"] .col-sub { color: #8870c0; }
+  .coleccion-btn[data-col="bosque"].active {
+    background: rgba(80,60,130,0.42);
+    border-color: #a080e0;
+    box-shadow: 0 0 10px rgba(160,128,224,0.5), inset 0 0 8px rgba(160,128,224,0.12);
+    color: #d0b8ff;
+  }
+  .coleccion-btn[data-col="bosque"].active .col-sub { color: #a090d8; }
+
+  .coleccion-btn[data-col="pasiones"] {
+    background: rgba(130, 50, 160, 0.2);
+    border: 1px solid rgba(160,60,200,0.4);
+    color: #d88ef0;
+  }
+  .coleccion-btn[data-col="pasiones"] .col-sub { color: #a060c0; }
+  .coleccion-btn[data-col="pasiones"].active {
+    background: rgba(130,50,160,0.4);
+    border-color: #c060e0;
+    box-shadow: 0 0 10px rgba(192,96,224,0.5), inset 0 0 8px rgba(192,96,224,0.12);
+    color: #f0a8ff;
+  }
+  .coleccion-btn[data-col="pasiones"].active .col-sub { color: #c070d8; }
+
+  /* Símbolos decorativos por colección */
+  .coleccion-btn[data-col="aurora"]::after {
+    content: '✦';
+    position: absolute; top: .4rem; right: .7rem;
+    font-size: .7rem; opacity: .5;
+    color: #f0c070;
+    animation: pulseSymbol 2.5s ease-in-out infinite;
+  }
+  .coleccion-btn[data-col="brisa"]::after {
+    content: '🍃';
+    position: absolute; top: .35rem; right: .6rem;
+    font-size: .65rem; opacity: .6;
+    animation: floatSymbol 3s ease-in-out infinite;
+  }
+  .coleccion-btn[data-col="bosque"]::after {
+    content: '✶';
+    position: absolute; top: .4rem; right: .7rem;
+    font-size: .75rem; opacity: .5;
+    color: #b89ef0;
+    animation: pulseSymbol 2s ease-in-out infinite;
+  }
+  .coleccion-btn[data-col="pasiones"]::after {
+    content: '♡';
+    position: absolute; top: .4rem; right: .7rem;
+    font-size: .75rem; opacity: .55;
+    color: #d88ef0;
+    animation: pulseSymbol 1.8s ease-in-out infinite;
+  }
+  .coleccion-btn { position: relative; }
+
+  @keyframes pulseSymbol {
+    0%, 100% { opacity: .3; transform: scale(1); }
+    50% { opacity: .75; transform: scale(1.2); }
+  }
+  @keyframes floatSymbol {
+    0%, 100% { opacity: .4; transform: translateY(0); }
+    50% { opacity: .7; transform: translateY(-2px); }
+  }
+
+    font-size: .62rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  @media (hover: hover) { .coleccion-btn:hover { filter: brightness(1.15); } }
+
+  /* META CATEGORÍA + COLECCIÓN en cards */
+  .card-meta {
+    display: flex; gap: .4rem; flex-wrap: wrap; align-items: center;
+    margin-bottom: .35rem;
+  }
+  .meta-cat {
+    font-size: .65rem; font-family: 'Poppins', sans-serif;
+    background: rgba(255,255,255,0.07);
+    color: #b8a0d0;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px; padding: .15rem .55rem;
+    letter-spacing: .03em;
+  }
+  .meta-col {
+    font-size: .65rem; font-family: 'Poppins', sans-serif;
+    background: rgba(201,168,76,0.12);
+    color: #f0d080;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px; padding: .15rem .55rem;
+    letter-spacing: .03em;
+  }
+</style>
+</head>
+<body>
+
+<div class="fairy-dust" id="dust"></div>
+<div id="starDustLayer"></div>
+
+<div id="fireflyLayer"  style="position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden;"></div>
+
+<div class="plankton-layer" id="planktonLayer"></div>
+
+<!-- FUEGOS ARTIFICIALES DE ENTRADA -->
+<div class="fireworks-screen" id="fireworksScreen"></div>
+
+<!-- BOTÓN VOLVER ARRIBA -->
+<button class="scroll-top-btn" id="scrollTopBtn" title="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="page">
+
+  <div class="header">
+    <img class="logo2-img intro-item intro-logo" src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/logo2.jpg" alt="Logo Fantasía Artesana">
+    <h1 class="intro-item intro-title">✨ Fantasía Artesana ✨</h1>
+    <div class="slogan-sub intro-item intro-desc">✨ Regalos, decoración y detalles personalizados para hacer especial cada momento.</div>
+    <p class="intro-item intro-desc" style="margin-top:1.4rem;">Hecho con amor · Hecho a mano</p>
+    <div class="slogan intro-item intro-desc" style="margin-top:1.4rem;">Donde el destino y las manos se encuentran para crear magia</div>
+    <div class="divider intro-item intro-desc">
+      <div class="divider-line l"></div>
+      <span id="moonFace" style="font-size:1.4rem;line-height:1;filter:drop-shadow(0 0 10px rgba(201,168,76,0.8));cursor:default;user-select:none;" title="">🌕</span>
+      <div class="divider-line r"></div>
+    </div>
+  </div>
+
+  <!-- BARRA DE BÚSQUEDA -->
+  <div class="search-wrap intro-item intro-ui" style="margin-top:1.2rem;">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="Buscar producto..." oninput="handleSearch(this.value)" autocomplete="off">
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+  </div>
+
+  <!-- TOOLBAR: SORT + MODO -->
+  <div class="toolbar intro-item intro-ui" style="margin-bottom:1rem;">
+    <div class="sort-wrap">
+      <select class="sort-select" id="sortSelect" onchange="handleSort(this.value)" title="Ordenar por precio">
+        <option value="default">💰 Precio</option>
+        <option value="asc">↑ Menor precio</option>
+        <option value="desc">↓ Mayor precio</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- BOTONES MÓVIL DRAWER (solo visible en móvil) -->
+  <div class="mobile-filter-bar intro-item intro-ui" id="mobileFilterBar">
+    <button class="mobile-drawer-btn" id="btnDrawerCat" onclick="abrirDrawer('cat')">
+      🏷️ Categorías <span class="mobile-active-label" id="mobileCatLabel"></span>
+    </button>
+    <button class="mobile-drawer-btn" id="btnDrawerCol" onclick="abrirDrawer('col')">
+      🌙 Colecciones <span class="mobile-active-label" id="mobileColLabel"></span>
+    </button>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL: SIDEBAR + CATÁLOGO -->
+  <div class="main-layout">
+
+    <!-- SIDEBAR CATEGORÍAS -->
+    <aside class="sidebar">
+      <div class="sidebar-title">✦ Categorías</div>
+      <div class="nav-filters" id="navFilters">
+        <button class="filter-btn active" data-cat="todos" onclick="filtrar('todos',this)">🪄 Todos <span class="cat-count" id="cnt-todos">0</span></button>
+        <button class="filter-btn" data-cat="decoracion" onclick="filtrar('decoracion',this)">🏡 Decoración <span class="cat-count" id="cnt-decoracion">0</span></button>
+        <button class="filter-btn" data-cat="accesorios" onclick="filtrar('accesorios',this)">🎀 Accesorios <span class="cat-count" id="cnt-accesorios">0</span></button>
+        <button class="filter-btn" data-cat="eventos" onclick="filtrar('eventos',this)">🎉 Eventos <span class="cat-count" id="cnt-eventos">0</span></button>
+        <button class="filter-btn" data-cat="pedido" onclick="filtrar('pedido',this)">💜 Personalizados <span class="cat-count" id="cnt-pedido">0</span></button>
+      </div>
+
+      <div class="sidebar-title" style="margin-top:1.5rem;">
+        🌙 Colecciones
+        <button class="colecciones-toggle" id="coleccionesToggle" onclick="toggleColecciones()" aria-expanded="false">
+          <span id="coleccionesArrow">&#9662;</span>
+        </button>
+      </div>
+      <div class="nav-filters colecciones-body" id="coleccionFilters">
+        <button class="coleccion-btn" data-col="aurora" onclick="filtrarColeccion('aurora',this)">🌅 Aurora<span class="col-sub">Colores que iluminan cada rincón.</span></button>
+        <button class="coleccion-btn" data-col="brisa" onclick="filtrarColeccion('brisa',this)">🌿 Brisa Serena<span class="col-sub">Inspirada en la tranquilidad de los pequeños momentos.</span></button>
+        <button class="coleccion-btn" data-col="bosque" onclick="filtrarColeccion('bosque',this)">🧚 Bosque Encantado<span class="col-sub">Donde la naturaleza y la fantasía se encuentran.</span></button>
+        <button class="coleccion-btn" data-col="pasiones" onclick="filtrarColeccion('pasiones',this)">💜 Pasiones<span class="col-sub">Porque cada pasión merece un detalle único.</span></button>
+      </div>
+      <div class="sidebar-deco">
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">🧶</span>
+          <span class="sidebar-deco-label">Tejido a mano con amor</span>
+        </div>
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">✨</span>
+          <span class="sidebar-deco-label">Piezas únicas</span>
+        </div>
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">🌸</span>
+          <span class="sidebar-deco-label">Diseños a pedido</span>
+        </div>
+        <div class="sidebar-deco-item">
+          <span class="sidebar-deco-icon">🦋</span>
+          <span class="sidebar-deco-label">Magia artesanal</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CATÁLOGO PRINCIPAL -->
+    <div class="catalog-main">
+
+    <!-- BANNER COLECCIÓN -->
+    <div class="coleccion-banner" id="coleccionBanner">
+      <div class="coleccion-banner-inner">
+        <span class="coleccion-banner-name" id="coleccionBannerName"></span>
+        <span class="coleccion-banner-frase" id="coleccionBannerFrase"></span>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <span class="section-divider-icon">✦</span>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="grid" id="grid">
+
+      <!-- FEATURED: Espiral del Viento Colores -->
+      <div class="featured-card reveal-card" data-cat="decoracion" data-coleccion="aurora" data-price="450" data-name="Espiral del Viento Colores Combinados" data-new="false"><div class="magic-border"></div>
+        <div class="featured-carousel">
+          <div class="carousel" data-idx="0">
+            <div class="carousel-track">
+              <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientocelestes.jpg" alt="Cortavientos Celeste">
+              <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientocelestes2.jpg" alt="Cortavientos Celeste 2">
+            </div>
+            <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+            <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+            <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div></div>
+          </div>
+        </div>
+        <div class="featured-info">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
+            <span class="p-tag">🌈 Aurora</span>
+            <span class="badge b-pop">⭐ El más vendido</span>
+          </div>
+          <h2 class="p-title" style="font-size:clamp(1rem,3vw,1.3rem);">Espiral del Viento · Colores Combinados</h2>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🏡 Decoración</span><span class="meta-col">✨ 🌅 Aurora</span></div>
+          <p class="p-desc" style="margin-top:.5rem;">¡Dale una explosión de color y alegría a tus espacios! Tejido a crochet combinando tonos vibrantes que crean un efecto visual hermoso y súper dinámico cuando se mueve. Es la opción perfecta para llenar de vida el patio, el balcón o el cuarto de los más chicos. 🌀🎈</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Espiral del Viento · Colores Combinados','¡Dale una explosión de color y alegría a tus espacios! Tejido a crochet combinando tonos vibrantes que crean un efecto visual hermoso y súper dinámico cuando se mueve. 🌀🎈',['cortavientocelestes.jpg','cortavientocelestes2.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Celeste%20%F0%9F%8C%80" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="450">$450</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Espiral Monocromatico -->
+      <div class="product-card reveal-card" data-cat="decoracion" data-coleccion="brisa" data-price="400" data-name="Espiral del Viento Monocromático" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientoverde.jpg" alt="Cortavientos Verde">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cortavientoverde2.jpg" alt="Cortavientos Verde 2">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🍃 Brisa Serena</span>
+          <h3 class="p-title">Espiral del Viento Monocromático</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🏡 Decoración</span><span class="meta-col">✨ 🌿 Brisa Serena</span></div>
+          <p class="p-desc">Un toque de calma y elegancia para tu rincón favorito. Tejido a mano en un solo tono, ideal para quienes buscan una decoración más minimalista y zen. Colgalo cerca de una ventana y relajate viendo cómo gira suavemente con la brisa. 🌿✨</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Espiral del Viento Monocromático','Un toque de calma y elegancia para tu rincón favorito. Tejido a mano en un solo tono, ideal para quienes buscan una decoración más minimalista y zen. 🌿✨',['cortavientoverde.jpg','cortavientoverde2.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Espiral%20del%20Viento%20Monocrom%C3%A1tico%20%F0%9F%8C%BF" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="400">$400</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Llavero Margarita Simple -->
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="bosque" data-price="250" data-name="Llavero Margarita Simple" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita.jpg" alt="Margarita Simple">
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🌸 Florecer · 🌿 Naturaleza</span>
+          <h3 class="p-title">Llavero Margarita Simple</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🧚 Bosque Encantado</span></div>
+          <p class="p-desc">Un clásico que nunca falla. Esta margarita tejida a crochet es pequeña, liviana y llena de encanto. El llavero ideal para quienes aman lo simple y bonito. ¡También es un regalo perfecto para cualquier ocasión! 🌼</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Llavero Margarita Simple','Un clásico que nunca falla. Esta margarita tejida a crochet es pequeña, liviana y llena de encanto. ¡Un regalo perfecto para cualquier ocasión! 🌼',['margarita.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Llavero%20Margarita%20%F0%9F%8C%BC" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="250">$250</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Llavero Ppyopuli -->
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="pasiones" data-price="350" data-name="Llavero Ppyopuli Amigurumi Woozi" data-new="true"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/ppyopuli.jpg" alt="Ppyopuli">
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">✨ Tus Pasiones · 🎵 Música</span>
+          <h3 class="p-title">Llavero Ppyopuli (Amigurumi Woozi)</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 💜 Pasiones</span></div>
+          <p class="p-desc">¡Llevá a tu bias a todos lados! Este tierno llavero de Ppyopuli está tejido a crochet con todo el amor que un Carat se merece. El compañero ideal para colgar en tu mochila, cartera o lightstick. 💖</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Llavero Ppyopuli (Amigurumi Woozi)','¡Llevá a tu bias a todos lados! Tejido a crochet con todo el amor que un Carat se merece. El compañero ideal para tu mochila, cartera o lightstick. 💖',['ppyopuli.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Llavero%20Ppyopuli%20(Amigurumi%20Woozi)%20%F0%9F%92%9C" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="350">$350</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kit de Música V1 -->
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Música Versión 1" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/dosguitarras.jpg" alt="Dos Guitarras">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/guitarra.jpg" alt="Guitarra">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/microfononegro.jpg" alt="Micrófono Negro">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/nota1.jpg" alt="Nota 1">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/nota2.jpg" alt="Nota 2">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/nota3.jpg" alt="Nota 3">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/nota4.jpg" alt="Nota 4">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/notas.jpg" alt="Notas">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/tortadeseventeen.jpg" alt="Torta Seventeen">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🎵 Música · ✨ Tus Pasiones</span>
+          <h3 class="p-title">Kit de Música · Versión 1</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
+          <p class="p-desc">¡Hacé que tu cumpleaños sea un verdadero comeback! Toppers temáticos en goma eva con capas en relieve que capturan la esencia de tu grupo favorito. El toque definitivo para que tu torta sea tan icónica como un concierto. 🎶💜</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Kit de Música · Versión 1','¡Hacé que tu cumpleaños sea un verdadero comeback! Toppers temáticos en goma eva con capas en relieve. El toque definitivo para que tu torta sea tan icónica como un concierto. 🎶💜',['dosguitarras.jpg','guitarra.jpg','microfononegro.jpg','nota1.jpg','nota2.jpg','nota3.jpg','nota4.jpg','notas.jpg','tortadeseventeen.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20M%C3%BAsica%20Versi%C3%B3n%201%20%F0%9F%8E%82" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kit de Música V2 -->
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Música Versión 2" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/coraznconmano.jpg" alt="Corazón con Mano">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/estrellasrosas.jpg" alt="Estrellas Rosas">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/microfonoblanco.jpg" alt="Micrófono Blanco">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/notassinborde.jpg" alt="Notas sin Borde">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/audifonos.jpg" alt="Audífonos">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/tortabts.jpg" alt="Torta BTS">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🎵 Música · ✨ Tus Pasiones</span>
+          <h3 class="p-title">Kit de Música · Versión 2</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
+          <p class="p-desc">¡Hacé que tu cumpleaños sea un verdadero comeback! Toppers temáticos en goma eva con capas en relieve que capturan la esencia de tu grupo favorito. El toque definitivo para que tu torta sea tan icónica como un concierto. 🎶💜</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Kit de Música · Versión 2','¡Hacé que tu cumpleaños sea un verdadero comeback! Toppers temáticos en goma eva con capas en relieve. El toque definitivo para que tu torta sea tan icónica como un concierto. 🎶💜',['coraznconmano.jpg','estrellasrosas.jpg','microfonoblanco.jpg','notassinborde.jpg','audifonos.jpg','tortabts.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20M%C3%BAsica%20Versi%C3%B3n%202%20%F0%9F%8E%82" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cofre Pirata -->
+      <div class="product-card reveal-card" data-cat="decoracion" data-coleccion="pasiones" data-price="300" data-name="Cofre Pirata" data-new="true"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/cofre.jpg" alt="Cofre Pirata">
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🏴 Aventuras · ✨ Tus Pasiones</span>
+          <h3 class="p-title">Cofre Pirata</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🏡 Decoración</span><span class="meta-col">✨ 💜 Pasiones</span></div>
+          <p class="p-desc">El tesoro más tierno del océano. Este cofre en goma eva con detalles en relieve es perfecto para sumar drama y aventura a cualquier torta. ¿Querés algo épico? Combinalo con el Kit Pirata completo. 🏴‍☠️✨</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Cofre Pirata','El tesoro más tierno del océano. Este cofre en goma eva con detalles en relieve es perfecto para sumar drama y aventura a cualquier torta. ¿Querés algo épico? Combinalo con el Kit Pirata completo. 🏴‍☠️✨',['cofre.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Cofre%20Pirata%20%F0%9F%8E%82" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="300">$300</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kit de Piratas -->
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Piratas" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/barco.jpg" alt="Barco">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/ancla.jpg" alt="Ancla">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/palmera.jpg" alt="Palmera">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/tortadepirata.jpg" alt="Torta de Pirata">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🏴 Aventuras · ✨ Tus Pasiones</span>
+          <h3 class="p-title">Kit de Piratas</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
+          <p class="p-desc">¡Al abordaje! Transformá cualquier torta en una aventura de alta mar. Este kit incluye un barco pirata y un cofre del tesoro llenos de detalles tridimensionales que van a fascinar al cumpleañero. 🏴‍☠️🦜</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Kit de Piratas','¡Al abordaje! Transformá cualquier torta en una aventura de alta mar. Detalles tridimensionales que van a fascinar al cumpleañero. 🏴‍☠️🦜',['barco.jpg','ancla.jpg','palmera.jpg','tortadepirata.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20Piratas%20%F0%9F%8E%82" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kit Nacional sin palo -->
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Kit de Nacional" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudodenacionalsinpalo.jpg" alt="Escudo Nacional">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/estrellasdenacionalsinpalo.jpg" alt="Estrellas Nacional">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/felizcumplesinpalo.jpg" alt="Feliz Cumple Nacional">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/numerosinpalo.jpg" alt="Número Nacional">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pelotassinpalo.jpg" alt="Pelotas Nacional">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">⚽ Deportes · ✨ Tus Pasiones</span>
+          <h3 class="p-title">Kit de Nacional</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
+          <p class="p-desc">Para los que llevan los colores en el corazón. Festejá tu pasión tricolor con toppers personalizados en goma eva que van a dejar a tu torta en lo más alto de la tabla. 🔴⚪🔵</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Kit de Nacional','Para los que llevan los colores en el corazón. Festejá tu pasión tricolor con toppers en goma eva. 🔴⚪🔵',['escudodenacionalsinpalo.jpg','estrellasdenacionalsinpalo.jpg','felizcumplesinpalo.jpg','numerosinpalo.jpg','pelotassinpalo.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Kit%20de%20Nacional%20%F0%9F%8E%82" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Topper Nacional con palo -->
+      <div class="product-card reveal-card" data-cat="eventos" data-coleccion="pasiones" data-price="0" data-name="Topper para Torta Nacional" data-new="true"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/escudoddenacionalconpalo.jpg" alt="Escudo con Palo">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/estrellasdenacionalconpalo.jpg" alt="Estrellas con Palo">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/felizcumpleconpalo.jpg" alt="Feliz Cumple con Palo">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/numeroconpalo.jpg" alt="Número con Palo">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pelotasconpalodebrochet.jpg" alt="Pelotas con Palo">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/tortadenacional.jpg" alt="Torta Nacional">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">⚽ Deportes · ✨ Tus Pasiones</span>
+          <h3 class="p-title">Topper para Torta Nacional</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎉 Eventos</span><span class="meta-col">✨ 💜 Pasiones</span></div>
+          <p class="p-desc">Los mismos toppers temáticos del Kit Nacional, ahora con palito incluido para que queden perfectos sobre la torta sin necesidad de nada más. Listos para clavar y lucir. 🔴⚪🔵</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Topper para Torta Nacional','Los mismos toppers del Kit Nacional, ahora con palito incluido. Listos para clavar y lucir. 🔴⚪🔵',['escudoddenacionalconpalo.jpg','estrellasdenacionalconpalo.jpg','felizcumpleconpalo.jpg','numeroconpalo.jpg','pelotasconpalodebrochet.jpg','tortadenacional.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Topper%20para%20Torta%20Nacional%20%F0%9F%8E%82" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="0">Consultar precio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Margarita + Pompón -->
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="bosque" data-price="300" data-name="Margarita Bolitas y Pompón" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon.jpg" alt="Margarita con Pompón">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon2.jpg" alt="Margarita con Pompón 2">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/margarita+pompon3.jpg" alt="Margarita con Pompón 3">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🌸 Florecer · 🌿 Naturaleza</span>
+          <h3 class="p-title">Margarita + Bolitas y Pompón</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🧚 Bosque Encantado</span></div>
+          <p class="p-desc">Un toque de primavera para tus llaves. Esta margarita tejida a mano combina la suavidad de un pompón de lana con cuentas de colores súper combinables. ¡Un detalle tierno y alegre para regalar o regalarte! 🌼</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Margarita + Bolitas y Pompón','Un toque de primavera para tus llaves. Margarita tejida a mano con pompón de lana y cuentas de colores súper combinables. 🌼',['margarita+pompon.jpg','margarita+pompon2.jpg','margarita+pompon3.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20la%20Margarita%20con%20Bolitas%20y%20Pomp%C3%B3n%20%F0%9F%8C%BC%E2%9C%A8" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="300">$300</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Moño Broche con Cadena -->
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="brisa" data-price="350" data-name="Moño Broche con Cadena" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñoconcadena2.jpg" alt="Moño Broche con Cadena 2">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñoconcadena.jpg" alt="Moño Broche con Cadena">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñoconcadena3.jpg" alt="Moño Broche con Cadena 3">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🎀 Estilo Libre</span>
+          <h3 class="p-title">Moño Broche con Cadena</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🌿 Brisa Serena</span></div>
+          <p class="p-desc">El accesorio definitivo para tus peinados. Moño tejido a crochet, grande, con mucha personalidad y broche firme. Con el detalle de la cadena colgante para un look más aesthetic. 🎀</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Moño Broche con Cadena','El accesorio definitivo para tus peinados. Moño tejido a crochet grande con broche firme y cadena colgante para un look más aesthetic. 🎀',['moñoconcadena2.jpg','moñoconcadena.jpg','moñoconcadena3.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Mo%C3%B1o%20Broche%20con%20Cadena%20%F0%9F%8E%80" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="350">$350</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Moño Broche Simple -->
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="brisa" data-price="300" data-name="Moño Broche Simple" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñosimple.jpg" alt="Moño Broche Simple">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñosimple2.jpg" alt="Moño Broche Simple 2">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/moñosimple3.jpg" alt="Moño Broche Simple 3">
+          </div>
+          <button class="carousel-btn prev" onclick="mover(this,-1)">‹</button>
+          <button class="carousel-btn next" onclick="mover(this,1)">›</button>
+          <div class="carousel-dots"><div class="cdot on"></div><div class="cdot"></div><div class="cdot"></div></div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">🎀 Estilo Libre</span>
+          <h3 class="p-title">Moño Broche Simple</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🌿 Brisa Serena</span></div>
+          <p class="p-desc">El accesorio definitivo para tus peinados. Moño tejido a crochet, grande, con mucha personalidad y broche firme para que no se mueva en todo el día. Sin cadena, para un estilo más clásico y versátil. 🎀</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Moño Broche Simple','Moño tejido a crochet grande con broche firme. Sin cadena, para un estilo más clásico y versátil. 🎀',['moñosimple.jpg','moñosimple2.jpg','moñosimple3.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Mo%C3%B1o%20Broche%20Simple%20%F0%9F%8E%80" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="300">$300</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pompón con Cuentas -->
+      <div class="product-card reveal-card" data-cat="accesorios" data-coleccion="aurora" data-price="150" data-name="Pompón con Cuentas" data-new="false"><div class="magic-border"></div>
+        <div class="carousel" data-idx="0">
+          <div class="carousel-track">
+            <img src="https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/pompon.jpg" alt="Pompón con Bolitas">
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="p-tag">✨ Pequeños Detalles · 🌈 Aurora</span>
+          <h3 class="p-title">Pompón con Cuentas</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 🎀 Accesorios</span><span class="meta-col">✨ 🌅 Aurora</span></div>
+          <p class="p-desc">Suavidad y brillo en un solo accesorio. Pompón de lana con cuentas nacaradas que le dan ese toque especial. Disponible en distintos colores para que combines con todo. Chico en tamaño, grande en ternura. 💛</p>
+          <div class="p-footer">
+            <div class="p-footer-left">
+              <div class="btn-group">
+                <button class="btn-ver" onclick="abrirModal('Pompón con Cuentas','Suavidad y brillo en un solo accesorio. Pompón de lana con cuentas nacaradas. Disponible en distintos colores. Chico en tamaño, grande en ternura. 💛',['pompon.jpg'], event)">Ver 🖼️</button>
+                <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Me%20interesa%20el%20Pomp%C3%B3n%20con%20Bolitas%20%F0%9F%92%9B" target="_blank">💬 Quiero el mío</a>
+              </div>
+            </div>
+            <span class="p-price" data-value="150">$150</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diseño Personalizado -->
+      <div class="product-card reveal-card" data-cat="pedido" data-price="0" data-name="Diseño Personalizado a Pedido" data-new="false"><div class="magic-border"></div>
+        <div style="height:205px;background:linear-gradient(135deg,#1c0c3a,#0f2b2b);display:flex;align-items:center;justify-content:center;font-size:3rem;text-shadow:0 0 15px rgba(138,79,255,0.4);">🎨</div>
+        <div class="card-body">
+          <span class="p-tag">Creaciones Únicas 🌙</span>
+          <h3 class="p-title">Creaciones Únicas</h3>
+          <div class="card-meta"><span class="meta-cat">🏷️ 💜 Personalizados</span></div>
+          <p class="p-desc">¿Tenés una idea en la cabeza y no encontrás lo que buscás? ¡Ese es nuestro fuerte! Contanos tu temática y lo hacemos realidad en goma eva o crochet. El precio varía según el diseño — escribinos y lo charlamos. 🎨✨</p>
+          <div class="p-footer">
+            <span class="p-price" data-value="0">Depende</span>
+            <div class="p-footer-left">
+              <a class="btn-buy" href="https://wa.me/59898458675?text=Hola!%20Quiero%20consultar%20por%20un%20dise%C3%B1o%20personalizado%20%F0%9F%8E%A8" target="_blank" style="width:100%;text-align:center;">💬 Quiero el mío</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sin resultados -->
+      </div><!-- /grid -->
+
+    <!-- DESPEDIDA -->
+    <div class="extra-section farewell-section">
+      <p class="farewell-main">✨ Gracias por llegar hasta aquí.</p>
+      <p class="farewell-sub">Cada creación nace con paciencia, imaginación y mucho cariño.<br>Espero ayudarte a encontrar ese detalle especial. 💜</p>
+    </div>
+
+    <!-- FAQ -->
+    <div class="extra-section faq-section">
+      <div class="extra-icon">🌙</div>
+      <h3 class="extra-title">Preguntas frecuentes</h3>
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">📦 ¿Realizan envíos? <span class="faq-arrow">›</span></div>
+          <div class="faq-a">Por ahora no realizamos envíos, pero estamos trabajando para poder ofrecerlos pronto. ¡Coordinamos la entrega por WhatsApp!</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">🎨 ¿Aceptan personalizaciones? <span class="faq-arrow">›</span></div>
+          <div class="faq-a">¡Claro! Podés elegir colores, combinaciones y detalles. Cada creación puede adaptarse a lo que necesitás.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">💬 ¿Cómo hago un pedido? <span class="faq-arrow">›</span></div>
+          <div class="faq-a">Tocá el botón "Quiero el mío" en cualquier producto y te contactamos por WhatsApp para coordinar todo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-results" id="noResults">
+        <div style="font-size:2.5rem;margin-bottom:0.8rem;">🔍</div>
+        <div style="font-size:1rem;font-weight:700;">No se encontraron productos</div>
+        <div style="font-size:0.85rem;margin-top:0.4rem;opacity:0.7;">Probá con otro término de búsqueda</div>
+      </div>
+
+    </div>
+    </div><!-- /catalog-main -->
+  </div><!-- /main-layout -->
+
+  <div class="section-divider" style="margin-top:1rem;">
+    <div class="section-divider-line"></div>
+    <span class="section-divider-icon">🌸</span>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-icon">🦋✨🧜‍♀️</div>
+    <h3>¿Te enamoraste de algo?</h3>
+    <p>Cada creación puede personalizarse en colores, detalles y tamaños. Si tenés una idea en mente, con gusto la hacemos realidad juntas.</p>
+    <div class="chips">
+      <a class="chip" href="https://wa.me/59898458675" target="_blank">📱 WhatsApp</a>
+      <a class="chip" href="https://www.instagram.com/_fantasia_artesana_" target="_blank">📸 Instagram</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" style="display:none; opacity:0;" onclick="cerrarModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="apagarModal()">×</button>
+    <div class="modal-carousel">
+      <div class="modal-track" id="modalTrack"></div>
+      <button class="modal-btn prev" id="modalPrev" onclick="modalMover(-1)">‹</button>
+      <button class="modal-btn next" id="modalNext" onclick="modalMover(1)">›</button>
+      <div class="modal-dots" id="modalDots"></div>
+    </div>
+    <div class="modal-info">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="modal-footer" style="display:flex;justify-content:center;width:100%;">
+        <a class="btn-buy" id="modalWa" href="#" target="_blank" style="width:100%;text-align:center;padding:0.6rem;">✨ ¡Lo quiero! Encargar ahora</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ========= PLANCTON BRILLANTE =========
+(function() {
+  const layer = document.getElementById('planktonLayer');
+  const plankColors = [
+    '#4ecdc4','#8a4fff','#c9a84c','#ff85c8','#64e8e0','#c084fc','#f9d76b'
+  ];
+  const isMobile = window.innerWidth <= 700;
+  const planktonCount = isMobile ? 10 : 35;
+
+  for (let i = 0; i < planktonCount; i++) {
+    const p = document.createElement('div');
+    p.className = 'plankton';
+    const sz = Math.random() * 4 + 1.5;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const col = plankColors[Math.floor(Math.random() * plankColors.length)];
+    const dur = (Math.random() * 8 + 4).toFixed(1);
+    const pdur = (Math.random() * 4 + 2).toFixed(1);
+    const delay = (Math.random() * 8).toFixed(1);
+    const dx = ((Math.random() - 0.5) * 80).toFixed(0);
+    const dy = ((Math.random() - 0.5) * 60).toFixed(0);
+
+    p.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      left:${left}%; top:${top}%;
+      background:${col};
+      --col:${col};
+      --dur:${dur}s; --pdur:${pdur}s; --delay:${delay}s;
+      --dx:${dx}px; --dy:${dy}px;
+    `;
+    layer.appendChild(p);
+  }
+})();
+
+
+// ========= DESTELLOS INTERACTIVOS =========
+const sparkleColors = ['#ffe87a','#ffd700','#4ecdc4','#a8d8ff','#ffffff','#ffc84a','#ff85c8','#c084fc'];
+const sparkleContainer = document.getElementById('dust');
+
+function createInteractiveSparkle(x, y, isExplosion = false) {
+  const s = document.createElement('div');
+  s.className = 'interactive-sparkle';
+  const sz = Math.random() * 7 + 4;
+  const col = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+  const duration = (Math.random() * 0.7 + 0.5).toFixed(2) + 's';
+  const range = isExplosion ? 130 : 40;
+  const moveX = (Math.random() * range - (range/2)) + 'px';
+  const moveY = (Math.random() * range - (range/2)) + 'px';
+  s.style.cssText = `width:${sz}px;height:${sz}px;left:${x-sz/2}px;top:${y-sz/2}px;background:${col};box-shadow:0 0 ${sz*4}px ${col},0 0 ${sz*8}px ${col},0 0 ${sz*14}px ${col};--d:${duration};--mx:${moveX};--my:${moveY};`;
+  sparkleContainer.appendChild(s);
+  setTimeout(() => s.remove(), parseFloat(duration) * 1000);
+}
+
+let lastMove = 0;
+let overCard = false;
+
+document.querySelectorAll('.product-card, .featured-card').forEach(card => {
+  card.addEventListener('mouseenter', () => { overCard = true; });
+  card.addEventListener('mouseleave', () => { overCard = false; });
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (overCard) return;
+  const now = Date.now();
+  if (now - lastMove > 30) {
+    createInteractiveSparkle(e.clientX + window.scrollX, e.clientY + window.scrollY);
+    lastMove = now;
+  }
+});
+
+// ========= POLVO DE ESTRELLAS =========
+(function() {
+  const layer = document.getElementById('starDustLayer');
+  const dustColors = ['#ffe87a','#ffd700','#ffffff','#c084fc','#4ecdc4','#ff85c8','#a8d8ff','#ffc84a'];
+  const isMobile = window.innerWidth <= 700;
+
+  // — 1. Partículas flotantes ambientales —
+  const ambientCount = isMobile ? 12 : 22;
+  for (let i = 0; i < ambientCount; i++) {
+    const el = document.createElement('div');
+    el.className = 'ambient-star';
+    const sz  = (Math.random() * 3 + 1.5).toFixed(1);
+    const col = dustColors[Math.floor(Math.random() * dustColors.length)];
+    const dur = (6 + Math.random() * 10).toFixed(1);
+    const pDur = (2 + Math.random() * 4).toFixed(1);
+    const delay = -(Math.random() * 10).toFixed(1);
+    const pDelay = -(Math.random() * 4).toFixed(1);
+    const dx = ((Math.random() - 0.5) * 60).toFixed(0) + 'px';
+    const dy = ((Math.random() - 0.5) * 50).toFixed(0) + 'px';
+    el.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      left:${(Math.random()*96).toFixed(1)}%;
+      top:${(Math.random()*96).toFixed(1)}%;
+      background:${col};
+      box-shadow: 0 0 ${parseFloat(sz)*3}px ${col}, 0 0 ${parseFloat(sz)*7}px ${col};
+      --af-dur:${dur}s; --af-delay:${delay}s;
+      --ap-dur:${pDur}s; --ap-delay:${pDelay}s;
+      --af-dx:${dx}; --af-dy:${dy};
+    `;
+    layer.appendChild(el);
+  }
+
+  // — 2. Rastro de cursor (PC) —
+  function spawnDust(x, y, count = 1) {
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'stardust';
+      const sz  = (Math.random() * 5 + 2).toFixed(1);
+      const col = dustColors[Math.floor(Math.random() * dustColors.length)];
+      const dur = (0.6 + Math.random() * 0.7).toFixed(2);
+      const dx  = ((Math.random() - 0.5) * 60).toFixed(0) + 'px';
+      const dy  = (-Math.random() * 55 - 10).toFixed(0) + 'px';
+      s.style.cssText = `
+        width:${sz}px; height:${sz}px;
+        left:${x - parseFloat(sz)/2}px;
+        top:${y  - parseFloat(sz)/2}px;
+        background:${col};
+        box-shadow: 0 0 ${parseFloat(sz)*3}px ${col}, 0 0 ${parseFloat(sz)*7}px ${col};
+        --sd-dur:${dur}s; --sdx:${dx}; --sdy:${dy};
+      `;
+      layer.appendChild(s);
+      setTimeout(() => s.remove(), parseFloat(dur) * 1000 + 100);
+    }
+  }
+
+  let lastCursor = 0;
+  window.addEventListener('mousemove', (e) => {
+    const now = Date.now();
+    if (now - lastCursor < 40) return;
+    lastCursor = now;
+    spawnDust(e.clientX + window.scrollX, e.clientY + window.scrollY, 2);
+  });
+
+  // — 3. Tap (celular) — explosión de polvo al tocar —
+  window.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    const x = t.clientX + window.scrollX;
+    const y = t.clientY + window.scrollY;
+    const burstCount = 10 + Math.floor(Math.random() * 6);
+    for (let i = 0; i < burstCount; i++) {
+      const s = document.createElement('div');
+      s.className = 'stardust';
+      s.style.display = 'block'; // override mobile hide for tap burst
+      const sz  = (Math.random() * 6 + 2).toFixed(1);
+      const col = dustColors[Math.floor(Math.random() * dustColors.length)];
+      const dur = (0.5 + Math.random() * 0.8).toFixed(2);
+      const angle = Math.random() * Math.PI * 2;
+      const dist  = 30 + Math.random() * 70;
+      const dx = (Math.cos(angle) * dist).toFixed(0) + 'px';
+      const dy = (Math.sin(angle) * dist).toFixed(0) + 'px';
+      s.style.cssText = `
+        display:block !important;
+        width:${sz}px; height:${sz}px;
+        left:${x - parseFloat(sz)/2}px;
+        top:${y  - parseFloat(sz)/2}px;
+        background:${col};
+        box-shadow: 0 0 ${parseFloat(sz)*3}px ${col}, 0 0 ${parseFloat(sz)*8}px ${col};
+        --sd-dur:${dur}s; --sdx:${dx}; --sdy:${dy};
+      `;
+      layer.appendChild(s);
+      setTimeout(() => s.remove(), parseFloat(dur) * 1000 + 100);
+    }
+  }, { passive: true });
+
+})();
+
+let lastTouchMove = 0;
+window.addEventListener('touchmove', (e) => {
+  const touch = e.touches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  if (el && el.closest('.product-card, .featured-card')) return;
+  const now = Date.now();
+  if (now - lastTouchMove > 35) {
+    createInteractiveSparkle(touch.clientX + window.scrollX, touch.clientY + window.scrollY);
+    lastTouchMove = now;
+  }
+}, { passive: true });
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateCounts();
+});
+
+// ========= BOTÓN VOLVER ARRIBA =========
+const scrollBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 350) {
+    scrollBtn.classList.add('visible');
+  } else {
+    scrollBtn.classList.remove('visible');
+  }
+}, { passive: true });
+
+
+
+// ========= FILTROS =========
+let currentCat = 'todos';
+let currentCol = null;
+let currentSearch = '';
+let currentSort = 'default';
+
+function updateCounts() {
+  const all = document.querySelectorAll('.featured-card[data-cat], .product-card[data-cat]');
+  const counts = { todos: 0, decoracion: 0, accesorios: 0, eventos: 0, pedido: 0 };
+  all.forEach(c => {
+    const cat = c.dataset.cat;
+    counts.todos++;
+    if (counts[cat] !== undefined) counts[cat]++;
+  });
+  Object.keys(counts).forEach(k => {
+    const el = document.getElementById('cnt-' + k);
+    if (el) el.textContent = counts[k];
+    const el2 = document.getElementById('d-cnt-' + k);
+    if (el2) el2.textContent = counts[k];
+  });
+}
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.featured-card[data-cat], .product-card[data-cat]');
+  const query = currentSearch.toLowerCase().trim();
+  let visible = 0;
+
+  const grid = document.getElementById('grid');
+  let cardArr = Array.from(cards);
+
+  if (currentSort !== 'default') {
+    cardArr.sort((a, b) => {
+      const pa = parseInt(a.dataset.price) || 0;
+      const pb = parseInt(b.dataset.price) || 0;
+      if (pa === 0 && pb === 0) return 0;
+      if (pa === 0) return 1;
+      if (pb === 0) return -1;
+      return currentSort === 'asc' ? pa - pb : pb - pa;
+    });
+    cardArr.forEach(c => grid.appendChild(c));
+  }
+
+  cardArr.forEach(card => {
+    const catMatch = currentCat === 'todos' || card.dataset.cat === currentCat;
+    const colMatch = !currentCol || card.dataset.coleccion === currentCol;
+    const name = (card.dataset.name || '').toLowerCase();
+    const desc = card.querySelector('.p-desc') ? card.querySelector('.p-desc').textContent.toLowerCase() : '';
+    const title = card.querySelector('.p-title') ? card.querySelector('.p-title').textContent.toLowerCase() : '';
+    const searchMatch = !query || name.includes(query) || desc.includes(query) || title.includes(query);
+    const show = catMatch && colMatch && searchMatch;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  const noResults = document.getElementById('noResults');
+  noResults.classList.toggle('show', visible === 0);
+}
+
+function filtrar(cat, btn) {
+  currentCat = cat;
+  currentCol = null;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.coleccion-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  mostrarBanner(null);
+  actualizarBotonesMobile();
+  applyFilters();
+}
+
+// ===== DRAWER MÓVIL =====
+function abrirDrawer(tipo) {
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.getElementById('drawerCat').classList.toggle('open', tipo === 'cat');
+  document.getElementById('drawerCol').classList.toggle('open', tipo === 'col');
+}
+function cerrarDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.getElementById('drawerCat').classList.remove('open');
+  document.getElementById('drawerCol').classList.remove('open');
+}
+function actualizarBotonesMobile() {
+  const btnCat = document.getElementById('btnDrawerCat');
+  const btnCol = document.getElementById('btnDrawerCol');
+  const labelCat = document.getElementById('mobileCatLabel');
+  const labelCol = document.getElementById('mobileColLabel');
+  const catNames = { todos:'', decoracion:'Decoración', accesorios:'Accesorios', eventos:'Eventos', pedido:'Personalizados' };
+  const colNames = { aurora:'Aurora', brisa:'Brisa Serena', bosque:'Bosque Encantado', pasiones:'Pasiones' };
+  if (currentCat && currentCat !== 'todos') {
+    btnCat.classList.add('has-filter');
+    labelCat.textContent = catNames[currentCat] || '';
+  } else {
+    btnCat.classList.remove('has-filter');
+    labelCat.textContent = '';
+  }
+  if (currentCol) {
+    btnCol.classList.add('has-filter');
+    labelCol.textContent = colNames[currentCol] || '';
+  } else {
+    btnCol.classList.remove('has-filter');
+    labelCol.textContent = '';
+  }
+}
+
+function toggleFaq(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+function toggleColecciones() {
+  const body = document.getElementById('coleccionFilters');
+  const arrow = document.getElementById('coleccionesArrow');
+  const isOpen = body.classList.toggle('open');
+  arrow.textContent = isOpen ? '\u25B4' : '\u25BE';
+}
+
+const coleccionData = {
+  aurora:   { name: '\uD83C\uDF05 Aurora \u2600\uFE0F',            frase: 'Donde los colores despiertan la imaginaci\u00F3n.' },
+  brisa:    { name: '\uD83C\uDF3F Brisa Serena \uD83C\uDF43',       frase: 'Creaciones que transmiten calma.' },
+  bosque:   { name: '\uD83E\uDDDA Bosque Encantado \uD83C\uDF3C',   frase: 'La magia florece en cada detalle.' },
+  pasiones: { name: '\uD83D\uDC9C Pasiones \u2B50',                 frase: 'Lo que amas, hecho a mano.' },
+};
+
+function mostrarBanner(col) {
+  const banner = document.getElementById('coleccionBanner');
+  if (!col) {
+    banner.classList.remove('visible');
+    banner.removeAttribute('data-col');
+    return;
+  }
+  const data = coleccionData[col];
+  document.getElementById('coleccionBannerName').textContent = data.name;
+  document.getElementById('coleccionBannerFrase').textContent = data.frase;
+  banner.setAttribute('data-col', col);
+  banner.classList.add('visible');
+}
+
+function filtrarColeccion(col, btn) {
+  currentCol = currentCol === col ? null : col;
+  currentCat = 'todos';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.coleccion-btn').forEach(b => b.classList.remove('active'));
+  if (currentCol) {
+    btn.classList.add('active');
+  } else {
+    document.querySelector('.filter-btn[data-cat="todos"]').classList.add('active');
+  }
+  mostrarBanner(currentCol);
+  actualizarBotonesMobile();
+  applyFilters();
+}
+
+function handleSearch(val) {
+  currentSearch = val;
+  const clearBtn = document.getElementById('searchClear');
+  clearBtn.classList.toggle('visible', val.length > 0);
+  applyFilters();
+}
+
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  input.value = '';
+  handleSearch('');
+  input.focus();
+}
+
+function handleSort(val) {
+  currentSort = val;
+  applyFilters();
+}
+
+// ========= EXPLOSIÓN DE BOTÓN =========
+function triggerButtonExplosion(clickEvent) {
+  let posX = clickEvent.clientX + window.scrollX;
+  let posY = clickEvent.clientY + window.scrollY;
+  if (!clickEvent.clientX && clickEvent.target) {
+    const rect = clickEvent.target.getBoundingClientRect();
+    posX = rect.left + rect.width / 2 + window.scrollX;
+    posY = rect.top + rect.height / 2 + window.scrollY;
+  }
+  for (let i = 0; i < 16; i++) createInteractiveSparkle(posX, posY, true);
+}
+
+// ========= FUEGOS ARTIFICIALES =========
+(function() {
+  const colors = ['#7b5ea7','#3dbfbf','#c9a84c','#ffffff','#b06ddb','#4ee8e0','#f7d87c','#ff85c8','#a78bfa'];
+  const isMobile = window.innerWidth <= 700;
+
+  function launch(screen, xPct, yPct, delay, shape) {
+    const cx = xPct * window.innerWidth;
+    const cy = yPct * window.innerHeight;
+    // Móvil: menos partículas y solo círculo
+    const particleCount = isMobile ? 22 : 42 + Math.floor(Math.random() * 16);
+    const useShape = isMobile ? 'circle' : shape;
+    const color1 = colors[Math.floor(Math.random() * colors.length)];
+    const color2 = colors[Math.floor(Math.random() * colors.length)];
+    const trail = document.createElement('div');
+    trail.className = 'fw-trail';
+    const trailH = cy * 0.7 + Math.random() * 40;
+    trail.style.cssText = `left:${cx}px;bottom:${window.innerHeight-cy}px;height:${trailH}px;--td:${delay*0.8}s;--tdelay:${delay*0.05}s;`;
+    screen.appendChild(trail);
+    for (let i = 0; i < particleCount; i++) {
+      const p = document.createElement('div');
+      p.className = 'fw-particle';
+      let tx, ty;
+      if (useShape === 'heart') {
+        const t = (i / particleCount) * Math.PI * 2;
+        const scale = 5.5 + Math.random() * 2.5;
+        const hx =  16 * Math.pow(Math.sin(t), 3);
+        const hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+        const jitter = Math.random() * 8 - 4;
+        tx = hx * scale + jitter;
+        ty = hy * scale + jitter;
+      } else {
+        const angle = (i / particleCount) * Math.PI * 2 + Math.random() * 0.3;
+        const radius = isMobile ? (30 + Math.random() * 40) : (60 + Math.random() * 80);
+        tx = Math.cos(angle) * radius + (Math.random() - 0.5) * 20;
+        ty = Math.sin(angle) * radius + (Math.random() - 0.5) * 20;
+      }
+      const sz = isMobile ? (Math.random() * 2.5 + 1.5) : (Math.random() * 5 + 2);
+      const col = Math.random() > 0.5 ? color1 : color2;
+      const dur = (0.9 + Math.random() * 0.6).toFixed(2);
+      p.style.cssText = `width:${sz}px;height:${sz}px;left:${cx}px;top:${cy}px;background:${col};box-shadow:0 0 ${sz*3}px ${col},0 0 ${sz*6}px ${col};--tx:${tx}px;--ty:${ty}px;--d:${dur}s;--delay:${delay}s;`;
+      screen.appendChild(p);
+    }
+  }
+
+  const initScreen = document.getElementById('fireworksScreen');
+  if (initScreen) {
+    launch(initScreen,0.25,0.25,0.1,'circle');
+    launch(initScreen,0.75,0.20,0.3,'circle');
+    launch(initScreen,0.50,0.35,0.6,'circle');
+    launch(initScreen,0.15,0.55,0.8,'circle');
+    launch(initScreen,0.85,0.45,0.9,'circle');
+    launch(initScreen,0.40,0.18,1.1,'circle');
+    launch(initScreen,0.65,0.60,1.3,'circle');
+    launch(initScreen,0.50,0.50,1.5,'circle');
+    setTimeout(() => {
+      initScreen.style.transition = 'opacity 0.5s ease';
+      initScreen.style.opacity = '0';
+      setTimeout(() => {
+        initScreen.remove();
+        document.querySelector('.page').classList.add('page-visible');
+        // Secuencia de entrada
+        const delays = {
+          'intro-logo':  0,
+          'intro-title': 180,
+          'intro-desc':  380,
+          'intro-ui':    620,
+        };
+        document.querySelectorAll('.intro-item').forEach(el => {
+          let d = 0;
+          for (const cls in delays) {
+            if (el.classList.contains(cls)) { d = delays[cls]; break; }
+          }
+          setTimeout(() => el.classList.add('intro-visible'), d);
+        });
+      }, 500);
+    }, 2800);
+  }
+
+})();
+
+// ========= MODAL =========
+function spawnModalSparkles(container) {
+  const modalCols = ['#8a4fff','#4ecdc4','#c9a84c','#ff85c8','#ffffff','#c084fc'];
+  const rect = container.getBoundingClientRect();
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('div');
+    s.className = 'modal-sparkle';
+    const sz = Math.random()*6+3;
+    const col = modalCols[Math.floor(Math.random()*modalCols.length)];
+    const x = Math.random()*rect.width;
+    const y = Math.random()*rect.height*0.5;
+    const mx = (Math.random()*160-80)+'px';
+    const my = (Math.random()*160-80)+'px';
+    const dur = (Math.random()*0.6+0.6).toFixed(2)+'s';
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${x}px;top:${y}px;background:${col};box-shadow:0 0 ${sz*3}px ${col};--d:${dur};--mx:${mx};--my:${my};`;
+    container.appendChild(s);
+    setTimeout(() => s.remove(), parseFloat(dur)*1000+100);
+  }
+}
+
+function mover(btn, dir) {
+  const carousel = btn.closest('.carousel');
+  const track = carousel.querySelector('.carousel-track');
+  const imgs = track.querySelectorAll('img');
+  const dots = carousel.querySelectorAll('.cdot');
+  let idx = parseInt(carousel.dataset.idx) || 0;
+  idx = (idx + dir + imgs.length) % imgs.length;
+  carousel.dataset.idx = idx;
+  track.style.transform = `translateX(-${idx*100}%)`;
+  dots.forEach((d,i) => d.classList.toggle('on', i===idx));
+}
+
+const BASE = 'https://raw.githubusercontent.com/fantasiaartesana07-gif/Cat-logo-de-producto/main/';
+let modalIdx = 0;
+let modalImgs = [];
+
+function abrirModal(titulo, desc, fotos, clickEvent) {
+  if (clickEvent) triggerButtonExplosion(clickEvent);
+  modalImgs = fotos; modalIdx = 0;
+  const track = document.getElementById('modalTrack');
+  const dots = document.getElementById('modalDots');
+  const modalEl = document.getElementById('modal');
+  track.innerHTML = fotos.map(f => `<img src="${BASE}${f}" alt="${titulo}">`).join('');
+  dots.innerHTML = fotos.map((_,i) => `<div class="cdot${i===0?' on':''}" onclick="modalIr(${i})"></div>`).join('');
+  document.getElementById('modalTitle').textContent = titulo;
+  document.getElementById('modalDesc').textContent = desc;
+  const waText = encodeURIComponent("Hola! Me interesa: " + titulo + " ✨");
+  document.getElementById('modalWa').href = "https://wa.me/59898458675?text=" + waText;
+  document.getElementById('modalPrev').style.display = fotos.length > 1 ? 'flex' : 'none';
+  document.getElementById('modalNext').style.display = fotos.length > 1 ? 'flex' : 'none';
+  track.style.transform = 'translateX(0)';
+  modalEl.style.display = 'flex';
+  setTimeout(() => {
+    modalEl.style.opacity = '1';
+    document.body.classList.add('modal-open');
+    const box = modalEl.querySelector('.modal-box');
+    if (box) spawnModalSparkles(box);
+  }, 10);
+}
+
+function apagarModal() {
+  const modalEl = document.getElementById('modal');
+  modalEl.style.opacity = '0';
+  document.body.classList.remove('modal-open');
+  setTimeout(() => { modalEl.style.display = 'none'; }, 300);
+}
+
+function cerrarModal(e) {
+  if (e.target.id === 'modal') apagarModal();
+}
+
+function modalMover(dir) {
+  modalIdx = (modalIdx + dir + modalImgs.length) % modalImgs.length;
+  modalIr(modalIdx);
+}
+
+function modalIr(i) {
+  modalIdx = i;
+  document.getElementById('modalTrack').style.transform = "translateX(-" + (i*100) + "%)";
+  document.querySelectorAll('#modalDots .cdot').forEach((d,j) => d.classList.toggle('on', j===i));
+}
+
+
+
+// ========= LUNA REAL + EFECTOS POR FASE =========
+(function() {
+  // Calcula la fase lunar real usando el ciclo sinódico (29.53059 días)
+  // Referencia: luna nueva conocida el 6 enero 2000 00:18 UTC (JD 2451549.5125)
+  function getRealMoonPhase() {
+    const knownNewMoon = new Date('2000-01-06T00:18:00Z').getTime();
+    const synodicMs    = 29.53059 * 24 * 60 * 60 * 1000;
+    const now          = Date.now();
+    const elapsed      = ((now - knownNewMoon) % synodicMs + synodicMs) % synodicMs;
+    const fraction     = elapsed / synodicMs; // 0=luna nueva, 0.5=luna llena
+    // 8 fases
+    const idx = Math.floor((fraction * 8 + 0.5) % 8);
+    return idx;
+  }
+
+  const phases = [
+    { e:'🌑', n:'Luna nueva',         brightness: 0.0 },
+    { e:'🌒', n:'Luna creciente',     brightness: 0.25 },
+    { e:'🌓', n:'Cuarto creciente',   brightness: 0.5 },
+    { e:'🌔', n:'Gibosa creciente',   brightness: 0.75 },
+    { e:'🌕', n:'Luna llena',         brightness: 1.0 },
+    { e:'🌖', n:'Gibosa menguante',   brightness: 0.75 },
+    { e:'🌗', n:'Cuarto menguante',   brightness: 0.5 },
+    { e:'🌘', n:'Luna menguante',     brightness: 0.25 },
+  ];
+
+  const face  = document.getElementById('moonFace');
+  if (!face) return;
+
+  const idx   = getRealMoonPhase();
+  const phase = phases[idx];
+
+  // Mostrar fase real con fade
+  face.style.opacity = '0';
+  face.style.transition = 'opacity 1s ease';
+  setTimeout(() => {
+    face.textContent  = phase.e;
+    face.style.opacity = '1';
+  }, 300);
+
+  // Aplicar efectos según brillo de la fase
+  const b = phase.brightness; // 0 (nueva) → 1 (llena)
+
+  // Fondo: más oscuro/azul en luna nueva, más cálido/brillante en luna llena
+  const bgDark  = `linear-gradient(125deg, #020d18, #051e2e, #073544, #04231a, #062a3a, #031520, #083028)`;
+  const bgFull  = `linear-gradient(125deg, #031a2e, #082e48, #0a4560, #063528, #0a3850, #042030, #0d4040)`;
+  // Interpolamos mezclando opacidades via CSS custom property en body
+  document.documentElement.style.setProperty('--moon-brightness', b);
+  // Solo cambiar backgroundImage en escritorio; en móvil el ::before hace el fondo estático
+  if (window.innerWidth > 700) {
+    document.body.style.backgroundImage = b < 0.5 ? bgDark : bgFull;
+    document.body.style.backgroundSize  = '400% 400%';
+  }
+
+  // Intensidad del plancton: más visible cuanto más llena
+  const planktonOp = 0.08 + b * 0.82; // 0.08 a 0.9
+  document.querySelectorAll('.plankton').forEach(p => {
+    p.style.setProperty('--max-plankton-op', planktonOp.toFixed(2));
+  });
+
+  // Intensidad luciérnagas: más brillantes con luna nueva (sin luz de luna)
+  // y más tenues con luna llena (ya hay mucha luz)
+  const fireflyBright = 1.0 - b * 0.55; // 1.0 → 0.45
+  document.querySelectorAll('.firefly').forEach(f => {
+    f.style.opacity = fireflyBright.toFixed(2);
+    const scale = (0.7 + fireflyBright * 0.8).toFixed(2);
+    f.style.setProperty('--ff-scale', scale);
+  });
+
+  // Recalcular una vez por día (check cada hora si cambió la fase)
+  setInterval(() => {
+    const newIdx = getRealMoonPhase();
+    if (newIdx !== idx) location.reload();
+  }, 3600000);
+})();
+
+// ========= LUCIÉRNAGAS =========
+(function() {
+  const layer  = document.getElementById('fireflyLayer');
+  const colors = ['#c9a84c','#4ecdc4','#ff85c8','#c084fc','#f9d76b','#64e8e0'];
+  const isMobile = window.innerWidth <= 700;
+  const count  = isMobile ? 10 : 20;
+  for (let i=0;i<count;i++) {
+    const el = document.createElement('div');
+    el.className = 'firefly';
+    const col = colors[Math.floor(Math.random()*colors.length)];
+    const sz  = isMobile ? (3+Math.random()*3).toFixed(1) : (4+Math.random()*6).toFixed(1);
+    el.style.cssText = `
+      --fcol:${col};--fsz:${sz}px;
+      --fx0:${(Math.random()*90).toFixed(0)}%;--fx1:${(Math.random()*90).toFixed(0)}%;
+      --fx2:${(Math.random()*90).toFixed(0)}%;--fx3:${(Math.random()*90).toFixed(0)}%;
+      --fy0:${(Math.random()*85).toFixed(0)}%;--fy1:${(Math.random()*85).toFixed(0)}%;
+      --fy2:${(Math.random()*85).toFixed(0)}%;--fy3:${(Math.random()*85).toFixed(0)}%;
+      --fxd:${(32+Math.random()*22).toFixed(1)}s;--fyd:${(24+Math.random()*18).toFixed(1)}s;
+      --fxdelay:-${(Math.random()*14).toFixed(1)}s;--fydelay:-${(Math.random()*10).toFixed(1)}s;
+      --fpd:${(1.8+Math.random()*2.5).toFixed(1)}s;--fpdel:-${(Math.random()*2.5).toFixed(1)}s;
+    `;
+    layer.appendChild(el);
+  }
+})();
+
+  // ===== SCROLL REVEAL =====
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal-card').forEach((card, i) => {
+    card.style.transitionDelay = (i % 3) * 60 + 'ms';
+    revealObserver.observe(card);
+  });
+
+</script>
+  <!-- DRAWERS MÓVIL — fuera de todo contenedor para que position:fixed funcione -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="cerrarDrawer()"></div>
+  <div class="drawer" id="drawerCat">
+    <div class="drawer-handle"></div>
+    <div class="drawer-title">🏷️ Categorías</div>
+    <div class="drawer-content">
+      <button class="filter-btn active" data-cat="todos" onclick="filtrar('todos',this);cerrarDrawer()">🪄 Todos <span class="cat-count" id="d-cnt-todos">0</span></button>
+      <button class="filter-btn" data-cat="decoracion" onclick="filtrar('decoracion',this);cerrarDrawer()">🏡 Decoración <span class="cat-count" id="d-cnt-decoracion">0</span></button>
+      <button class="filter-btn" data-cat="accesorios" onclick="filtrar('accesorios',this);cerrarDrawer()">🎀 Accesorios <span class="cat-count" id="d-cnt-accesorios">0</span></button>
+      <button class="filter-btn" data-cat="eventos" onclick="filtrar('eventos',this);cerrarDrawer()">🎉 Eventos <span class="cat-count" id="d-cnt-eventos">0</span></button>
+      <button class="filter-btn" data-cat="pedido" onclick="filtrar('pedido',this);cerrarDrawer()">💜 Personalizados <span class="cat-count" id="d-cnt-pedido">0</span></button>
+    </div>
+  </div>
+  <div class="drawer" id="drawerCol">
+    <div class="drawer-handle"></div>
+    <div class="drawer-title">🌙 Colecciones</div>
+    <div class="drawer-content">
+      <button class="coleccion-btn" data-col="aurora" onclick="filtrarColeccion('aurora',this);cerrarDrawer()">🌅 Aurora<span class="col-sub">Colores que iluminan cada rincón.</span></button>
+      <button class="coleccion-btn" data-col="brisa" onclick="filtrarColeccion('brisa',this);cerrarDrawer()">🌿 Brisa Serena<span class="col-sub">Inspirada en la tranquilidad de los pequeños momentos.</span></button>
+      <button class="coleccion-btn" data-col="bosque" onclick="filtrarColeccion('bosque',this);cerrarDrawer()">🧚 Bosque Encantado<span class="col-sub">Donde la naturaleza y la fantasía se encuentran.</span></button>
+      <button class="coleccion-btn" data-col="pasiones" onclick="filtrarColeccion('pasiones',this);cerrarDrawer()">💜 Pasiones<span class="col-sub">Porque cada pasión merece un detalle único.</span></button>
+    </div>
+  </div>
+
+</body>
+</html>
